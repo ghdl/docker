@@ -20,12 +20,6 @@
 
 ---
 
-- Platforms:
-  - [ ] Build with gcc (#149)
-  - [ ] Fedora 28
-
----
-
 - [ ] Integration with play-with-docker (PWD)
   - [ ] eclipse/che demo in PWD: [eclipse/che#3595](https://github.com/eclipse/che/issues/3595#issuecomment-349852819)
   - [ ] Write dummy compose files and companion scripts to allow `play-with-docker.com/?stack=`
