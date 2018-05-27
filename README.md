@@ -31,7 +31,7 @@ However, the sources are all kept in branches `dev` and `master`. Any contributi
 ``` bash
 git checkout "$BRANCH"
 git reset --hard master
-cp "".travis-${BRANCH}.yml" .travis.yml
+cp ".travis-${BRANCH}.yml" .travis.yml
 git commit -am "$BRANCH"
 ```
 ```
