@@ -44,7 +44,7 @@ scriptdir=$(dirname $0)
 . "$scriptdir/ansi_color.sh"
 #disable_color
 
-scriptdir="./dist/linux/"
+scriptdir="./dist/travis/"
 
 # Display env (to debug)
 
