@@ -1,0 +1,18 @@
+ services: docker
+ language: minimal
+ install: skip
+
+ addons:
+   apt:
+     packages:
+      - docker-ce
+
+script: ./create.sh
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: ./deploy2dockerhub.sh
+  on:
+    repo: ghdl/docker
+    branch: master

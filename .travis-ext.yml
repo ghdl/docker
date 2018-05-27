@@ -1,0 +1,19 @@
+os: linux
+services: docker
+language: minimal
+install: skip
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+script: ./extended.sh
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ./deploy2dockerhub.sh "$IMAGE"
+    on:
+      repo: ghdl/docker
+      branch: ext

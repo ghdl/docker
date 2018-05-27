@@ -1,0 +1,77 @@
+FROM ghdl/pkg:stretch-mcode AS stretch-mcode
+
+#---
+
+FROM python:slim-stretch AS python-slim
+
+COPY --from=stretch-mcode ./*.tgz /tmp/
+
+RUN apt-get update -qq \
+ && apt-get -y install libgnat-6 gcc libc6-dev curl \
+ && apt-get autoclean && apt-get clean && apt-get autoremove \
+ && GHDL_TGZ=`ls /tmp/ghdl-*` \
+ && tar -xzf "$GHDL_TGZ" -C /usr/local \
+ && rm -f "$GHDL_TGZ"
+
+#---
+
+FROM python-slim AS do-vunit
+
+RUN pip3 install vunit_hdl
+
+#---
+
+FROM python-slim AS do-vunit-master
+
+RUN curl -L https://github.com/VUnit/vunit/archive/master.tar.gz | tar xvz \
+ && cd vunit-master \
+ && curl -L https://github.com/OSVVM/OSVVM/archive/master.tar.gz | tar xvz --strip-components=1 -C vunit/vhdl/osvvm \
+ && python3 setup.py install \
+ && cd .. && rm -rf vunit-master
+
+#---
+
+FROM ghdl/build:stretch-mcode AS build-gtkwave
+
+RUN apt-get update -qq \
+ && apt-get -y install \
+   build-essential \
+   clang \
+   flex \
+   gawk \
+   gperf \
+   libreadline-dev \
+   libffi-dev \
+   libgtk2.0-dev \
+   liblzma-dev \
+   pkg-config \
+   subversion \
+   tcl-dev \
+   tk-dev \
+ && REPO=svn://svn.code.sf.net/p/gtkwave/code/gtkwave3 \
+ && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
+ && svn checkout $REPO ./ \
+ && ./configure --prefix="/usr/local" --with-tk=/usr/lib \
+ && make -j$(nproc) DESTDIR="$(pwd)/build-dir" \
+ && make check \
+ && make install DESTDIR="$(pwd)/build-dir" \
+ && tar -zcvf /tmp/gtkwave.tgz -C build-dir/usr/local/ . \
+ && cd .. && rm -rf gtkwave
+
+#---
+
+FROM do-vunit AS do-vunit-gtkwave
+
+COPY --from="build-gtkwave" ./tmp/*.tgz /tmp/
+
+RUN apt-get update -qq \
+ && apt-get -y install graphviz libgtk2.0-0 libtcl8.6 libtk8.6 xdot \
+ && apt-get autoclean && apt-get clean && apt-get autoremove \
+ && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
+ && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
+ && rm -f "$GTKWAVE_TGZ"
+
+
+# echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" > /etc/profile.d/colorprompt.sh
+# https://wiki.debian.org/BashColors
+# https://wiki.archlinux.org/index.php/Bash/Prompt_customization
