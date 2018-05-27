@@ -38,6 +38,8 @@ env:
     - IMAGE=fedora26+llvm
     - IMAGE=fedora27+mcode
     - IMAGE=fedora27+llvm
+    - IMAGE=fedora28+mcode
+    - IMAGE=fedora28+llvm
 
 stages:
   - test
