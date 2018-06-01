@@ -6,15 +6,7 @@ else
   DOCKER_DISPLAY=unix$DISPLAY
 fi
 
-check_c() { r="1"; if [ -n "$(docker container inspect $1 2>&1 | grep "Error:")" ]; then r="0"; fi; echo "$r"; }
-rm_c() {
-  echo ""
-  echo "Removing container $1"
-  if [ "$(check_c $1)" = "1" ]; then docker rm -f "$1"; fi;
-}
-
 test_xdpyinfo() { docker run --rm -t $GUIAPP ghdl/ext:xdpyinfo sh -c 'xdpyinfo'; }
-
 
 echo "[DOCKER GUIAPP] Set envvars for X11"
 
@@ -32,11 +24,7 @@ GUIAPP="-v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH -e DISPLAY=$DOCKE
 
 if [ -z "$SKIP_DISP" ]; then
   if [ -z $(docker images -q ghdl/ext:xdpyinfo 2> /dev/null) ]; then
-    echo "[DOCKER GUIAPP] Build ghdl/ext:xdpyinfo from alpine:latest"
-    docker pull alpine:latest
-    docker run --name xdpyinfo -t alpine:latest sh -c 'sed -i -e ''s/v[0-9]\.[0-9]/edge/g'' /etc/apk/repositories && apk add -U --no-cache xdpyinfo'
-    docker commit xdpyinfo ghdl/ext:xdpyinfo
-    rm_c xdpyinfo
+    docker pull ghdl/ext:xdpyinfo
   fi
 
   echo "[DOCKER GUIAPP] Test ghdl/ext:xdpyinfo"
@@ -55,7 +43,7 @@ if [ -z "$SKIP_DISP" ]; then
             exit 1
           else
             eval "$XMING_PATH -ac -multiwindow -clipboard" 1> /tmp/xming_log.log 2>&1 &
-                test_xdpyinfo
+            test_xdpyinfo
           fi
       ;;
       esac
