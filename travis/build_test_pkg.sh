@@ -44,8 +44,6 @@ scriptdir=$(dirname $0)
 . "$scriptdir/ansi_color.sh"
 #disable_color
 
-scriptdir="./dist/travis/"
-
 # Display env (to debug)
 
 echo -en "travis_fold:start:travis_env\r"
@@ -99,8 +97,9 @@ BUILD_CMD_OPTS="${BUILD_CMD_OPTS} -p $PKG_NAME"
 
 echo "build cmd: $BUILD_CMD_OPTS"
 
-
 # Build
+
+scriptdir="./dist/travis/"
 
 if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     # Install gnat compiler (use cache)
