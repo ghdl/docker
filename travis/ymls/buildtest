@@ -18,28 +18,7 @@ deploy:
     script: ../deploy2dockerhub.sh "$IMAGE"
     on:
       repo: ghdl/docker
-      branch: test
-
-# For each linux build, a different job/instance (with the constraints
-# above) is executed in parallel in stage 'test'.
-env:
-  matrix:
-    - IMAGE=stretch+mcode
-    - IMAGE=stretch+mcode+gpl
-    - IMAGE=buster+mcode
-    - IMAGE=buster+mcode+gpl
-    - IMAGE=ubuntu14+mcode
-    - IMAGE=ubuntu14+llvm-3.8
-    - IMAGE=ubuntu16+mcode
-    - IMAGE=ubuntu16+llvm-3.9
-    - IMAGE=ubuntu18+mcode
-    - IMAGE=ubuntu18+llvm-5.0
-    - IMAGE=fedora26+mcode
-    - IMAGE=fedora26+llvm
-    - IMAGE=fedora27+mcode
-    - IMAGE=fedora27+llvm
-    - IMAGE=fedora28+mcode
-    - IMAGE=fedora28+llvm
+      branch: buildtest
 
 stages:
   - test
@@ -60,5 +39,8 @@ jobs:
           file_glob: true
           on:
             repo: ghdl/docker
-            branch: test
+            branch: buildtest
             tags: true
+
+# For each linux build, a different job/instance (with the constraints
+# above) is executed in parallel in stage 'test'.
