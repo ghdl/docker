@@ -24,6 +24,7 @@ for BRANCH in $@; do
     case "$c" in
       [yY][eE][sS]|[yY])
         git checkout -b "$BRANCH" master
+        git push -u origin "$BRANCH"
       ;;
       *)
         echo "Skipping..."
