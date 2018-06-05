@@ -54,9 +54,6 @@ for BRANCH in $@; do
   cp "$f" .travis.yml
   sed -i.bak "s/\(branch:\s\)buildtest/branch: $BRANCH/g" .travis.yml
 
-  echo "env:" >> .travis.yml
-  echo "  matrix:" >> .travis.yml
-
   for k in $(eval echo "\$$BRANCH"); do
     case "$BRANCH" in
       "mcode")
