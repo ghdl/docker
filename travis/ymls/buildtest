@@ -12,35 +12,12 @@ before_script: git clone https://github.com/ghdl/ghdl && cd ghdl
 script: ../travis/build_test_pkg.sh
 
 deploy:
-  - &deploy-docker
-    provider: script
-    skip_cleanup: true
-    script: ../deploy2dockerhub.sh "$IMAGE"
-    on:
-      repo: ghdl/docker
-      branch: buildtest
-
-stages:
-  - test
-  - collect ghdl/pkg images and build ghdl/pkg:all
-
-jobs:
-  include:
-    - stage: collect ghdl/pkg images and build ghdl/pkg:all
-      env: IMAGE="pkg"
-      script: ../pack.sh
-      deploy:
-        - <<: *deploy-docker
-        - provider: releases
-          skip_cleanup: true
-          api_key:
-            secure: VzowiHBE7Lc14p/QOFvYYLz65g1uvYvffv32F2AVlpt4hs0EAdqME2+BLPnDDI1D4Oou30VXs2p37doI0J2qyyiT5TbSFzErYz+7uREYEOBWR5IQsK/iQrSxKOZ2Ox558T1zcObnZhVjAbV1yxQhdqitSWBCpayuNl4Gvubc0S1+MXhh/psvLgJ/r2Nq5gCAaoqmxvHUoNotQWYF5hKzynXPvV0wniB2l2HKc/UMK7jIu+GRKwMWk1NXuBk5ocreoAVrSH/FHD87K8wUfUqgaGjYRaniKbl2etMw4kcfRC1J+WtcUzVeHtb2tnlHo1Qk1tE7Dt5LMWYp0RlpiLfHmu4attHn2jdKBwdetGiB+admq7D6K0bROVQw6l1kJNYNROXR9PhA6ZkYQvDY1iF+RmikUee8zpGEZE0Ux1RjlCBAOE+yJu3/TWJpO3KCFEYKELqmljOgpaAu/ogyowLwDtakjzK1nA34CmgN9xwgARuxbzQNPxMIlFBeH4QJ9qMj3Jo9jUOxKF4dtSF5Y2t8p4XZ4RDBAwMb4QB35BaWCd7u2UwCVbks3CR7mdFXT22ZjN+92kgFOsqhsK67cNCXuUhL3jDAQ5His4qqca2+A25BVDFG3qz673gZotIq4/MYcBZx7daNJN88dFH47Rx8SDtiu7mb/6Y7TMaf7zW/KEs=
-          file: "ghdl-*.tgz"
-          file_glob: true
-          on:
-            repo: ghdl/docker
-            branch: buildtest
-            tags: true
+  provider: script
+  skip_cleanup: true
+  script: ../deploy2dockerhub.sh "$IMAGE"
+  on:
+    repo: ghdl/docker
+    branch: buildtest
 
 # For each linux build, a different job/instance (with the constraints
 # above) is executed in parallel in stage 'test'.
