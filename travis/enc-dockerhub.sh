@@ -8,8 +8,8 @@ gem install travis --no-rdoc --no-ri
 
 git clone $REPO ./tmp-repo && cd tmp-repo
 
-travis login --org --auto
-travis encrypt DOCKER_USER=$USERNAME --add
-travis encrypt DOCKER_PASS=$PASSWORD --add
+travis login --pro --auto
+travis encrypt DOCKER_USER=$USERNAME --add --pro --debug
+travis encrypt DOCKER_PASS=$PASSWORD --add --pro --debug
 
 sh
