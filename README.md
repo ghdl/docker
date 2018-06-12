@@ -1,3 +1,7 @@
+|master|mcode|mcode (GPL)|LLVM|GCC|ext|
+|---|---|---|---|---|---|
+|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=master)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=mcode)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=mcodegpl)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=llvm)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=gcc)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=ext)](https://travis-ci.com/ghdl/docker/branches)|
+
 # ghdl/docker
 
 This repository contains scripts to build and to deploy the docker images that are used in the [GHDL GitHub organization](https://github.com/ghdl).
