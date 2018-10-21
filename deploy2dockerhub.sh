@@ -15,7 +15,8 @@ case $1 in
   *)     FILTER="/ghdl /pkg";;
 esac
 
-echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+. "$scriptdir/travis/docker_login.sh"
+
 for key in $FILTER; do
   for tag in `echo $(docker images ghdl$key* | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
       if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi

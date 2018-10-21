@@ -6,6 +6,7 @@ addons:
   apt:
     packages:
     - docker-ce
+    - pass
 script: "./create.sh"
 deploy:
   provider: script
