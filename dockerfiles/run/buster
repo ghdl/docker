@@ -3,7 +3,7 @@
 FROM debian:buster-slim AS mcode
 
 RUN apt-get update -qq \
- && apt-get -y install libgnat-7 gcc libc6-dev \
+ && apt-get -y install libgnat-8 gcc libc6-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
 
 #---
