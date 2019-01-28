@@ -103,17 +103,17 @@ Note that, instead of `git`, `curl` was used to download the VUnit repo.
 
 ---
 
-Let's try [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit--gtkwave-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) now. We will execute the [full_adder](http://ghdl.readthedocs.io/en/latest/using/QuickStartGuide.html#a-full-adder) example from the docs, which are hosted in 1138-4EB/elide.
+Let's try [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit--gtkwave-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) now. We will execute the [full_adder](http://ghdl.readthedocs.io/en/latest/using/QuickStartGuide.html#a-full-adder) example from the docs, which are hosted in 1138-4EB/hwd-ide.
 
 ```
-./dist/docker_guiapp.sh -it ghdl/ext:vunit-gtkwave bash
-mkdir elide
-curl -L https://github.com/1138-4EB/elide/archive/develop.tar.gz | tar xz -C elide --strip-components=1
-./elide/examples/full_adder/test.sh
+x11docker -i ghdl/ext:vunit-gtkwave bash
+mkdir hwd-ide
+curl -L https://github.com/1138-4EB/hwd-ide/archive/develop.tar.gz | tar xz -C hwd-ide --strip-components=1
+./hwd-ide/examples/full_adder/test.sh
 ls -la
 gtkwave adder.vcd
 ```
 
 ![ghdl_vunit-gtkwave](https://user-images.githubusercontent.com/6628437/33923787-6178e760-dfd3-11e7-9183-808c85c43f65.gif)
 
-> NOTE: [docker_guiapp.sh](https://github.com/ghdl/docker/blob/master/docker_guiapp.sh) is a helper script to set the DISPLAY envvar and port, in order to enable apps inside the container (say gtkwave) to use the X server on the host. If running the example on Windows, Xming (or any other X server) is required. The script includes checking if Xming is already running and starting it if required. See details in the source and [here](https://github.com/1138-4EB/elide/wiki/Desktop#windows).
+> NOTE: [x11docker](https://github.com/mviereck/x11docker) is a helper script to enable apps inside the container (say gtkwave) to use a X server on the host. If running the example on Windows, [VcXsrv](https://sourceforge.net/projects/vcxsrv/) or [Cygwin/X](https://x.cygwin.com/) are required (see [MSYS2, Cygwin and WSL on MS Windows](https://github.com/mviereck/x11docker#msys2-cygwin-and-wsl-on-ms-windows)).
