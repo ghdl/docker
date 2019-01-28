@@ -2,11 +2,9 @@ os: linux
 services: docker
 language: minimal
 install: skip
-
 addons:
   apt:
     packages:
-      - docker-ce
       - pass
 
 script: ./extended.sh

@@ -2,11 +2,9 @@ os: linux
 services: docker
 language: minimal
 install: skip
-
 addons:
   apt:
     packages:
-      - docker-ce
       - pass
 
 before_script: git clone https://github.com/ghdl/ghdl && cd ghdl
