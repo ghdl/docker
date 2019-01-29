@@ -1,13 +1,13 @@
-FROM ghdl/pkg:stretch-mcode AS stretch-mcode
+FROM ghdl/pkg:buster-mcode AS buster-mcode
 
 #---
 
-FROM python:slim-stretch AS python-slim
+FROM debian:buster-slim AS python-slim
 
-COPY --from=stretch-mcode ./*.tgz /tmp/
+COPY --from=buster-mcode ./*.tgz /tmp/
 
 RUN apt-get update -qq \
- && apt-get -y install libgnat-6 gcc libc6-dev curl \
+ && apt-get -y install libgnat-8 gcc libc6-dev curl python3 python3-pip \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
  && GHDL_TGZ=`ls /tmp/ghdl-*` \
  && tar -xzf "$GHDL_TGZ" -C /usr/local \
@@ -21,17 +21,23 @@ RUN pip3 install vunit_hdl
 
 #---
 
-FROM python-slim AS do-vunit-master
+FROM alpine as get-vunit-master
 
-RUN curl -L https://github.com/VUnit/vunit/archive/master.tar.gz | tar xvz \
- && cd vunit-master \
- && curl -L https://github.com/OSVVM/OSVVM/archive/master.tar.gz | tar xvz --strip-components=1 -C vunit/vhdl/osvvm \
- && python3 setup.py install \
- && cd .. && rm -rf vunit-master
+RUN apk update && apk add git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
 
 #---
 
-FROM ghdl/build:stretch-mcode AS build-gtkwave
+FROM python-slim AS do-vunit-master
+
+COPY --from=get-vunit-master /tmp/vunit /tmp/vunit
+
+RUN cd /tmp/vunit \
+ && python3 setup.py install \
+ && cd .. && rm -rf /tmp/vunit
+
+#---
+
+FROM ghdl/build:buster-mcode AS build-gtkwave
 
 RUN apt-get update -qq \
  && apt-get -y install \
@@ -66,7 +72,7 @@ FROM do-vunit AS do-vunit-gtkwave
 COPY --from="build-gtkwave" ./tmp/*.tgz /tmp/
 
 RUN apt-get update -qq \
- && apt-get -y install graphviz libgtk2.0-0 libtcl8.6 libtk8.6 xdot \
+ && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
  && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
  && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
