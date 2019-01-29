@@ -40,18 +40,19 @@ RUN apt-get update -qq \
    flex \
    gawk \
    gperf \
+   libbz2-dev \
    libreadline-dev \
    libffi-dev \
-   libgtk2.0-dev \
+   libgtk-3-dev \
    liblzma-dev \
    pkg-config \
    subversion \
    tcl-dev \
    tk-dev \
- && REPO=svn://svn.code.sf.net/p/gtkwave/code/gtkwave3 \
+ && REPO=svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 \
  && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
  && svn checkout $REPO ./ \
- && ./configure --prefix="/usr/local" --with-tk=/usr/lib \
+ && ./configure --prefix="/usr/local" --with-tk=/usr/lib --enable-gtk3 \
  && make -j$(nproc) DESTDIR="$(pwd)/build-dir" \
  && make check \
  && make install DESTDIR="$(pwd)/build-dir" \
