@@ -78,7 +78,10 @@ RUN apt-get update -qq \
  && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
  && rm -f "$GTKWAVE_TGZ"
 
+#---
 
-# echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" > /etc/profile.d/colorprompt.sh
-# https://wiki.debian.org/BashColors
-# https://wiki.archlinux.org/index.php/Bash/Prompt_customization
+FROM do-vunit-gtkwave AS do-broadway
+
+COPY broadway.sh /etc/broadway.sh
+
+RUN printf "\nsource /etc/broadway.sh\n" >> /etc/bash.bashrc

@@ -14,11 +14,10 @@ for f in `ls $currentdir`; do
         echo "travis_fold:start:$tag"
         travis_time_start
         printf "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR\n"
-        docker build -t ghdl/ext:${tag} --target do-$tag - < ${currentdir}/$f
+        docker build -t ghdl/ext:${tag} --target do-$tag . -f ${currentdir}/$f
         travis_time_finish
         echo "travis_fold:end:$tag"
     done
 done
 
-#docker build -t ghdl/ext:vunit --target vunit - < ./dist/linux/docker/ext/vunit
-#docker build -t ghdl/ext:vunit-gtkwave --target vunit-gtkwave - < ./dist/linux/docker/ext/vunit
+#docker build -t ghdl/ext:broadway --target do-broadway . -f ./dist/linux/docker/ext/vunit
