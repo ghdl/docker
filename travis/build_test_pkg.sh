@@ -41,8 +41,6 @@ set -e
 scriptdir=$(dirname $0)
 
 . "$scriptdir/utils.sh"
-. "$scriptdir/ansi_color.sh"
-#disable_color
 
 # Display env (to debug)
 

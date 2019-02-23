@@ -5,8 +5,6 @@ set -e
 scriptdir=$(dirname $0)
 
 . "$scriptdir/travis/utils.sh"
-. "$scriptdir/travis/ansi_color.sh"
-#disable_color
 
 currentdir="${scriptdir}/dockerfiles/run"
 

@@ -1,3 +1,8 @@
+#! /bin/sh
+
+. "$scriptdir/travis/ansi_color.sh"
+#disable_color
+
 # This is a trimmed down copy of https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/*
 travis_time_start() {
   # `date +%N` returns the date in nanoseconds. It is used as a replacement for $RANDOM, which is only available in bash.

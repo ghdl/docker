@@ -3,8 +3,6 @@
 cd "$(dirname $0)"
 
 . "travis/utils.sh"
-. "travis/ansi_color.sh"
-#disable_color
 
 curbranch="$(git branch | grep \* | cut -d ' ' -f2-)"
 
