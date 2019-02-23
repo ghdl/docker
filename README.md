@@ -1,6 +1,9 @@
-|master|mcode|mcode (GPL)|LLVM|GCC|ext|
-|---|---|---|---|---|---|
-|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=master)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=mcode)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=mcodegpl)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=llvm)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=gcc)](https://travis-ci.com/ghdl/docker/branches)|[![Build Status](https://travis-ci.com/ghdl/docker.svg?branch=ext)](https://travis-ci.com/ghdl/docker/branches)|
+[!['master' Build Status](https://img.shields.io/travis/com/ghdl/docker/master.svg?longCache=true&logo=travis&style=flat-square&label=master)](https://travis-ci.com/ghdl/docker/branches)
+[!['mcode' Build Status](https://img.shields.io/travis/com/ghdl/docker/mcode.svg?longCache=true&logo=travis&style=flat-square&label=mcode)](https://travis-ci.com/ghdl/docker/branches)
+[!['mcodegpl' Build Status](https://img.shields.io/travis/com/ghdl/docker/mcodegpl.svg?longCache=true&logo=travis&style=flat-square&label=mcodegpl)](https://travis-ci.com/ghdl/docker/branches)
+[!['llvm' Build Status](https://img.shields.io/travis/com/ghdl/docker/llvm.svg?longCache=true&logo=travis&style=flat-square&label=llvm)](https://travis-ci.com/ghdl/docker/branches)
+[!['gcc' Build Status](https://img.shields.io/travis/com/ghdl/docker/gcc.svg?longCache=true&logo=travis&style=flat-square&label=gcc)](https://travis-ci.com/ghdl/docker/branches)
+[!['ext' Build Status](https://img.shields.io/travis/com/ghdl/docker/ext.svg?longCache=true&logo=travis&style=flat-square&label=ext)](https://travis-ci.com/ghdl/docker/branches)
 
 # ghdl/docker
 
