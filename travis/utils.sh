@@ -3,7 +3,7 @@
 . "$scriptdir/travis/ansi_color.sh"
 #disable_color
 
-# This is a trimmed down copy of https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/*
+# This is a trimmed down copy of https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/bash/*
 travis_time_start() {
   # `date +%N` returns the date in nanoseconds. It is used as a replacement for $RANDOM, which is only available in bash.
   travis_timer_id=`date +%N`
@@ -25,3 +25,14 @@ else
     date -u '+%s%N'
   }
 fi
+
+travis_start () {
+  echo "travis_fold:start:$1"
+  travis_time_start
+  printf "$2\n"
+}
+
+travis_finish () {
+  travis_time_finish
+  echo "travis_fold:end:$1"
+}

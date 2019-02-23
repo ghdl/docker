@@ -18,12 +18,11 @@ esac
 for key in $FILTER; do
   for tag in `echo $(docker images ghdl$key* | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
       if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi
-      echo "travis_fold:start:`echo $tag | grep -oP 'ghdl/\K.*'`"
-      travis_time_start
-      printf "$ANSI_YELLOW[DOCKER push] ${tag}$ANSI_NOCOLOR\n"
+      i="`echo $tag | grep -oP 'ghdl/\K.*'`"
+      travis_start "$i" "$ANSI_YELLOW[DOCKER push] ${tag}$ANSI_NOCOLOR"
       docker push $tag
-      travis_time_finish
-      echo "travis_fold:end:`echo $tag | grep -oP 'ghdl/\K.*'`"
+      travis_finish "$i"
   done
 done
+
 docker logout

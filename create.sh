@@ -11,12 +11,10 @@ for d in build run; do
     currentdir="${scriptdir}/dockerfiles/$d"
     for f in `ls $currentdir`; do
         for tag in `grep -oP "FROM.*AS \K.*" ${currentdir}/$f`; do
-            echo "travis_fold:start:${f}-$tag"
-            travis_time_start
-            printf "$ANSI_BLUE[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR\n"
-            docker build -t ghdl/${d}:${f}-${tag} --target $tag - < ${currentdir}/$f
-            travis_time_finish
-            echo "travis_fold:end:${f}-$tag"
+            i="${f}-$tag"
+            travis_start "$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
+            docker build -t "ghdl/${d}:$i" --target "$tag" - < "${currentdir}/$f"
+            travis_finish "$i"
         done
     done
 done

@@ -9,12 +9,9 @@ scriptdir=$(dirname $0)
 currentdir="${scriptdir}/dockerfiles/ext"
 for f in `ls $currentdir`; do
     for tag in `grep -oP "FROM.*AS do-\K.*" ${currentdir}/$f`; do
-        echo "travis_fold:start:$tag"
-        travis_time_start
-        printf "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR\n"
+        travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
         docker build -t ghdl/ext:${tag} --target do-$tag . -f ${currentdir}/$f
-        travis_time_finish
-        echo "travis_fold:end:$tag"
+        travis_finish "$tag"
     done
 done
 

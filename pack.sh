@@ -10,23 +10,23 @@ currentdir="${scriptdir}/dockerfiles/run"
 
 for f in `ls $currentdir`; do
     for tag in `grep -oP "FROM.*AS \K.*" ${currentdir}/$f`; do
-        fulltag="${f}-${tag}"
-        echo "travis_fold:start:$fulltag"
-        travis_time_start
-        printf "$ANSI_BLUE[DOCKER pull] pkg : ${f} - ${tag}$ANSI_NOCOLOR\n"
-        thisimg="ghdl/pkg:$fulltag"
-        docker pull $thisimg
-        echo "FROM \"$thisimg\" AS $fulltag" >> Dockerfile-from
-        echo "COPY --from=$fulltag ./* /$fulltag/" >> Dockerfile-copy
-        travis_time_finish
-        echo "travis_fold:end:$fulltag"
+        ftag="${f}-${tag}"
+        travis_start "$ftag" "$ANSI_BLUE[DOCKER pull] pkg : ${f} - ${tag}$ANSI_NOCOLOR"
+        img="ghdl/pkg:$ftag"
+        docker pull $img
+        cat >> Dockerfile-from <<-EOF
+FROM $img AS $ftag
+EOF
+        cat >> Dockerfile-copy <<-EOF
+COPY --from=$ftag ./* /$ftag/
+EOF
+        travis_finish "$ftag"
     done
 done
 
 mkdir -pv tmp-pkg && cd tmp-pkg
 
-echo "travis_fold:start:pkg_tmp"
-printf "$ANSI_BLUE[DOCKER build] pkg:tmp $ANSI_NOCOLOR\n"
+travis_start "pkg_tmp" "$ANSI_BLUE[DOCKER build] pkg:tmp $ANSI_NOCOLOR"
 mv ../Dockerfile-from ./Dockerfile
 echo "FROM busybox" >> Dockerfile
 cat ../Dockerfile-copy >> Dockerfile
@@ -35,15 +35,14 @@ echo "Dockerfile:"
 cat Dockerfile
 echo ""
 docker build -t ghdl/pkg:tmp .
-echo "travis_fold:end:pkg_tmp"
+travis_finish "pkg_tmp"
 
-echo "travis_fold:start:pkg_all"
-printf "$ANSI_BLUE[DOCKER build] pkg:all $ANSI_NOCOLOR\n"
+travis_start "pkg_all" "$ANSI_BLUE[DOCKER build] pkg:all $ANSI_NOCOLOR"
 echo "FROM \"ghdl/pkg:tmp\" AS pkg-tmp" > Dockerfile
 echo "FROM busybox" >> Dockerfile
 echo "COPY --from=pkg-tmp ./* ./ghdl-pkgs/" >> Dockerfile
 docker build -t save_pkg .
-echo "travis_fold:end:pkg_all"
+travis_finish "pkg_all"
 
 docker rmi -f `docker images -q ghdl/pkg:*`
 docker tag save_pkg ghdl/pkg:all
