@@ -17,7 +17,7 @@ RUN dnf --nodocs -y install llvm-devel clang \
 
 #---
 
-FROM mcode AS gcc-8.2.1
+FROM mcode AS gcc-8.2.0
 
 RUN dnf --nodocs -y install gcc-c++ \
  && dnf clean all
