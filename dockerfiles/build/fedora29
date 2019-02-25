@@ -22,5 +22,5 @@ FROM mcode AS gcc-8.2.1
 RUN dnf --nodocs -y install gcc-c++ \
  && dnf clean all
 
-RUN dnf --nodocs -y install gcc lbzip2 flex autogen texinfo dejagnu wget bzip2 \
+RUN dnf --nodocs -y --allowerasing install gcc lbzip2 flex autogen texinfo dejagnu wget bzip2 \
  && dnf clean all
