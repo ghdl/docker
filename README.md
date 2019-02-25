@@ -22,14 +22,14 @@ See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a 
 
 Due to the time limit in Travis CI, and because not all the images need to be updated at the same frequency, several job matrices are defined. Travis CI does not support dynamic modification of the `.travis.yml` file, so multiple files are used:
 
-- [`.travis.yml`](./.travis.yml): this is the default (branches `dev` or `master`). `create.sh` is executed in order to build [`ghdl/build`](https://hub.docker.com/r/ghdl/build/) and [`ghdl/run`](https://hub.docker.com/r/ghdl/run/) images. All of them are pushed to [hub.docker.com/u/ghdl](https://hub.docker.com/u/ghdl/).
+- [`.travis.yml`](./.travis.yml): this is the default (branches `dev` or `master`). `travis/run.sh -c` is executed in order to build [`ghdl/build`](https://hub.docker.com/r/ghdl/build/) and [`ghdl/run`](https://hub.docker.com/r/ghdl/run/) images. All of them are pushed to [hub.docker.com/u/ghdl](https://hub.docker.com/u/ghdl/).
 - [`travis/ymls/buildtest`](./travis/ymls/buildtest): this is used as a base for branches `mcode`, `mcodegpl`, `gpl`, and `gcc`. [ghdl/ghdl](https://github.com/ghdl/ghdl) is cloned, and `travis/buid_test_pkg.sh` is executed. For each of the defined platforms:
   - GHDL is built in the corresponding [`ghdl/build`](https://hub.docker.com/r/ghdl/build/) image.
   - A [`ghdl/ghdl`](https://hub.docker.com/r/ghdl/ghdl/) image is created based on the corresponding [`ghdl/run`](https://hub.docker.com/r/ghdl/run/) image.
   - The testsuite is executed inside the [`ghdl/ghdl`](https://hub.docker.com/r/ghdl/ghdl/) created in the previous step.
   - If successful, a [`ghdl/pkg`](https://hub.docker.com/r/ghdl/pkg/) image is created with the tarball built in the first step.
   - [`ghdl/ghdl`](https://hub.docker.com/r/ghdl/ghdl/) and [`ghdl/pkg`](https://hub.docker.com/r/ghdl/pkg/) images are pushed to [hub.docker.com/u/ghdl](https://hub.docker.com/u/ghdl/).
-- [`travis/ymls/ext`](./travis/ymls/ext): this is used for branch `ext`. `extended.sh` is executed in order to build some of [`ghdl/ext`](https://hub.docker.com/r/ghdl/ext/) images (tags `vunit`, `vunit-master` and `vunit-gtkwave`). All of them are pushed to [hub.docker.com/u/ghdl](https://hub.docker.com/u/ghdl/).
+- [`travis/ymls/ext`](./travis/ymls/ext): this is used for branch `ext`. `travis/run.sh -e` is executed in order to build some of [`ghdl/ext`](https://hub.docker.com/r/ghdl/ext/) images (tags `vunit`, `vunit-master` and `vunit-gtkwave`). All of them are pushed to [hub.docker.com/u/ghdl](https://hub.docker.com/u/ghdl/).
 
 ---
 

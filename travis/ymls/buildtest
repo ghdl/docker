@@ -13,7 +13,7 @@ script: ../travis/build_test_pkg.sh
 deploy:
   provider: script
   skip_cleanup: true
-  script: ../deploy2dockerhub.sh "$IMAGE"
+  script: ../travis/run.sh "$IMAGE"
   on:
     repo: ghdl/docker
     branch: buildtest

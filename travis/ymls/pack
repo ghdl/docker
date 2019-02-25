@@ -9,13 +9,12 @@ addons:
 
 env: IMAGE="pkg"
 
-before_script: git clone https://github.com/ghdl/ghdl && cd ghdl
 script: ../pack.sh
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ../deploy2dockerhub.sh "$IMAGE"
+    script: ../travis/run.sh "$IMAGE"
     on:
       repo: ghdl/docker
       branch: pack

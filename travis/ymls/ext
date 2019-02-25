@@ -7,12 +7,12 @@ addons:
     packages:
       - pass
 
-script: ./extended.sh
+script: ./travis/run.sh -e
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ./deploy2dockerhub.sh "$IMAGE"
+    script: ./travis/run.sh "$IMAGE"
     on:
       repo: ghdl/docker
       branch: ext

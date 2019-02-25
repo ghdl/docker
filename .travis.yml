@@ -6,11 +6,11 @@ addons:
   apt:
     packages:
     - pass
-script: "./create.sh"
+script: ./travis/run.sh -c
 deploy:
   provider: script
   skip_cleanup: true
-  script: "./deploy2dockerhub.sh"
+  script: ./travis/run.sh
   on:
     repo: ghdl/docker
     branch: master
