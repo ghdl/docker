@@ -12,9 +12,9 @@ if [ $# -le 0 ]; then
 fi
 
 mcodegpl="stretch buster"
-mcode="stretch buster ubuntu14 ubuntu16 ubuntu18 fedora26 fedora27 fedora28"
-llvm="ubuntu14-3.8 ubuntu16-3.9 ubuntu18-5.0 fedora26 fedora27 fedora28"
-gcc="stretch-5.5.0 fedora26-6.4.0 buster-7.2.0 fedora28-8.1.0"
+mcode="stretch buster ubuntu14 ubuntu16 ubuntu18 fedora28 fedora29"
+llvm="ubuntu14-3.8 ubuntu16-3.9 ubuntu18-5.0 fedora28 fedora29"
+gcc="stretch-5.5.0 buster-7.2.0 fedora28-8.1.0 fedora28-8.2.1"
 
 for BRANCH in $@; do
   if [ "$(git branch | grep "$BRANCH")" = "" ]; then
