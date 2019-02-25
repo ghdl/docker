@@ -7,13 +7,13 @@ addons:
     packages:
       - pass
 
-before_script: git clone https://github.com/ghdl/ghdl && cd ghdl
-script: ../travis/build_test_pkg.sh
+before_script: git clone https://github.com/ghdl/ghdl
+script: ./travis/run.sh -b
 
 deploy:
   provider: script
   skip_cleanup: true
-  script: ../travis/run.sh "$IMAGE"
+  script: ./travis/run.sh "$IMAGE"
   on:
     repo: ghdl/docker
     branch: buildtest
