@@ -9,9 +9,15 @@ cd $(dirname $0)/..
 #--
 
 create () {
+  files="stretch buster"
+  if [ "$DISTRO" != "debian" ]; then
+    cd ./dockerfiles/build
+    files="`ls ${DISTRO}*`"
+    cd -
+  fi
   for d in build run; do
       ddir="./dockerfiles/$d"
-      for f in `ls $ddir`; do
+      for f in $files; do
           for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
               i="${f}-$tag"
               travis_start "$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
@@ -64,20 +70,19 @@ deploy () {
 #--
 
 build_img_pkg() {
+    IMAGE_TAG=`echo $IMAGE | sed -e 's/+/-/g'`
     travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
-    cd tmp-img
     docker build -t ghdl/ghdl:$IMAGE_TAG . -f-<<EOF
 FROM scratch
-COPY $PKG ./
+COPY `ls | grep -oP 'ghdl-.*tgz'` ./
 COPY BUILD_TOOLS ./
 EOF
-    cd .. && rm -rf tmp-img
     travis_finish "build_scratch"
 }
 
 build () {
   cd ghdl
-  . ./dist/travis/travis-ci.sh
+  ./dist/travis/travis-ci.sh
 
   if [ "$TRAVIS_OS_NAME" != "osx" ]; then
     if [ -f test_ok ]; then

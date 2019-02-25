@@ -6,6 +6,10 @@ addons:
   apt:
     packages:
     - pass
+env:
+  - DISTRO=fedora
+  - DISTRO=debian
+  - DISTRO=ubuntu
 script: ./travis/run.sh -c
 deploy:
   provider: script
