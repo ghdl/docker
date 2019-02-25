@@ -10,12 +10,12 @@ cd $(dirname $0)/..
 
 create () {
   for d in build run; do
-      currentdir="${scriptdir}/dockerfiles/$d"
-      for f in `ls $currentdir`; do
-          for tag in `grep -oP "FROM.*AS \K.*" ${currentdir}/$f`; do
+      ddir="./dockerfiles/$d"
+      for f in `ls $ddir`; do
+          for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
               i="${f}-$tag"
               travis_start "$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
-              docker build -t "ghdl/${d}:$i" --target "$tag" - < "${currentdir}/$f"
+              docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/$f"
               travis_finish "$i"
           done
       done
@@ -25,11 +25,11 @@ create () {
 #--
 
 extended() {
-  currentdir="${scriptdir}/dockerfiles/ext"
-  for f in `ls $currentdir`; do
-      for tag in `grep -oP "FROM.*AS do-\K.*" ${currentdir}/$f`; do
+  ddir="./dockerfiles/ext"
+  for f in `ls $ddir`; do
+      for tag in `grep -oP "FROM.*AS do-\K.*" ${ddir}/$f`; do
           travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-          docker build -t ghdl/ext:${tag} --target do-$tag . -f ${currentdir}/$f
+          docker build -t ghdl/ext:${tag} --target do-$tag . -f ${ddir}/$f
           travis_finish "$tag"
       done
   done
@@ -46,7 +46,7 @@ deploy () {
     *)     FILTER="/ghdl /pkg";;
   esac
 
-  . "$scriptdir/travis/docker_login.sh"
+  . ./travis/docker_login.sh
 
   for key in $FILTER; do
     for tag in `echo $(docker images ghdl$key* | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
