@@ -72,7 +72,7 @@ deploy () {
 build_img_pkg() {
     IMAGE_TAG=`echo $IMAGE | sed -e 's/+/-/g'`
     travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
-    docker build -t ghdl/ghdl:$IMAGE_TAG . -f-<<EOF
+    docker build -t ghdl/pkg:$IMAGE_TAG . -f-<<EOF
 FROM scratch
 COPY `ls | grep -oP 'ghdl-.*tgz'` ./
 COPY BUILD_TOOLS ./
