@@ -12,7 +12,7 @@ getDockerCredentialPass () {
   [ "$(echo "$PASS_URL" | cut -c1-5)" != "https" ] && PASS_URL="https://github.com/docker/docker-credential-helpers/releases/download/v0.6.0/docker-credential-pass-v0.6.0-amd64.tar.gz"
 
   echo "PASS_URL: $PASS_URL"
-  curl -fsSL "$PASS_URL" | tar xv
+  curl -fsSL "$PASS_URL" | tar xzv
   chmod + $(pwd)/docker-credential-pass
 }
 
