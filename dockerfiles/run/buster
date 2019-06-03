@@ -1,6 +1,8 @@
+ARG IMAGE="debian:buster-slim"
+
 # [run] Debian 10
 
-FROM debian:buster-slim AS mcode
+FROM $IMAGE AS mcode
 
 RUN apt-get update -qq \
  && apt-get -y install libgnat-8 gcc libc6-dev \

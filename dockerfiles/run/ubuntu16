@@ -1,6 +1,8 @@
+ARG IMAGE="ubuntu:xenial"
+
 # [run] Ubuntu 16
 
-FROM ubuntu:xenial AS mcode
+FROM $IMAGE AS mcode
 
 RUN apt-get update -qq \
   && apt-get -y install --no-install-recommends \

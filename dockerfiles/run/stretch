@@ -1,6 +1,8 @@
+ARG IMAGE="debian:stretch-slim"
+
 # [run] Debian 9
 
-FROM debian:stretch-slim AS mcode
+FROM $IMAGE AS mcode
 
 RUN apt-get update -qq \
  && apt-get -y install libgnat-6 gcc libc6-dev \

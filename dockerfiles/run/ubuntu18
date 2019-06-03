@@ -1,6 +1,8 @@
+ARG IMAGE="ubuntu:bionic"
+
 # [run] Ubuntu 18
 
-FROM ubuntu:bionic AS mcode
+FROM $IMAGE AS mcode
 
 RUN apt-get update -qq \
   && apt-get -y install --no-install-recommends \
