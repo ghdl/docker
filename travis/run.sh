@@ -82,7 +82,7 @@ EOF
 
 build () {
   cd ghdl
-  ./dist/travis/travis-ci.sh
+  CONFIG_OPTS="--default-pic " ./dist/travis/travis-ci.sh
 
   if [ "$TRAVIS_OS_NAME" != "osx" ]; then
     if [ -f test_ok ]; then
