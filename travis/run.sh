@@ -44,6 +44,26 @@ extended() {
 
 #--
 
+language_server() {
+  distro="$1"
+  for img in build run; do
+      tag="ghdl/$img:ls-$distro"
+      travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
+      docker build -t $tag . -f ./dockerfiles/ext/ls_${distro}_base --target=$img
+      travis_finish "$tag"
+  done
+  llvm_ver="4.0"
+  if [ "x$distro" = "xubuntu" ]; then
+    llvm_ver="6.0"
+  fi
+  tag="ghdl/ext:ls-$distro"
+  travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
+  docker build -t $tag . -f ./dockerfiles/ext/ls_debian --build-arg DISTRO="$distro" --build-arg LLVM_VER="$llvm_ver"
+  travis_finish "$tag"
+}
+
+#--
+
 deploy () {
   case $1 in
     "")    FILTER="/";;
@@ -98,6 +118,7 @@ case "$1" in
   -b) build    ;;
   -c) create   ;;
   -e) extended ;;
+  -l) language_server "$2";;
   *)
     deploy $@
 esac

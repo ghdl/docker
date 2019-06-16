@@ -7,12 +7,29 @@ addons:
     packages:
       - pass
 
-script: ./travis/run.sh -e
+stages:
+  - test
+  - vunit
 
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: ./travis/run.sh "$IMAGE"
-    on:
-      repo: ghdl/docker
-      branch: ext
+jobs:
+  include:
+    - &job
+      env:
+       - TASK="debian"
+       - IMAGE=""
+      script: ./travis/run.sh -l $TASK
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: ./travis/run.sh "$IMAGE"
+          on:
+            repo: ghdl/docker
+            branch: ext
+    - <<: *job
+      env:
+       - TASK="ubuntu"
+       - IMAGE=""
+    - <<: *job
+      stage: vunit
+      env: IMAGE="ext"
+      script: ./travis/run.sh -e
