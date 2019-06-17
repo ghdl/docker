@@ -94,7 +94,7 @@ build_img_pkg() {
     travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
     docker build -t ghdl/pkg:$IMAGE_TAG . -f-<<EOF
 FROM scratch
-COPY `ls | grep -oP 'ghdl-.*tgz'` ./
+COPY `ls | grep '^ghdl.*\.tgz'` ./
 COPY BUILD_TOOLS ./
 EOF
     travis_finish "build_scratch"
