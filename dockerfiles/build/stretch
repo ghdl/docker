@@ -4,8 +4,13 @@ FROM debian:stretch-slim AS mcode
 
 RUN apt-get update -qq \
   && apt-get -y install --no-install-recommends \
-    gnat gcc make zlib1g-dev \
-  && apt-get autoclean && apt-get clean && apt-get -y autoremove
+    ca-certificates \
+    gnat \
+    gcc \
+    make \
+    zlib1g-dev \
+  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+  && update-ca-certificates
 
 #---
 
@@ -13,9 +18,32 @@ FROM mcode AS mcode-gpl
 
 #---
 
+FROM mcode AS llvm-4.0
+
+RUN apt-get update -qq \
+  && apt-get -y install --no-install-recommends \
+    clang-4.0 \
+    llvm-4.0-dev \
+  && apt-get autoclean && apt-get clean && apt-get -y autoremove
+
+#---
+
 FROM debian:stretch-slim AS gcc-5.5.0
 
 RUN apt-get update -qq \
   && apt-get -y install --no-install-recommends \
-    curl gnat gcc g++ make zlib1g-dev lbzip2 flex autogen dejagnu texinfo ca-certificates wget bzip2 \
+    ca-certificates \
+    bzip2 \
+    curl \
+    gnat \
+    gcc \
+    g++ \
+    make \
+    zlib1g-dev \
+    lbzip2 \
+    flex \
+    autogen \
+    dejagnu \
+    texinfo \
+    wget \
   && apt-get autoclean && apt-get clean && apt-get -y autoremove

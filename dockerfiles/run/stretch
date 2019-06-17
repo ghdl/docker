@@ -5,7 +5,10 @@ ARG IMAGE="debian:stretch-slim"
 FROM $IMAGE AS mcode
 
 RUN apt-get update -qq \
- && apt-get -y install libgnat-6 gcc libc6-dev \
+ && apt-get -y install \
+   gcc \
+   libgnat-6 \
+   libc6-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
 
 #---
@@ -14,7 +17,18 @@ FROM mcode AS mcode-gpl
 
 #---
 
+FROM mcode AS llvm-4.0
+
+RUN apt-get update -qq \
+  && apt-get -y install --no-install-recommends \
+    libllvm4.0 \
+    zlib1g-dev \
+  && apt-get autoclean && apt-get clean && apt-get -y autoremove
+
+#---
+
 FROM mcode AS gcc-5.5.0
 
-RUN apt-get install -y zlib1g-dev \
+RUN apt-get install -y \
+   zlib1g-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
