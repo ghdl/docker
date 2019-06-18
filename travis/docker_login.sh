@@ -3,16 +3,7 @@
 set -e
 
 getDockerCredentialPass () {
-  PASS_URL="$(curl -s https://api.github.com/repos/docker/docker-credential-helpers/releases/latest \
-    | grep "browser_download_url.*pass-.*-amd64" \
-    | cut -d : -f 2,3 \
-    | tr -d \" \
-    | cut -c2- )"
-
-  [ "$(echo "$PASS_URL" | cut -c1-5)" != "https" ] && PASS_URL="https://github.com/docker/docker-credential-helpers/releases/download/v0.6.0/docker-credential-pass-v0.6.0-amd64.tar.gz"
-
-  echo "PASS_URL: $PASS_URL"
-  curl -fsSL "$PASS_URL" | tar xzv
+  docker run --rm -u $(id -u) -v $(pwd):/src ghdl/build:pass cp /tmp/docker-credential-pass /src
   chmod + $(pwd)/docker-credential-pass
 }
 
