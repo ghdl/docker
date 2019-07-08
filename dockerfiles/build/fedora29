@@ -7,20 +7,21 @@ RUN dnf --nodocs -y install gcc-gnat zlib-devel make \
 
 #---
 
-FROM mcode AS llvm
+FROM mcode as common
 
 RUN dnf --nodocs -y install gcc-c++ \
  && dnf clean all --enablerepo=\*
+
+#---
+
+FROM common AS llvm
 
 RUN dnf --nodocs -y install llvm-devel clang \
  && dnf clean all --enablerepo=\*
 
 #---
 
-FROM mcode AS gcc-8.2.0
-
-RUN dnf --nodocs -y install gcc-c++ \
- && dnf clean all
+FROM common AS gcc-8.2.0
 
 RUN dnf --nodocs -y --allowerasing install gcc lbzip2 flex autogen texinfo dejagnu wget bzip2 \
  && dnf clean all

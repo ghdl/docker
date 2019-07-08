@@ -1,8 +1,6 @@
-ARG IMAGE="python:slim-stretch"
-
+ARG IMAGE="python:rc-slim-buster"
 
 #---
-
 
 FROM $IMAGE AS base
 
@@ -17,33 +15,26 @@ RUN apt-get update -qq \
  && update-ca-certificates \
  && pip3 install setuptools wheel
 
-
 #---
-
 
 FROM base AS build
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    clang-4.0 \
-    gnat \
-    llvm-4.0-dev \
- && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
- && apt update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    clang-7 \
+    gnat-7 \
+    llvm-7-dev \
     npm \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && npm install -g vsce
 
-
 #---
-
 
 FROM base AS run
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    libgnat-6 \
-    libllvm4.0 \
+    libgnat-7 \
+    libllvm7 \
     unzip \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove

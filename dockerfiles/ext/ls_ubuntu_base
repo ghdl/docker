@@ -1,8 +1,6 @@
 ARG IMAGE="ubuntu:bionic"
 
-
 #---
-
 
 FROM $IMAGE AS base
 
@@ -19,24 +17,20 @@ RUN apt-get update -qq \
  && update-ca-certificates \
  && pip3 install setuptools wheel
 
-
 #---
-
 
 FROM base AS build
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     clang-6.0 \
-    gnat \
+    gnat-7 \
     llvm-6.0-dev \
     npm \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && npm install -g vsce
 
-
 #---
-
 
 FROM base AS run
 

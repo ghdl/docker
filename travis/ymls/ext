@@ -14,10 +14,8 @@ stages:
 jobs:
   include:
     - &job
-      env:
-       - TASK="debian"
-       - IMAGE=""
-      script: ./travis/run.sh -l $TASK
+      env: IMAGE="debian"
+      script: ./travis/run.sh -l $IMAGE
       deploy:
         - provider: script
           skip_cleanup: true
@@ -26,9 +24,7 @@ jobs:
             repo: ghdl/docker
             branch: ext
     - <<: *job
-      env:
-       - TASK="ubuntu"
-       - IMAGE=""
+      env: IMAGE="ubuntu"
     - <<: *job
       stage: vunit
       env: IMAGE="ext"

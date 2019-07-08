@@ -1,6 +1,6 @@
-# [run] Debian 9
+# [run] Debian 11
 
-ARG IMAGE="debian:stretch-slim"
+ARG IMAGE="debian:sid-slim"
 
 FROM $IMAGE AS mcode
 
@@ -8,7 +8,7 @@ RUN apt-get update -qq \
  && apt-get -y install --no-install-recommends \
     gcc \
     libc6-dev \
-    libgnat-6 \
+    libgnat-8 \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
 
 #---
@@ -21,9 +21,11 @@ RUN apt-get install -y --no-install-recommends \
 
 #---
 
-FROM gcc AS llvm-4.0
+FROM gcc AS llvm-8
 
 RUN apt-get update -qq \
  && apt-get -y install --no-install-recommends \
-    libllvm4.0 \
+    libllvm8 \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
+
+

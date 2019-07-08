@@ -1,6 +1,6 @@
-# [build] Debian 9
+# [build] Debian 11
 
-ARG IMAGE="debian:stretch-slim"
+ARG IMAGE="debian:sid-slim"
 
 FROM $IMAGE AS mcode
 
@@ -16,12 +16,12 @@ RUN apt-get update -qq \
 
 #---
 
-FROM mcode AS llvm-4.0
+FROM mcode AS llvm-8
 
 RUN apt-get update -qq \
  && apt-get -y install --no-install-recommends \
-    clang-4.0 \
-    llvm-4.0-dev \
+    clang-8 \
+    llvm-8-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
 
 #---

@@ -8,24 +8,48 @@ cd $(dirname $0)/..
 
 #--
 
-create () {
-  files="stretch buster"
-  if [ "$DISTRO" != "debian" ]; then
-    cd ./dockerfiles/build
-    files="`ls ${DISTRO}*`"
-    cd -
-  fi
+create_build_run () {
+  case $DISTRO in
+    "debian")
+      files="stretch buster sid"
+    ;;
+    *)
+      cd ./dockerfiles/build
+      files="`ls ${DISTRO}*`"
+      cd -
+    ;;
+  esac
+
   for d in build run; do
       ddir="./dockerfiles/$d"
       for f in $files; do
           for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
               i="${f}-$tag"
-              travis_start "$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
+              travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
               docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/$f"
-              travis_finish "$i"
+              travis_finish "$d-$i"
           done
       done
   done
+}
+
+#--
+
+create () {
+  case $DISTRO in
+    ls-*)
+      distro="$(echo $DISTRO | cut -d - -f2)"
+      for img in build run; do
+          tag="ghdl/$img:ls-$distro"
+          travis_start "ghdl/$img.ls-$distro" "$ANSI_BLUE[DOCKER build] $img : ls-${distro}$ANSI_NOCOLOR"
+          docker build -t $tag . -f ./dockerfiles/ext/ls_${distro}_base --target=$img
+          travis_finish "ghdl/$img.ls-$distro"
+      done
+    ;;
+    *)
+      create_build_run
+    ;;
+  esac
 }
 
 #--
@@ -46,18 +70,12 @@ extended() {
 
 language_server() {
   distro="$1"
-  for img in build run; do
-      tag="ghdl/$img:ls-$distro"
-      travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-      docker build -t $tag . -f ./dockerfiles/ext/ls_${distro}_base --target=$img
-      travis_finish "$tag"
-  done
-  llvm_ver="4.0"
+  tag="ghdl/ext:ls-$distro"
+  llvm_ver="7"
   if [ "x$distro" = "xubuntu" ]; then
     llvm_ver="6.0"
   fi
-  tag="ghdl/ext:ls-$distro"
-  travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
+  travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ls-${distro}$ANSI_NOCOLOR"
   docker build -t $tag . -f ./dockerfiles/ext/ls_debian --build-arg DISTRO="$distro" --build-arg LLVM_VER="$llvm_ver"
   travis_finish "$tag"
 }
@@ -66,10 +84,14 @@ language_server() {
 
 deploy () {
   case $1 in
-    "")    FILTER="/";;
-    "ext") FILTER="/ext";;
-    "pkg") FILTER="/pkg:all";;
-    *)     FILTER="/ghdl /pkg";;
+    "")
+      FILTER="/build /run";;
+    "ext"|"debian"|"ubuntu")
+      FILTER="/ext";;
+    "pkg")
+      FILTER="/pkg:all";;
+    *)
+      FILTER="/ghdl /pkg";;
   esac
 
   . ./travis/docker_login.sh
@@ -77,7 +99,7 @@ deploy () {
   for key in $FILTER; do
     for tag in `echo $(docker images "ghdl$key*" | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
         if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi
-        i="`echo $tag | grep -oP 'ghdl/\K.*'`"
+        i="`echo $tag | grep -oP 'ghdl/\K.*' | sed 's#:#-#g'`"
         travis_start "$i" "$ANSI_YELLOW[DOCKER push] ${tag}$ANSI_NOCOLOR"
         docker push $tag
         travis_finish "$i"

@@ -3,7 +3,7 @@
 set -e
 
 getDockerCredentialPass () {
-  docker run --rm -u $(id -u) -v $(pwd):/src ghdl/build:pass cp /tmp/docker-credential-pass /src
+  docker run --rm -u $(id -u) -v $(pwd):/src ghdl/pass:pass cp /tmp/docker-credential-pass /src
   chmod + $(pwd)/docker-credential-pass
 }
 
