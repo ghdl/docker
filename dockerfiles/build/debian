@@ -1,14 +1,20 @@
-# [build] Debian 9
+# [build] Debian
 
 ARG IMAGE="debian:stretch-slim"
+ARG LLVM_VER="4.0"
+ARG GNAT_VER="6"
+
+#---
 
 FROM $IMAGE AS mcode
 
+ARG GNAT_VER
+
 RUN apt-get update -qq \
- && apt-get -y install --no-install-recommends \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     ca-certificates \
     gcc \
-    gnat \
+    gnat-$GNAT_VER \
     make \
     zlib1g-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
@@ -16,12 +22,14 @@ RUN apt-get update -qq \
 
 #---
 
-FROM mcode AS llvm-4.0
+FROM mcode AS llvm
+
+ARG LLVM_VER
 
 RUN apt-get update -qq \
- && apt-get -y install --no-install-recommends \
-    clang-4.0 \
-    llvm-4.0-dev \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    clang-$LLVM_VER \
+    llvm-$LLVM_VER-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
 
 #---
@@ -29,7 +37,7 @@ RUN apt-get update -qq \
 FROM mcode AS gcc
 
 RUN apt-get update -qq \
- && apt-get -y install --no-install-recommends \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     autogen \
     bzip2 \
     curl \

@@ -9,27 +9,54 @@ cd $(dirname $0)/..
 #--
 
 create_build_run () {
-  case $DISTRO in
-    "debian")
-      files="stretch buster sid"
-    ;;
-    *)
-      cd ./dockerfiles/build
-      files="`ls ${DISTRO}*`"
-      cd -
-    ;;
-  esac
-
   for d in build run; do
       ddir="./dockerfiles/$d"
-      for f in $files; do
-          for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
-              i="${f}-$tag"
-              travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
-              docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/$f"
-              travis_finish "$d-$i"
+
+      case $DISTRO in
+        "debian")
+          for f in stretch buster sid; do
+            case $f in
+              *stretch*)
+                LLVM_VER="4.0"
+                GNAT_VER="6"
+              ;;
+              *buster*)
+                LLVM_VER="7"
+                GNAT_VER="7"
+              ;;
+              *sid*)
+                LLVM_VER="8"
+                GNAT_VER="8"
+              ;;
+            esac
+            for tag in mcode llvm gcc; do
+                i="${f}-$tag"
+                if [ "x$tag" = "xllvm" ]; then i="$i-$LLVM_VER"; fi
+                travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
+                docker build -t "ghdl/${d}:$i" --target "$tag" \
+                  --build-arg IMAGE="debian:$f-slim" \
+                  --build-arg LLVM_VER="$LLVM_VER" \
+                  --build-arg GNAT_VER="$GNAT_VER" \
+                  - < "${ddir}/debian"
+                travis_finish "$d-$i"
+            done
           done
-      done
+        ;;
+
+        *)
+          cd ./dockerfiles/build
+          files="`ls ${DISTRO}*`"
+          cd -
+          for f in $files; do
+              for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
+                  i="${f}-$tag"
+                  travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
+                  docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/$f"
+                  travis_finish "$d-$i"
+              done
+          done
+        ;;
+      esac
   done
 }
 
