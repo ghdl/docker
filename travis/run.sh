@@ -17,16 +17,15 @@ create_image () {
         --build-arg IMAGE="$BASE_IMAGE" \
         --build-arg LLVM_VER="$LLVM_VER" \
         --build-arg GNAT_VER="$GNAT_VER" \
-        - < "${ddir}/debian"
+        - < "./dockerfiles/${d}_debian"
       travis_finish "$d-$i"
   done
 }
 
 create_distro_images () {
   for d in build run; do
-      ddir="./dockerfiles/$d"
-
       case $DISTRO in
+
         "debian")
           for f in stretch buster sid; do
             case $f in
@@ -71,10 +70,10 @@ create_distro_images () {
 
         "fedora")
           for f in 28 29 30; do
-              for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
+              for tag in `grep -oP "FROM.*AS \K.*" ./dockerfiles/${d}_fedora`; do
                   i="fedora${f}-$tag"
                   travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : fedora${f} - ${tag}$ANSI_NOCOLOR"
-                  docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/fedora"
+                  docker build -t "ghdl/${d}:$i" --target "$tag" --build-arg IMAGE="fedora:${f}" - < "./dockerfiles/${d}_fedora"
                   travis_finish "$d-$i"
               done
           done
