@@ -8,7 +8,21 @@ cd $(dirname $0)/..
 
 #--
 
-create_build_run () {
+create_image () {
+  for tag in mcode llvm gcc; do
+      i="${f}-$tag"
+      if [ "x$tag" = "xllvm" ]; then i="$i-$LLVM_VER"; fi
+      travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
+      docker build -t "ghdl/${d}:$i" --target "$tag" \
+        --build-arg IMAGE="$BASE_IMAGE" \
+        --build-arg LLVM_VER="$LLVM_VER" \
+        --build-arg GNAT_VER="$GNAT_VER" \
+        - < "${ddir}/debian"
+      travis_finish "$d-$i"
+  done
+}
+
+create_distro_images () {
   for d in build run; do
       ddir="./dockerfiles/$d"
 
@@ -29,17 +43,29 @@ create_build_run () {
                 GNAT_VER="8"
               ;;
             esac
-            for tag in mcode llvm gcc; do
-                i="${f}-$tag"
-                if [ "x$tag" = "xllvm" ]; then i="$i-$LLVM_VER"; fi
-                travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
-                docker build -t "ghdl/${d}:$i" --target "$tag" \
-                  --build-arg IMAGE="debian:$f-slim" \
-                  --build-arg LLVM_VER="$LLVM_VER" \
-                  --build-arg GNAT_VER="$GNAT_VER" \
-                  - < "${ddir}/debian"
-                travis_finish "$d-$i"
-            done
+            BASE_IMAGE="$DISTRO:$f-slim"
+            create_image
+          done
+        ;;
+
+        "ubuntu")
+          for f in trusty xenial bionic; do
+            case $f in
+              *trusty*) #14
+                LLVM_VER="3.8"
+                GNAT_VER="4.6"
+              ;;
+              *xenial*) #16
+                LLVM_VER="3.9"
+                GNAT_VER="4.9"
+              ;;
+              *bionic*) #18
+                LLVM_VER="5.0"
+                GNAT_VER="7"
+              ;;
+            esac
+            BASE_IMAGE="$DISTRO:$f"
+            create_image
           done
         ;;
 
@@ -73,8 +99,9 @@ create () {
           travis_finish "ghdl/$img.ls-$distro"
       done
     ;;
+
     *)
-      create_build_run
+      create_distro_images
     ;;
   esac
 }
@@ -84,11 +111,11 @@ create () {
 extended() {
   ddir="./dockerfiles/ext"
   for f in `ls $ddir`; do
-      for tag in `grep -oP "FROM.*AS do-\K.*" ${ddir}/$f`; do
-          travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-          docker build -t ghdl/ext:${tag} --target do-$tag . -f ${ddir}/$f
-          travis_finish "$tag"
-      done
+    for tag in `grep -oP "FROM.*AS do-\K.*" ${ddir}/$f`; do
+      travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
+      docker build -t ghdl/ext:${tag} --target do-$tag . -f ${ddir}/$f
+      travis_finish "$tag"
+    done
   done
   #docker build -t ghdl/ext:broadway --target do-broadway . -f ./dist/linux/docker/ext/vunit
 }
@@ -125,11 +152,11 @@ deploy () {
 
   for key in $FILTER; do
     for tag in `echo $(docker images "ghdl$key*" | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
-        if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi
-        i="`echo $tag | grep -oP 'ghdl/\K.*' | sed 's#:#-#g'`"
-        travis_start "$i" "$ANSI_YELLOW[DOCKER push] ${tag}$ANSI_NOCOLOR"
-        docker push $tag
-        travis_finish "$i"
+      if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi
+      i="`echo $tag | grep -oP 'ghdl/\K.*' | sed 's#:#-#g'`"
+      travis_start "$i" "$ANSI_YELLOW[DOCKER push] ${tag}$ANSI_NOCOLOR"
+      docker push $tag
+      travis_finish "$i"
     done
   done
 
@@ -139,14 +166,14 @@ deploy () {
 #--
 
 build_img_pkg() {
-    IMAGE_TAG=`echo $IMAGE | sed -e 's/+/-/g'`
-    travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
-    docker build -t ghdl/pkg:$IMAGE_TAG . -f-<<EOF
+  IMAGE_TAG=`echo $IMAGE | sed -e 's/+/-/g'`
+  travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
+  docker build -t ghdl/pkg:$IMAGE_TAG . -f-<<EOF
 FROM scratch
 COPY `ls | grep '^ghdl.*\.tgz'` ./
 COPY BUILD_TOOLS ./
 EOF
-    travis_finish "build_scratch"
+  travis_finish "build_scratch"
 }
 
 build () {

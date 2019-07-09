@@ -1,0 +1,31 @@
+# [build] Ubuntu
+
+ARG IMAGE="ubuntu:xenial"
+ARG LLVM_VER="4.0"
+ARG GNAT_VER="4.9"
+
+#---
+
+FROM $IMAGE AS mcode
+
+ARG GNAT_VER
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    gcc \
+    gnat-$GNAT_VER \
+    make \
+    zlib1g-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove
+
+#---
+
+FROM mcode AS llvm
+
+ARG LLVM_VER
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    clang-$LLVM_VER \
+    llvm-$LLVM_VER-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove
