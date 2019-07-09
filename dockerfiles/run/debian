@@ -1,4 +1,4 @@
-# [run] Debian
+# [run] Debian or Ubuntu
 
 ARG IMAGE="debian:stretch-slim"
 ARG LLVM_VER="4.0"
