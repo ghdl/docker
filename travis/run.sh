@@ -69,15 +69,12 @@ create_distro_images () {
           done
         ;;
 
-        *)
-          cd ./dockerfiles/build
-          files="`ls ${DISTRO}*`"
-          cd -
-          for f in $files; do
+        "fedora")
+          for f in 28 29 30; do
               for tag in `grep -oP "FROM.*AS \K.*" ${ddir}/$f`; do
-                  i="${f}-$tag"
-                  travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
-                  docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/$f"
+                  i="fedora${f}-$tag"
+                  travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : fedora${f} - ${tag}$ANSI_NOCOLOR"
+                  docker build -t "ghdl/${d}:$i" --target "$tag" - < "${ddir}/fedora"
                   travis_finish "$d-$i"
               done
           done
