@@ -87,12 +87,30 @@ create_distro_images () {
 create () {
   case $DISTRO in
     ls-*)
-      distro="$(echo $DISTRO | cut -d - -f2)"
+      dist="$(echo $DISTRO | cut -d - -f2)"
+      case "$dist" in
+        debian)
+          BASE_IMAGE="python:rc-slim-buster"
+          LLVM_VER="7"
+          GNAT_VER="7"
+          APT_PY=""
+        ;;
+        ubuntu)
+          BASE_IMAGE="ubuntu:bionic"
+          LLVM_VER="6.0"
+          GNAT_VER="7"
+          APT_PY="python3 python3-pip"
+        ;;
+      esac
       for img in build run; do
-          tag="ghdl/$img:ls-$distro"
-          travis_start "ghdl/$img.ls-$distro" "$ANSI_BLUE[DOCKER build] $img : ls-${distro}$ANSI_NOCOLOR"
-          docker build -t $tag . -f ./dockerfiles/ext/ls_${distro}_base --target=$img
-          travis_finish "ghdl/$img.ls-$distro"
+          tag="ghdl/$img:ls-$dist"
+          travis_start "ghdl/$img.ls-$dist" "$ANSI_BLUE[DOCKER build] $img : ls-${dist}$ANSI_NOCOLOR"
+          docker build -t $tag . -f ./dockerfiles/ls_debian_base --target=$img \
+            --build-arg IMAGE="$BASE_IMAGE" \
+            --build-arg LLVM_VER="$LLVM_VER" \
+            --build-arg GNAT_VER="$GNAT_VER" \
+            --build-arg APT_PY="$APT_PY"
+          travis_finish "ghdl/$img.ls-$dist"
       done
     ;;
 
@@ -105,15 +123,13 @@ create () {
 #--
 
 extended() {
-  ddir="./dockerfiles/ext"
-  for f in `ls $ddir`; do
-    for tag in `grep -oP "FROM.*AS do-\K.*" ${ddir}/$f`; do
+  for f in vunit; do
+    for tag in `grep -oP "FROM.*AS do-\K.*" ./dockerfiles/$f`; do
       travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-      docker build -t ghdl/ext:${tag} --target do-$tag . -f ${ddir}/$f
+      docker build -t ghdl/ext:${tag} --target do-$tag . -f ./dockerfiles/$f
       travis_finish "$tag"
     done
   done
-  #docker build -t ghdl/ext:broadway --target do-broadway . -f ./dist/linux/docker/ext/vunit
 }
 
 #--
@@ -126,7 +142,7 @@ language_server() {
     llvm_ver="6.0"
   fi
   travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ls-${distro}$ANSI_NOCOLOR"
-  docker build -t $tag . -f ./dockerfiles/ext/ls_debian --build-arg DISTRO="$distro" --build-arg LLVM_VER="$llvm_ver"
+  docker build -t $tag . -f ./dockerfiles/ls_debian --build-arg DISTRO="$distro" --build-arg LLVM_VER="$llvm_ver"
   travis_finish "$tag"
 }
 

@@ -1,8 +1,13 @@
-ARG IMAGE="ubuntu:bionic"
+ARG IMAGE="python:rc-slim-buster"
+ARG LLVM_VER="7"
+ARG GNAT_VER="7"
+ARG APT_PY=""
 
 #---
 
 FROM $IMAGE AS base
+
+ARG APT_PY
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
@@ -10,9 +15,7 @@ RUN apt-get update -qq \
     curl \
     gcc \
     make \
-    python3 \
-    python3-pip \
-    zlib1g-dev \
+    zlib1g-dev $APT_PY \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && update-ca-certificates \
  && pip3 install setuptools wheel
@@ -21,11 +24,14 @@ RUN apt-get update -qq \
 
 FROM base AS build
 
+ARG LLVM_VER
+ARG GNAT_VER
+
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    clang-6.0 \
-    gnat-7 \
-    llvm-6.0-dev \
+    clang-$LLVM_VER \
+    gnat-$GNAT_VER \
+    llvm-$LLVM_VER-dev \
     npm \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && npm install -g vsce
@@ -34,9 +40,12 @@ RUN apt-get update -qq \
 
 FROM base AS run
 
+ARG LLVM_VER
+ARG GNAT_VER
+
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    libgnat-7 \
-    libllvm6.0 \
+    libgnat-$GNAT_VER \
+    libllvm$LLVM_VER \
     unzip \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
