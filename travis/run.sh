@@ -179,6 +179,9 @@ deploy () {
 
 build_img_pkg() {
   IMAGE_TAG=`echo $IMAGE | sed -e 's/+/-/g'`
+  if [ "x$EXTRA" != "x" ]; then
+    IMAGE_TAG="$IMAGE_TAG-$EXTRA"
+  fi
   travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
   docker build -t ghdl/pkg:$IMAGE_TAG . -f-<<EOF
 FROM scratch

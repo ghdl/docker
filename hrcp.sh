@@ -65,13 +65,16 @@ for BRANCH in $@; do
         fi
       ;;
       "mcodegpl")
-        a="$k+mcode+gpl"
+        a="$k+mcode"
       ;;
       *)
         "Unknown branch type $k"
       ;;
     esac
     echo "      - IMAGE=$a" >> .travis.yml
+    if [ "x$BRANCH" = "xmcodegpl" ]; then
+      echo "        EXTRA=gpl" >> .travis.yml
+    fi
   done
 
   git commit -am "$BRANCH"
