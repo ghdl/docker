@@ -35,7 +35,7 @@ create_distro_images () {
               ;;
               *buster*)
                 LLVM_VER="7"
-                GNAT_VER="7"
+                GNAT_VER="8"
               ;;
               *sid*)
                 LLVM_VER="8"
