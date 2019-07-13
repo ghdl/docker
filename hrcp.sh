@@ -12,7 +12,7 @@ if [ $# -le 0 ]; then
 fi
 
 mcodegpl="sid"
-mcode="sid ubuntu16 ubuntu18 fedora28 fedora29"
+mcode="buster sid ubuntu16 ubuntu18 fedora28 fedora29"
 llvm="buster-7 sid-8 ubuntu16-3.9 ubuntu18-5.0 fedora28 fedora29"
 gcc="stretch-5.5.0 buster-7.4.0 sid-9.1.0 fedora28-8.1.0 fedora29-8.2.0"
 
