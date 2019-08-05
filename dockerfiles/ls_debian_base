@@ -1,4 +1,4 @@
-ARG IMAGE="python:rc-slim-buster"
+ARG IMAGE="python:3-slim-buster"
 ARG LLVM_VER="7"
 ARG GNAT_VER="7"
 ARG APT_PY=""

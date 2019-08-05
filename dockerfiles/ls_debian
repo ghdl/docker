@@ -7,9 +7,8 @@ FROM "ghdl/build:ls-$DISTRO" AS build
 
 ARG LLVM_VER
 
-RUN mkdir /tmp/ghdl-dist
-
-RUN mkdir -p /tmp/ghdl && cd /tmp/ghdl \
+RUN mkdir /tmp/ghdl-dist \
+ && mkdir -p /tmp/ghdl && cd /tmp/ghdl \
  && curl -fsSL https://codeload.github.com/ghdl/ghdl/tar.gz/master | tar xzf - --strip-components=1 \
  && CONFIG_OPTS="--default-pic" ./dist/travis/build.sh -b llvm-$LLVM_VER -p ghdl-llvm-fPIC \
  && mv ghdl-llvm-fPIC.tgz /tmp/ghdl-dist/ \
@@ -21,7 +20,6 @@ RUN mkdir -p /tmp/vscode-repo && cd /tmp/vscode-repo \
  && npm install \
  && vsce package \
  && mv $(ls vhdl-lsp-*.vsix) /tmp/ghdl-dist/
-
 
 #---
 

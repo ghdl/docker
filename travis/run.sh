@@ -90,7 +90,7 @@ create () {
       dist="$(echo $DISTRO | cut -d - -f2)"
       case "$dist" in
         debian)
-          BASE_IMAGE="python:rc-slim-buster"
+          BASE_IMAGE="python:3-slim-buster"
           LLVM_VER="7"
           GNAT_VER="7"
           APT_PY=""
