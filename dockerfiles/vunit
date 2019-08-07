@@ -55,9 +55,8 @@ RUN apt-get update -qq \
    subversion \
    tcl-dev \
    tk-dev \
- && REPO=svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 \
  && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
- && svn checkout $REPO ./ \
+ && svn checkout svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 ./ \
  && ./configure --prefix="/usr/local" --with-tk=/usr/lib --enable-gtk3 \
  && make -j$(nproc) DESTDIR="$(pwd)/build-dir" \
  && make check \
