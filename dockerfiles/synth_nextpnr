@@ -1,0 +1,88 @@
+FROM debian:buster-slim AS base
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    ca-certificates \
+    curl \
+    python3 \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && update-ca-certificates \
+ && rm -rf /var/lib/apt/lists
+
+#---
+
+FROM base AS icestorm-build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    g++ \
+    libffi-dev \
+    libftdi1-dev \
+    make \
+    pkg-config \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
+
+ENV PREFIX /opt/icestorm
+
+RUN mkdir /usr/local/src/icestorm \
+ && cd /usr/local/src/icestorm \
+ && curl -fsSL https://codeload.github.com/cliffordwolf/icestorm/tar.gz/master | tar xzf - --strip-components=1 \
+ && make -j $(nproc) \
+ && make install
+
+#---
+
+FROM base AS icestorm
+
+COPY --from=icestorm-build /opt/icestorm /opt/icestorm
+ENV PATH /opt/icestorm/bin:$PATH
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libftdi1-2 \
+    usbutils \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
+
+#---
+
+FROM base AS nextpnr-base
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libboost-all-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
+
+#---
+
+FROM nextpnr-base AS nextpnr-build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    cmake \
+    g++ \
+    libeigen3-dev \
+    make \
+    python3-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
+
+COPY --from=icestorm-build /opt/icestorm/share/icebox /opt/icebox
+
+RUN  mkdir -p /opt/nextpnr \
+ && mkdir -p /usr/local/src/nextpnr/build \
+ && cd /usr/local/src/nextpnr \
+ && curl -fsSL https://codeload.github.com/YosysHQ/nextpnr/tar.gz/master | tar xzf - --strip-components=1 \
+ && cd build \
+ && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/nextpnr -DARCH=ice40 -DICEBOX_ROOT=/opt/icebox -DBUILD_GUI=OFF -DBUILD_PYTHON=ON -DUSE_OPENMP=ON \
+ && make -j $(nproc) \
+ && make install
+
+#---
+
+FROM nextpnr-base AS nextpnr
+
+COPY --from=nextpnr-build /opt/nextpnr /opt/nextpnr
+ENV PATH /opt/nextpnr/bin:$PATH

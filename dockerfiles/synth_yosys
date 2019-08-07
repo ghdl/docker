@@ -1,0 +1,59 @@
+FROM debian:buster-slim AS base
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    ca-certificates \
+    clang \
+    curl \
+    libffi-dev \
+    libreadline-dev \
+    tcl-dev \
+    graphviz \
+    xdot \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && update-ca-certificates \
+ && rm -rf /var/lib/apt/lists
+
+#---
+
+FROM base AS build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    bison \
+    flex \
+    gawk \
+    gcc \
+    git \
+    iverilog \
+    pkg-config \
+    zlib1g-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
+
+ENV PREFIX /opt/yosys
+
+RUN mkdir /usr/local/src/yosys \
+ && cd /usr/local/src/yosys \
+ && curl -fsSL https://codeload.github.com/cliffordwolf/yosys/tar.gz/master | tar xzf - --strip-components=1 \
+ && make -j $(nproc) \
+ && make install \
+ && make test
+
+#---
+
+FROM base AS yosys
+
+COPY --from=build /opt/yosys /opt/yosys
+ENV PATH /opt/yosys/bin:$PATH
+CMD ["yosys"]
+
+#---
+
+FROM yosys AS yosys-gnat
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libgnat-8 \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists

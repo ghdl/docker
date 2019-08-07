@@ -123,13 +123,50 @@ create () {
 #--
 
 extended() {
-  for f in vunit; do
-    for tag in `grep -oP "FROM.*AS do-\K.*" ./dockerfiles/$f`; do
+  case $IMAGE in
+  synth)
+    travis_start "yosys" "$ANSI_BLUE[DOCKER build] synth : yosys$ANSI_NOCOLOR"
+    docker build -t ghdl/synth:yosys --target yosys . -f ./dockerfiles/synth_yosys
+    travis_finish "yosys"
+    travis_start "yosys-gnat" "$ANSI_BLUE[DOCKER build] synth : yosys-gnat$ANSI_NOCOLOR"
+    docker build -t ghdl/synth:yosys-gnat --target yosys-gnat . -f ./dockerfiles/synth_yosys
+    travis_finish "yosys-gnat"
+
+    travis_start "synth" "$ANSI_BLUE[DOCKER build] synth : beta$ANSI_NOCOLOR"
+    mkdir -p ghdlsynth
+    cd ghdlsynth
+    curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
+    ./travis.sh
+    cd ..
+    travis_start "synth" "$ANSI_BLUE[DOCKER build] synth : beta$ANSI_NOCOLOR"
+  ;;
+  formal)
+    travis_start "symbiyosys" "$ANSI_BLUE[DOCKER build] synth : symbiyosys$ANSI_NOCOLOR"
+    docker build -t ghdl/synth:symbiyosys --target symbiyosys . -f ./dockerfiles/synth_formal
+    travis_finish "symbiyosys"
+    travis_start "formal" "$ANSI_BLUE[DOCKER build] synth : formal$ANSI_NOCOLOR"
+    docker build -t ghdl/synth:formal --target formal . -f ./dockerfiles/synth_formal
+    travis_finish "formal"
+
+    docker rmi ghdl/synth:beta ghdl/synth:yosys
+  ;;
+  pnr)
+    travis_start "icestorm" "$ANSI_BLUE[DOCKER build] synth : icestorm$ANSI_NOCOLOR"
+    docker build -t ghdl/synth:icestorm --target icestorm . -f ./dockerfiles/synth_nextpnr
+    travis_finish "icestorm"
+    travis_start "nextpnr" "$ANSI_BLUE[DOCKER build] synth : nextpnr$ANSI_NOCOLOR"
+    docker build -t ghdl/synth:nextpnr --target nextpnr . -f ./dockerfiles/synth_nextpnr
+    travis_finish "nextpnr"
+  ;;
+  *)
+    for tag in `grep -oP "FROM.*AS do-\K.*" ./dockerfiles/vunit`; do
       travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-      docker build -t ghdl/ext:${tag} --target do-$tag . -f ./dockerfiles/$f
+      docker build -t ghdl/ext:${tag} --target do-$tag . -f ./dockerfiles/vunit
       travis_finish "$tag"
     done
-  done
+    docker rmi ghdl/ext:ls-debian
+  ;;
+  esac
 }
 
 #--
@@ -154,6 +191,8 @@ deploy () {
       FILTER="/build /run";;
     "ext"|"debian"|"ubuntu")
       FILTER="/ext";;
+    "synth"|"formal"|"pnr")
+      FILTER="/synth";;
     "pkg")
       FILTER="/pkg:all";;
     *)

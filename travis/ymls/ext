@@ -9,12 +9,12 @@ addons:
 
 stages:
   - test
-  - vunit
+  - ext
 
 jobs:
   include:
     - &job
-      env: IMAGE="debian"
+      env: IMAGE=debian
       script: ./travis/run.sh -l $IMAGE
       deploy:
         - provider: script
@@ -24,8 +24,18 @@ jobs:
             repo: ghdl/docker
             branch: ext
     - <<: *job
-      env: IMAGE="ubuntu"
+      env: IMAGE=ubuntu
     - <<: *job
-      stage: vunit
-      env: IMAGE="ext"
+      env: IMAGE=synth
+      script: ./travis/run.sh -e
+    - <<: *job
+      env: IMAGE=pnr
+      script: ./travis/run.sh -e
+    - <<: *job
+      stage: ext
+      env: IMAGE=ext
+      script: ./travis/run.sh -e
+    - <<: *job
+      stage: ext
+      env: IMAGE=formal
       script: ./travis/run.sh -e

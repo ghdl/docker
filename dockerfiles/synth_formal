@@ -1,0 +1,50 @@
+FROM debian:buster-slim AS build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    binutils \
+    ca-certificates \
+    curl \
+    g++ \
+    make \
+    python3 \
+    python3-distutils \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && update-ca-certificates \
+ && rm -rf /var/lib/apt/lists
+
+RUN mkdir /z3 && cd z3 \
+ && curl -fsSL https://codeload.github.com/Z3Prover/z3/tar.gz/master | tar xzf - --strip-components=1 \
+ && python3 scripts/mk_make.py --prefix=/opt/z3 \
+ && cd build \
+ && make \
+ && make install \
+ && mkdir /symbiyosys && cd /symbiyosys \
+ && curl -fsSL https://codeload.github.com/YosysHQ/SymbiYosys/tar.gz/master | tar xzf - --strip-components=1 \
+ && make PREFIX=/opt/symbiyosys install
+
+#---
+
+FROM ghdl/synth:yosys AS symbiyosys
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    python3 \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
+
+COPY --from=build /opt/z3 /opt/z3
+COPY --from=build /opt/symbiyosys /usr/local
+
+#---
+
+FROM ghdl/synth:beta AS formal
+
+COPY --from=build /opt/z3 /opt/z3
+COPY --from=build /opt/symbiyosys /usr/local
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    python3 \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists
