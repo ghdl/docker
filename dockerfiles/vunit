@@ -87,17 +87,23 @@ RUN printf "\nsource /etc/broadway.sh\n" >> /etc/bash.bashrc
 
 #---
 
+FROM ghdl/ext:ls-debian AS do-ls-vunit
+
+COPY --from=get-vunit-master /tmp/vunit /tmp/vunit
+
+RUN cd /tmp/vunit \
+ && python3 setup.py install \
+ && cd .. && rm -rf /tmp/vunit
+
+#---
+
 FROM ghdl/ext:ls-debian AS do-ls-vunit-gtkwave
 
 COPY --from=build-gtkwave ./tmp/*.tgz /tmp/
-COPY --from=get-vunit-master /tmp/vunit /tmp/vunit
 
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
  && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
  && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
- && rm -f "$GTKWAVE_TGZ" \
- && cd /tmp/vunit \
- && python3 setup.py install \
- && cd .. && rm -rf /tmp/vunit
+ && rm -f "$GTKWAVE_TGZ"
