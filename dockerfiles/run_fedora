@@ -33,4 +33,5 @@ FROM common AS gcc
 
 RUN dnf --nodocs -y install \
     libstdc++ \
+    lcov \
  && dnf clean all --enablerepo=\*
