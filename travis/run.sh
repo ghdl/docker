@@ -123,7 +123,35 @@ create () {
 #--
 
 extended() {
-  case $IMAGE in
+  case $1 in
+  vunit)
+    for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
+      tag="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
+      for version in stable master; do
+        if [ "x$version" = "xmaster" ]; then
+          tag="$tag-master"
+        fi
+        travis_start "$tag" "$ANSI_BLUE[DOCKER build] vunit : ${tag}$ANSI_NOCOLOR"
+        docker build -t "ghdl/vunit:$tag" --target "$version" --build-arg TAG="$fulltag" - < ./dockerfiles/vunit
+        travis_finish "$tag"
+      done
+    done
+  ;;
+  *)
+    for tag in `grep -oP "FROM.*AS do-\K.*" ./dockerfiles/gui`; do
+      travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
+      docker build -t "ghdl/ext:$tag" --target "do-$tag" . -f ./dockerfiles/gui
+      travis_finish "$tag"
+    done
+    docker rmi ghdl/ext:ls-debian
+  ;;
+  esac
+}
+
+#--
+
+synth() {
+  case $1 in
   synth)
     travis_start "yosys" "$ANSI_BLUE[DOCKER build] synth : yosys$ANSI_NOCOLOR"
     docker build -t ghdl/synth:yosys --target yosys . -f ./dockerfiles/synth_yosys
@@ -159,12 +187,8 @@ extended() {
     travis_finish "nextpnr"
   ;;
   *)
-    for tag in `grep -oP "FROM.*AS do-\K.*" ./dockerfiles/vunit`; do
-      travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-      docker build -t ghdl/ext:${tag} --target do-$tag . -f ./dockerfiles/vunit
-      travis_finish "$tag"
-    done
-    docker rmi ghdl/ext:ls-debian
+    echo "${ANSI_RED}synth: unknown task $1!$ANSI_NOCOLOR"
+    exit 1
   ;;
   esac
 }
@@ -193,6 +217,8 @@ deploy () {
       FILTER="/ext";;
     "synth"|"formal"|"pnr")
       FILTER="/synth";;
+    "vunit")
+      FILTER="/vunit";;
     "pkg")
       FILTER="/pkg:all";;
     *)
@@ -247,8 +273,18 @@ build () {
 case "$1" in
   -b) build    ;;
   -c) create   ;;
-  -e) extended ;;
-  -l) language_server "$2";;
+  -e)
+    shift
+    extended "$@"
+  ;;
+  -s)
+    shift
+    synth "$@"
+  ;;
+  -l)
+    shift
+    language_server "$@"
+  ;;
   *)
     deploy $@
 esac

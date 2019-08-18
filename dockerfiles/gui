@@ -1,0 +1,64 @@
+FROM debian:buster-slim AS build
+RUN apt-get update -qq \
+ && apt-get -y install \
+   build-essential \
+   clang \
+   flex \
+   gawk \
+   gperf \
+   libbz2-dev \
+   libreadline-dev \
+   libffi-dev \
+   libgtk-3-dev \
+   liblzma-dev \
+   pkg-config \
+   subversion \
+   tcl-dev \
+   tk-dev \
+ && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
+ && svn checkout svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 ./ \
+ && ./configure --prefix="/usr/local" --with-tk=/usr/lib --enable-gtk3 \
+ && make -j$(nproc) DESTDIR="$(pwd)/build-dir" \
+ && make check \
+ && make install DESTDIR="$(pwd)/build-dir" \
+ && tar -zcvf /tmp/gtkwave.tgz -C build-dir/usr/local/ . \
+ && cd .. && rm -rf gtkwave
+
+#---
+
+FROM ghdl/vunit:llvm-master AS do-gtkwave
+COPY --from=build ./tmp/*.tgz /tmp/
+RUN apt-get update -qq \
+ && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
+ && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
+ && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
+ && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
+ && rm -f "$GTKWAVE_TGZ"
+
+#---
+
+FROM do-gtkwave AS do-broadway
+COPY broadway.sh /etc/broadway.sh
+RUN printf "\nsource /etc/broadway.sh\n" >> /etc/bash.bashrc
+
+#---
+
+FROM alpine as get-master
+RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
+
+FROM ghdl/ext:ls-debian AS do-ls-vunit
+COPY --from=get-master /tmp/vunit /tmp/vunit
+RUN cd /tmp/vunit \
+ && python3 setup.py install \
+ && cd .. && rm -rf /tmp/vunit
+
+#---
+
+FROM do-ls-vunit AS do-latest
+COPY --from=build ./tmp/*.tgz /tmp/
+RUN apt-get update -qq \
+ && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
+ && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
+ && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
+ && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
+ && rm -f "$GTKWAVE_TGZ"

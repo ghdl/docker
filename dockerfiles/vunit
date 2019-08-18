@@ -1,109 +1,19 @@
-FROM ghdl/pkg:buster-mcode AS buster-mcode
+ARG TAG="buster-mcode"
 
-#---
-
-FROM debian:buster-slim AS python-slim
-
-COPY --from=buster-mcode ./*.tgz /tmp/
-
+FROM ghdl/ghdl:$TAG AS base
 RUN apt-get update -qq \
- && apt-get -y install libgnat-8 gcc libc6-dev curl python3 python3-pip \
- && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
- && GHDL_TGZ=`ls /tmp/ghdl-*` \
- && tar -xzf "$GHDL_TGZ" -C /usr/local \
- && rm -f "$GHDL_TGZ"
+ && apt-get -y install ca-certificates curl python3 python3-pip \
+ && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y
 
-#---
-
-FROM python-slim AS do-vunit
-
+FROM base as stable
 RUN pip3 install vunit_hdl
 
-#---
+FROM alpine as get-master
+RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
 
-FROM alpine as get-vunit-master
-
-RUN apk update && apk add git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
-
-#---
-
-FROM python-slim AS do-vunit-master
-
-COPY --from=get-vunit-master /tmp/vunit /tmp/vunit
-
+FROM base AS master
+COPY --from=get-master /tmp/vunit /tmp/vunit
 RUN cd /tmp/vunit \
  && python3 setup.py install \
- && cd .. && rm -rf /tmp/vunit
-
-#---
-
-FROM ghdl/build:buster-mcode AS build-gtkwave
-
-RUN apt-get update -qq \
- && apt-get -y install \
-   build-essential \
-   clang \
-   flex \
-   gawk \
-   gperf \
-   libbz2-dev \
-   libreadline-dev \
-   libffi-dev \
-   libgtk-3-dev \
-   liblzma-dev \
-   pkg-config \
-   subversion \
-   tcl-dev \
-   tk-dev \
- && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
- && svn checkout svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 ./ \
- && ./configure --prefix="/usr/local" --with-tk=/usr/lib --enable-gtk3 \
- && make -j$(nproc) DESTDIR="$(pwd)/build-dir" \
- && make check \
- && make install DESTDIR="$(pwd)/build-dir" \
- && tar -zcvf /tmp/gtkwave.tgz -C build-dir/usr/local/ . \
- && cd .. && rm -rf gtkwave
-
-#---
-
-FROM do-vunit AS do-vunit-gtkwave
-
-COPY --from="build-gtkwave" ./tmp/*.tgz /tmp/
-
-RUN apt-get update -qq \
- && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
- && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
- && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
- && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
- && rm -f "$GTKWAVE_TGZ"
-
-#---
-
-FROM do-vunit-gtkwave AS do-broadway
-
-COPY broadway.sh /etc/broadway.sh
-
-RUN printf "\nsource /etc/broadway.sh\n" >> /etc/bash.bashrc
-
-#---
-
-FROM ghdl/ext:ls-debian AS do-ls-vunit
-
-COPY --from=get-vunit-master /tmp/vunit /tmp/vunit
-
-RUN cd /tmp/vunit \
- && python3 setup.py install \
- && cd .. && rm -rf /tmp/vunit
-
-#---
-
-FROM ghdl/ext:ls-debian AS do-ls-vunit-gtkwave
-
-COPY --from=build-gtkwave ./tmp/*.tgz /tmp/
-
-RUN apt-get update -qq \
- && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
- && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
- && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
- && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
- && rm -f "$GTKWAVE_TGZ"
+ && cd .. \
+ && rm -rf vunit

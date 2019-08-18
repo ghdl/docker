@@ -10,8 +10,8 @@ addons:
 jobs:
   include:
     - &job
-      env: TASK=debian
-      script: ./travis/run.sh -l "$TASK"
+      env: TASK=synth
+      script: ./travis/run.sh -s "$TASK"
       deploy:
         - provider: script
           skip_cleanup: true
@@ -20,11 +20,7 @@ jobs:
             repo: ghdl/docker
             branch: ext
     - <<: *job
-      env: TASK=ubuntu
-    - &ext
-      <<: *job
-      env: TASK=vunit
-      script: ./travis/run.sh -e "$TASK"
-    - <<: *ext
-      stage: ext
-      env: TASK=gui
+      env: TASK=pnr
+    - <<: *job
+      stage: formal
+      env: TASK=formal
