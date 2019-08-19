@@ -48,22 +48,23 @@ create_distro_images () {
         ;;
 
         "ubuntu")
-          for f in trusty xenial bionic; do
+          for f in 14 16 18; do
             case $f in
-              *trusty*) #14
+              14) #trusty
                 LLVM_VER="3.8"
                 GNAT_VER="4.6"
               ;;
-              *xenial*) #16
+              16) #xenial
                 LLVM_VER="3.9"
                 GNAT_VER="4.9"
               ;;
-              *bionic*) #18
+              18) #bionic
                 LLVM_VER="5.0"
                 GNAT_VER="7"
               ;;
             esac
-            BASE_IMAGE="$DISTRO:$f"
+            BASE_IMAGE="$DISTRO:$f.04"
+            f="ubuntu$f"
             create_image
           done
         ;;
