@@ -2,84 +2,61 @@
 
 set -e
 
-cd $(dirname $0)/..
+cd $(dirname $0)/../dockerfiles
 
-. ./travis/utils.sh
+. ../travis/utils.sh
+
+export DOCKER_BUILDKIT=1
 
 #--
 
-create_image () {
-  for tag in mcode llvm gcc; do
-      i="${f}-$tag"
-      if [ "x$tag" = "xllvm" ]; then i="$i-$LLVM_VER"; fi
-      travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : ${f} - ${tag}$ANSI_NOCOLOR"
-      docker build -t "ghdl/${d}:$i" --target "$tag" \
-        --build-arg IMAGE="$BASE_IMAGE" \
-        --build-arg LLVM_VER="$LLVM_VER" \
-        --build-arg GNAT_VER="$GNAT_VER" \
-        - < "./dockerfiles/${d}_debian"
-      travis_finish "$d-$i"
-  done
+case "$TRAVIS_COMMIT_MESSAGE" in
+  *'[skip]'*)
+    SKIP_BUILD=true
+  ;;
+esac
+echo "SKIP_BUILD: $SKIP_BUILD"
+
+#--
+
+build_img () {
+  travis_start "$TAG" "[DOCKER build] $DREPO : ${DTAG}"
+  DCTX="-"
+  case "$1" in
+    "--ctx"*)
+    DCTX="-f- $(echo $1 | sed 's/--ctx=//g')"
+    shift
+    ;;
+  esac
+  printf "· ${ANSI_CYAN}File: ${ANSI_NOCOLOR}"
+  echo "$DFILE"
+  printf "· ${ANSI_CYAN}Ctx:  ${ANSI_NOCOLOR}"
+  echo "$DCTX"
+  printf "· ${ANSI_CYAN}Args: ${ANSI_NOCOLOR}"
+  echo "$@"
+  if [ "x$SKIP_BUILD" = "xtrue" ]; then
+    printf "${ANSI_YELLOW}SKIP_BUILD...$ANSI_NOCOLOR\n"
+  else
+    docker build -t "ghdl/${DREPO}:$DTAG" "$@" $DCTX < $DFILE
+  fi
+  travis_finish "$TAG"
 }
 
+#--
+
 create_distro_images () {
-  for d in build run; do
-      case $DISTRO in
-
-        "debian")
-          for f in stretch buster sid; do
-            case $f in
-              *stretch*)
-                LLVM_VER="4.0"
-                GNAT_VER="6"
-              ;;
-              *buster*)
-                LLVM_VER="7"
-                GNAT_VER="8"
-              ;;
-              *sid*)
-                LLVM_VER="8"
-                GNAT_VER="8"
-              ;;
-            esac
-            BASE_IMAGE="$DISTRO:$f-slim"
-            create_image
-          done
-        ;;
-
-        "ubuntu")
-          for f in 14 16 18; do
-            case $f in
-              14) #trusty
-                LLVM_VER="3.8"
-                GNAT_VER="4.6"
-              ;;
-              16) #xenial
-                LLVM_VER="3.9"
-                GNAT_VER="4.9"
-              ;;
-              18) #bionic
-                LLVM_VER="5.0"
-                GNAT_VER="7"
-              ;;
-            esac
-            BASE_IMAGE="$DISTRO:$f.04"
-            f="ubuntu$f"
-            create_image
-          done
-        ;;
-
-        "fedora")
-          for f in 28 29 30; do
-              for tag in `grep -oP "FROM.*AS \K.*" ./dockerfiles/${d}_fedora`; do
-                  i="fedora${f}-$tag"
-                  travis_start "$d-$i" "${ANSI_BLUE}[DOCKER build] ${d} : fedora${f} - ${tag}$ANSI_NOCOLOR"
-                  docker build -t "ghdl/${d}:$i" --target "$tag" --build-arg IMAGE="fedora:${f}" - < "./dockerfiles/${d}_fedora"
-                  travis_finish "$d-$i"
-              done
-          done
-        ;;
-      esac
+  for tag in mcode llvm gcc; do
+    i="${ver}-$tag"
+    if [ "x$tag" = "xllvm" ]; then i="$i-$LLVM_VER"; fi
+    TAG="$d-$i" \
+    DREPO="$d" \
+    DTAG="$i" \
+    DFILE="${d}_debian" \
+    build_img \
+    --target="$tag" \
+    --build-arg IMAGE="$BASE_IMAGE" \
+    --build-arg LLVM_VER="$LLVM_VER" \
+    --build-arg GNAT_VER="$GNAT_VER"
   done
 }
 
@@ -104,19 +81,78 @@ create () {
         ;;
       esac
       for img in build run; do
-          tag="ghdl/$img:ls-$dist"
-          travis_start "ghdl/$img.ls-$dist" "$ANSI_BLUE[DOCKER build] $img : ls-${dist}$ANSI_NOCOLOR"
-          docker build -t $tag . -f ./dockerfiles/ls_debian_base --target=$img \
-            --build-arg IMAGE="$BASE_IMAGE" \
-            --build-arg LLVM_VER="$LLVM_VER" \
-            --build-arg GNAT_VER="$GNAT_VER" \
-            --build-arg APT_PY="$APT_PY"
-          travis_finish "ghdl/$img.ls-$dist"
+        tag="ghdl/$img:ls-$dist"
+        TAG="ghdl/$img.ls-$dist" \
+        DREPO="$img" \
+        DTAG="ls-$dist" \
+        DFILE=ls_debian_base \
+        build_img \
+        --target="$img" \
+        --build-arg IMAGE="$BASE_IMAGE" \
+        --build-arg LLVM_VER="$LLVM_VER" \
+        --build-arg GNAT_VER="$GNAT_VER" \
+        --build-arg APT_PY="$APT_PY"
       done
     ;;
 
     *)
-      create_distro_images
+      printf "Build distro images\n"
+      for d in build run; do
+          case $DISTRO in
+
+            "debian")
+              for ver in stretch buster sid; do
+                case $ver in
+                  *stretch*)
+                    LLVM_VER="4.0"
+                    GNAT_VER="6"
+                  ;;
+                  *buster*)
+                    LLVM_VER="7"
+                    GNAT_VER="8"
+                  ;;
+                  *sid*)
+                    LLVM_VER="8"
+                    GNAT_VER="8"
+                  ;;
+                esac
+                BASE_IMAGE="$DISTRO:$ver-slim"
+                create_distro_images
+              done
+            ;;
+
+            "ubuntu")
+              for ver in 14 16 18; do
+                case $ver in
+                  14) #trusty
+                    LLVM_VER="3.8"
+                    GNAT_VER="4.6"
+                  ;;
+                  16) #xenial
+                    LLVM_VER="3.9"
+                    GNAT_VER="4.9"
+                  ;;
+                  18) #bionic
+                    LLVM_VER="5.0"
+                    GNAT_VER="7"
+                  ;;
+                esac
+                BASE_IMAGE="$DISTRO:$ver.04"
+                ver="ubuntu$ver"
+                create_distro_images
+              done
+            ;;
+
+            "fedora")
+              for f in 28 29 30; do
+                for tgt in `grep -oP "FROM.*AS \K.*" ./${d}_fedora`; do
+                  i="fedora${f}-$tgt"
+                  TAG="$d-$i" DREPO="$d" DTAG="$i" DFILE="${d}_fedora" build_img --target="$tgt" --build-arg IMAGE="fedora:${f}"
+                done
+              done
+            ;;
+          esac
+      done
     ;;
   esac
 }
@@ -127,24 +163,20 @@ extended() {
   case $1 in
   vunit)
     for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
-      tag="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
+      TAG="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
       for version in stable master; do
         if [ "x$version" = "xmaster" ]; then
-          tag="$tag-master"
+          TAG="$TAG-master"
         fi
-        travis_start "$tag" "$ANSI_BLUE[DOCKER build] vunit : ${tag}$ANSI_NOCOLOR"
-        docker build -t "ghdl/vunit:$tag" --target "$version" --build-arg TAG="$fulltag" - < ./dockerfiles/vunit
-        travis_finish "$tag"
+        DREPO=vunit DTAG="$TAG" DFILE=vunit build_img --target="$version" --build-arg TAG="$fulltag"
       done
     done
   ;;
   *)
-    for tag in `grep -oP "FROM.*AS do-\K.*" ./dockerfiles/gui`; do
-      travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ${tag}$ANSI_NOCOLOR"
-      docker build -t "ghdl/ext:$tag" --target "do-$tag" . -f ./dockerfiles/gui
-      travis_finish "$tag"
+    for TAG in gtkwave ls-vunit latest; do
+      DREPO=ext DTAG="$TAG" DFILE=gui build_img --target="$TAG"
     done
-    docker rmi ghdl/ext:ls-debian
+    TAG="broadway" DREPO=ext DTAG="broadway" DFILE=gui build_img --ctx=.. --target="broadway"
   ;;
   esac
 }
@@ -154,38 +186,26 @@ extended() {
 synth() {
   case $1 in
   synth)
-    travis_start "yosys" "$ANSI_BLUE[DOCKER build] synth : yosys$ANSI_NOCOLOR"
-    docker build -t ghdl/synth:yosys --target yosys . -f ./dockerfiles/synth_yosys
-    travis_finish "yosys"
-    travis_start "yosys-gnat" "$ANSI_BLUE[DOCKER build] synth : yosys-gnat$ANSI_NOCOLOR"
-    docker build -t ghdl/synth:yosys-gnat --target yosys-gnat . -f ./dockerfiles/synth_yosys
-    travis_finish "yosys-gnat"
-
-    travis_start "synth" "$ANSI_BLUE[DOCKER build] synth : beta$ANSI_NOCOLOR"
+    for TAG in yosys yosys-gnat; do
+      DREPO=synth DTAG="$TAG" DFILE=synth_yosys build_img --target="$TAG"
+    done
+    travis_start "synth" "[DOCKER build] synth : beta"
     mkdir -p ghdlsynth
     cd ghdlsynth
     curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
     ./travis.sh
     cd ..
-    travis_start "synth" "$ANSI_BLUE[DOCKER build] synth : beta$ANSI_NOCOLOR"
+    travis_finish "synth"
   ;;
   formal)
-    travis_start "symbiyosys" "$ANSI_BLUE[DOCKER build] synth : symbiyosys$ANSI_NOCOLOR"
-    docker build -t ghdl/synth:symbiyosys --target symbiyosys . -f ./dockerfiles/synth_formal
-    travis_finish "symbiyosys"
-    travis_start "formal" "$ANSI_BLUE[DOCKER build] synth : formal$ANSI_NOCOLOR"
-    docker build -t ghdl/synth:formal --target formal . -f ./dockerfiles/synth_formal
-    travis_finish "formal"
-
-    docker rmi ghdl/synth:beta ghdl/synth:yosys
+    for TAG in symbiyosys formal; do
+      DREPO=synth DTAG="$TAG" DFILE=synth_formal build_img --target="$TAG"
+    done
   ;;
   pnr)
-    travis_start "icestorm" "$ANSI_BLUE[DOCKER build] synth : icestorm$ANSI_NOCOLOR"
-    docker build -t ghdl/synth:icestorm --target icestorm . -f ./dockerfiles/synth_nextpnr
-    travis_finish "icestorm"
-    travis_start "nextpnr" "$ANSI_BLUE[DOCKER build] synth : nextpnr$ANSI_NOCOLOR"
-    docker build -t ghdl/synth:nextpnr --target nextpnr . -f ./dockerfiles/synth_nextpnr
-    travis_finish "nextpnr"
+    for TAG in icestorm nextpnr; do
+      DREPO=synth DTAG="$TAG" DFILE=synth_nextpnr build_img --target="$TAG"
+    done
   ;;
   *)
     echo "${ANSI_RED}synth: unknown task $1!$ANSI_NOCOLOR"
@@ -198,14 +218,11 @@ synth() {
 
 language_server() {
   distro="$1"
-  tag="ghdl/ext:ls-$distro"
   llvm_ver="7"
   if [ "x$distro" = "xubuntu" ]; then
     llvm_ver="6.0"
   fi
-  travis_start "$tag" "$ANSI_BLUE[DOCKER build] ext : ls-${distro}$ANSI_NOCOLOR"
-  docker build -t $tag . -f ./dockerfiles/ls_debian --build-arg DISTRO="$distro" --build-arg LLVM_VER="$llvm_ver"
-  travis_finish "$tag"
+  TAG="ls-$distro" DREPO="ext" DTAG="ls-$distro" DFILE=ls_debian build_img --build-arg "DISTRO=$distro" --build-arg LLVM_VER=$llvm_ver
 }
 
 #--
@@ -214,7 +231,7 @@ deploy () {
   case $1 in
     "")
       FILTER="/build /run";;
-    "ext"|"debian"|"ubuntu")
+    "ext"|"debian"|"ubuntu"|"gui")
       FILTER="/ext";;
     "synth"|"formal"|"pnr")
       FILTER="/synth";;
@@ -226,13 +243,13 @@ deploy () {
       FILTER="/ghdl /pkg";;
   esac
 
-  . ./travis/docker_login.sh
+  . ./docker_login.sh
 
   for key in $FILTER; do
     for tag in `echo $(docker images "ghdl$key*" | awk -F ' ' '{print $1 ":" $2}') | cut -d ' ' -f2-`; do
       if [ "$tag" = "REPOSITORY:TAG" ]; then break; fi
       i="`echo $tag | grep -oP 'ghdl/\K.*' | sed 's#:#-#g'`"
-      travis_start "$i" "$ANSI_YELLOW[DOCKER push] ${tag}$ANSI_NOCOLOR"
+      travis_start "$i" "[DOCKER push] ${tag}" "$ANSI_YELLOW"
       docker push $tag
       travis_finish "$i"
     done
@@ -248,7 +265,7 @@ build_img_pkg() {
   if [ "x$EXTRA" != "x" ]; then
     IMAGE_TAG="$IMAGE_TAG-$EXTRA"
   fi
-  travis_start "build_scratch" "$ANSI_BLUE[DOCKER build] ghdl/pkg:${IMAGE_TAG}$ANSI_NOCOLOR"
+  travis_start "build_scratch" "[DOCKER build] ghdl/pkg:${IMAGE_TAG}"
   docker build -t ghdl/pkg:$IMAGE_TAG . -f-<<EOF
 FROM scratch
 COPY `ls | grep '^ghdl.*\.tgz'` ./
@@ -258,22 +275,24 @@ EOF
 }
 
 build () {
-  cd ghdl
   CONFIG_OPTS="--default-pic " ./dist/travis/travis-ci.sh
-
   if [ "$TRAVIS_OS_NAME" != "osx" ]; then
     if [ -f test_ok ]; then
       build_img_pkg
     fi
   fi
-  cd ..
 }
 
 #--
 
 case "$1" in
-  -b) build    ;;
-  -c) create   ;;
+  -b)
+    cd ../ghdl
+    build
+  ;;
+  -c)
+    create
+  ;;
   -e)
     shift
     extended "$@"
@@ -287,5 +306,6 @@ case "$1" in
     language_server "$@"
   ;;
   *)
+    cd ../travis
     deploy $@
 esac

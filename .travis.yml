@@ -1,11 +1,14 @@
 os: linux
 services: docker
 language: minimal
-install: skip
+install:
+  - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  - sudo service docker restart
 addons:
   apt:
     packages:
     - pass
+    - docker-ce
 env:
   - DISTRO=fedora
   - DISTRO=debian

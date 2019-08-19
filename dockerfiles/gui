@@ -26,7 +26,7 @@ RUN apt-get update -qq \
 
 #---
 
-FROM ghdl/vunit:llvm-master AS do-gtkwave
+FROM ghdl/vunit:llvm-master AS gtkwave
 COPY --from=build ./tmp/*.tgz /tmp/
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
@@ -37,7 +37,7 @@ RUN apt-get update -qq \
 
 #---
 
-FROM do-gtkwave AS do-broadway
+FROM gtkwave AS broadway
 COPY broadway.sh /etc/broadway.sh
 RUN printf "\nsource /etc/broadway.sh\n" >> /etc/bash.bashrc
 
@@ -46,7 +46,7 @@ RUN printf "\nsource /etc/broadway.sh\n" >> /etc/bash.bashrc
 FROM alpine as get-master
 RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
 
-FROM ghdl/ext:ls-debian AS do-ls-vunit
+FROM ghdl/ext:ls-debian AS ls-vunit
 COPY --from=get-master /tmp/vunit /tmp/vunit
 RUN cd /tmp/vunit \
  && python3 setup.py install \
@@ -54,7 +54,7 @@ RUN cd /tmp/vunit \
 
 #---
 
-FROM do-ls-vunit AS do-latest
+FROM ls-vunit AS latest
 COPY --from=build ./tmp/*.tgz /tmp/
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
