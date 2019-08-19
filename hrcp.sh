@@ -14,7 +14,7 @@ fi
 mcodegpl="sid"
 mcode="buster sid ubuntu16 ubuntu18 fedora28 fedora29"
 llvm="buster-7 sid-8 ubuntu16-3.9 ubuntu18-5.0 fedora28 fedora29"
-gcc="stretch-5.5.0 buster-7.4.0 sid-9.1.0 fedora28-8.1.0 fedora29-8.2.0"
+gcc="stretch-5.5.0 buster-8.3.0 sid-9.1.0 fedora28-8.1.0 fedora29-8.2.0"
 
 for BRANCH in $@; do
   if [ "$(git branch | grep "$BRANCH")" = "" ]; then
