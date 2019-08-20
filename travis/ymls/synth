@@ -9,7 +9,7 @@ jobs:
           script: ./travis/run.sh "$TASK"
           on:
             repo: ghdl/docker
-            branch: ext
+            branch: synth
     - <<: *job
       env: TASK=pnr
     - <<: *job
