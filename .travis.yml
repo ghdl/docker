@@ -9,6 +9,7 @@ addons:
     packages:
     - pass
     - docker-ce
+
 env:
   - DISTRO=fedora
   - DISTRO=debian
