@@ -19,16 +19,23 @@ RUN apt-get update -qq \
 
 #---
 
-FROM mcode AS gcc
+FROM mcode AS zlib
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    lcov \
     zlib1g-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove
 
 #---
 
-FROM gcc AS llvm
+FROM zlib AS gcc
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    lcov \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove
+
+#---
+
+FROM zlib AS llvm
 
 ARG LLVM_VER
 
