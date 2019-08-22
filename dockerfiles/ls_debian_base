@@ -18,6 +18,7 @@ RUN apt-get update -qq \
     zlib1g-dev $APT_PY \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && update-ca-certificates \
+ && rm -rf /var/lib/apt/lists/* \
  && pip3 install setuptools wheel
 
 #---
@@ -34,6 +35,7 @@ RUN apt-get update -qq \
     llvm-$LLVM_VER-dev \
     npm \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/* \
  && npm install -g vsce
 
 #---
@@ -48,4 +50,5 @@ RUN apt-get update -qq \
     libgnat-$GNAT_VER \
     libllvm$LLVM_VER \
     unzip \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/*

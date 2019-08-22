@@ -7,7 +7,7 @@ RUN apt-get update -qq \
     python3 \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && update-ca-certificates \
- && rm -rf /var/lib/apt/lists
+ && rm -rf /var/lib/apt/lists/*
 
 #---
 
@@ -21,7 +21,7 @@ RUN apt-get update -qq \
     make \
     pkg-config \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists
+ && rm -rf /var/lib/apt/lists/*
 
 ENV PREFIX /opt/icestorm
 
@@ -43,7 +43,7 @@ RUN apt-get update -qq \
     libftdi1-2 \
     usbutils \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists
+ && rm -rf /var/lib/apt/lists/*
 
 #---
 
@@ -53,7 +53,7 @@ RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     libboost-all-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists
+ && rm -rf /var/lib/apt/lists/*
 
 #---
 
@@ -67,7 +67,7 @@ RUN apt-get update -qq \
     make \
     python3-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists
+ && rm -rf /var/lib/apt/lists/*
 
 COPY --from=icestorm-build /opt/icestorm/share/icebox /opt/icebox
 

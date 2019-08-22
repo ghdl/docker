@@ -31,6 +31,7 @@ COPY --from=build ./tmp/*.tgz /tmp/
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
+ && rm -rf /var/lib/apt/lists/* \
  && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
  && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
  && rm -f "$GTKWAVE_TGZ"
@@ -59,6 +60,7 @@ COPY --from=build ./tmp/*.tgz /tmp/
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
+ && rm -rf /var/lib/apt/lists/* \
  && GTKWAVE_TGZ=`ls /tmp/gtkwave*` \
  && tar -xzf "$GTKWAVE_TGZ" -C /usr/local \
  && rm -f "$GTKWAVE_TGZ"
