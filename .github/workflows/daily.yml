@@ -1,0 +1,36 @@
+name: 'daily'
+
+on:
+  push:
+    paths:
+      - '.github/workflows/daily.yml'
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+
+  build:
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        task: [
+          { distro: buster,   backend: mcode,     args: "" },
+          { distro: buster,   backend: llvm-7 ,   args: "" },
+          { distro: buster,   backend: gcc-8.3.0, args: "" },
+        ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Clone ghdl
+      run: git clone https://github.com/ghdl/ghdl
+    - name: Build 'ghdl' and 'pkg' images
+      run: ./run.sh -b $TARGS
+      env:
+        TASK: ${{ matrix.task.distro }}+${{ matrix.task.backend }}
+        TARGS: ${{ matrix.task.args }}
+    - name: Deploy to hub.docker.com
+      run: ./run.sh ""
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}

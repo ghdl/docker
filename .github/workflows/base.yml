@@ -1,0 +1,45 @@
+name: 'base'
+
+on:
+  push:
+    paths:
+      - '.github/workflows/base.yml'
+      - 'dockerfiles/build_*'
+      - 'dockerfiles/run_*'
+      - 'dockerfiles/ls_*base'
+  schedule:
+    - cron: '0 0 1,16 * *'
+
+jobs:
+
+  base:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        task: [
+          { distro: debian, version: buster },
+          { distro: debian, version: sid    },
+          { distro: fedora, version: 29     },
+          { distro: fedora, version: 30     },
+          { distro: ubuntu, version: 16     },
+          { distro: ubuntu, version: 18     },
+          { distro: ls,     version: debian },
+          { distro: ls,     version: ubuntu },
+        ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./run.sh -c $DISTRIBUTION $VERSION
+      env:
+        DISTRIBUTION: ${{ matrix.task.distro }}
+        VERSION:      ${{ matrix.task.version }}
+    - name: Deploy to hub.docker.com
+      run: ./run.sh base
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+# FIXIT: ensure that PR's do not trigger deploy steps!
+# FIXIT: ensure that branches different from 'master' do not trigger deploy steps!
+# FIXIT: ensure that PR's cannot access/use secrets!

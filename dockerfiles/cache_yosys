@@ -51,7 +51,7 @@ CMD ["yosys"]
 
 #---
 
-FROM yosys AS yosys-gnat
+FROM yosys
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \

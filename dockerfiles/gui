@@ -1,33 +1,5 @@
-FROM debian:buster-slim AS build
-RUN apt-get update -qq \
- && apt-get -y install \
-   build-essential \
-   clang \
-   flex \
-   gawk \
-   gperf \
-   libbz2-dev \
-   libreadline-dev \
-   libffi-dev \
-   libgtk-3-dev \
-   liblzma-dev \
-   pkg-config \
-   subversion \
-   tcl-dev \
-   tk-dev \
- && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
- && svn checkout svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 ./ \
- && ./configure --prefix="/usr/local" --with-tk=/usr/lib --enable-gtk3 \
- && make -j$(nproc) DESTDIR="$(pwd)/build-dir" \
- && make check \
- && make install DESTDIR="$(pwd)/build-dir" \
- && tar -zcvf /tmp/gtkwave.tgz -C build-dir/usr/local/ . \
- && cd .. && rm -rf gtkwave
-
-#---
-
 FROM ghdl/vunit:llvm-master AS gtkwave
-COPY --from=build ./tmp/*.tgz /tmp/
+COPY --from=ghdl/cache:gtkwave ./*.tgz /tmp/
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \
@@ -56,7 +28,7 @@ RUN cd /tmp/vunit \
 #---
 
 FROM ls-vunit AS latest
-COPY --from=build ./tmp/*.tgz /tmp/
+COPY --from=ghdl/cache:gtkwave ./*.tgz /tmp/
 RUN apt-get update -qq \
  && apt-get -y install graphviz libgtk-3-bin libtcl8.6 libtk8.6 xdot \
  && apt-get autoclean -y && apt-get clean -y && apt-get autoremove -y \

@@ -1,0 +1,72 @@
+name: 'ext'
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ext.yml'
+      - 'dockerfiles/synth_*'
+      - 'dockerfiles/ls_debian'
+      - 'dockerfiles/vunit'
+      - 'dockerfiles/gui'
+  schedule:
+    - cron: '0 0 * * 6'
+
+jobs:
+  synth:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build images
+      run: ./run.sh -e synth
+    - name: Deploy to hub.docker.com
+      run: ./run.sh synth
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+  ls:
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        task: [ debian, ubuntu ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build images
+      run: ./run.sh -l $TASK
+      env:
+        TASK: ${{ matrix.task }}
+    - name: Deploy to hub.docker.com
+      run: ./run.sh ext
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+  vunit:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build images
+      run: ./run.sh -e vunit
+    - name: Deploy to hub.docker.com
+      run: ./run.sh vunit
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+  gui:
+    needs: [ls, vunit]
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build images
+      run: ./run.sh -e gui
+    - name: Deploy to hub.docker.com
+      run: ./run.sh ext
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}

@@ -1,0 +1,63 @@
+name: 'cache'
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cache.yml'
+      - 'dockerfiles/cache_*'
+      - 'dockerfiles/run_*'
+  schedule:
+    - cron: '0 0 * * 5'
+
+jobs:
+
+  matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [ gtkwave, pnr ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./run.sh -x $TASK
+      env:
+        TASK: ${{ matrix.task }}
+    - name: Deploy to hub.docker.com
+      run: ./run.sh all
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+  yosys:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./run.sh -x yosys
+    - name: Deploy to hub.docker.com
+      run: ./run.sh all
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+  formal:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./run.sh -x formal
+    - name: Deploy to hub.docker.com
+      run: ./run.sh all
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+  symbiyosys:
+    needs: [yosys, formal]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./run.sh -x symbiyosys
+    - name: Deploy to hub.docker.com
+      run: ./run.sh all
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
