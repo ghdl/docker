@@ -15,6 +15,7 @@ RUN apt-get update -qq \
     gcc \
     libc6-dev \
     libgnat-$GNAT_VER \
+    make \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
 

@@ -7,6 +7,7 @@ RUN apt-get update -qq \
     curl \
     libffi-dev \
     libreadline-dev \
+    make \
     tcl-dev \
     graphviz \
     xdot \
