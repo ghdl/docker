@@ -3,6 +3,7 @@ name: 'ghdl'
 on:
   push:
     paths:
+      - 'run.sh'
       - '.github/workflows/ghdl.yml'
   schedule:
     - cron: '0 0 * * 5'

@@ -3,6 +3,7 @@ name: 'cache'
 on:
   push:
     paths:
+      - 'run.sh'
       - '.github/workflows/cache.yml'
       - 'dockerfiles/cache_*'
       - 'dockerfiles/run_*'

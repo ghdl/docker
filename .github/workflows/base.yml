@@ -3,6 +3,7 @@ name: 'base'
 on:
   push:
     paths:
+      - 'run.sh'
       - '.github/workflows/base.yml'
       - 'dockerfiles/build_*'
       - 'dockerfiles/run_*'

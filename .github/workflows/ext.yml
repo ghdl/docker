@@ -3,6 +3,7 @@ name: 'ext'
 on:
   push:
     paths:
+      - 'run.sh'
       - '.github/workflows/ext.yml'
       - 'dockerfiles/synth_*'
       - 'dockerfiles/ls_debian'
