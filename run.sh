@@ -241,11 +241,11 @@ cache() {
 extended() {
   case "$1" in
     synth)
-      printf "${ANSI_MAGENTA}[Clone] tgingold/ghdlsynth-beta${ANSI_NOCOLOR}"
+      printf "${ANSI_MAGENTA}[Clone] tgingold/ghdlsynth-beta${ANSI_NOCOLOR}\n"
       mkdir -p ghdlsynth
       cd ghdlsynth
       curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
-      printf "${ANSI_MAGENTA}[Run] ./travis.sh${ANSI_NOCOLOR}"
+      printf "${ANSI_MAGENTA}[Run] ./travis.sh${ANSI_NOCOLOR}\n"
       ./travis.sh
       cd ..
 
