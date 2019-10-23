@@ -3,6 +3,7 @@ name: 'daily'
 on:
   push:
     paths:
+      - 'run.sh'
       - '.github/workflows/daily.yml'
   schedule:
     - cron: '0 0 * * *'
