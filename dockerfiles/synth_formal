@@ -1,6 +1,6 @@
 FROM ghdl/synth:beta
 
-COPY --from=ghdl/cache:formal ./ /opt/z3
+COPY --from=ghdl/cache:formal ./z3 /opt/z3
 COPY --from=ghdl/cache:formal ./symbiyosys /usr/local
 
 RUN apt-get update -qq \
@@ -9,4 +9,4 @@ RUN apt-get update -qq \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
 
-ENV PATH /opt/z3/z3/bin:$PATH
+ENV PATH /opt/z3/bin:$PATH
