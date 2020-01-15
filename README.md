@@ -8,15 +8,15 @@
   -->
   <a title="Join the chat at https://gitter.im/ghdl1/Lobby" href="https://gitter.im/ghdl1/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef"></a><!--
   -->
-  <a title="'daily' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Adaily"><img alt="'daily' workflow Status" src="https://github.com/ghdl/docker/workflows/daily/badge.svg"></a><!--
+  <a title="'daily' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Adaily"><img alt="'daily' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/daily?longCache=true&style=flat-square&label=daily"></a><!--
   -->
-  <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aext"><img alt="'ext' workflow Status" src="https://github.com/ghdl/docker/workflows/ext/badge.svg"></a><!--
+  <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aext"><img alt="'ext' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ext?longCache=true&style=flat-square&label=ext"></a><!--
   -->
-  <a title="'ghdl' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aghdl"><img alt="'ghdl' workflow Status" src="https://github.com/ghdl/docker/workflows/ghdl/badge.svg"></a><!--
+  <a title="'ghdl' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aghdl"><img alt="'ghdl' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ghdl?longCache=true&style=flat-square&label=ghdl"></a><!--
   -->
-  <a title="'cache' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Acache"><img alt="'cache' workflow Status" src="https://github.com/ghdl/docker/workflows/cache/badge.svg"></a><!--
+  <a title="'cache' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Acache"><img alt="'cache' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/cache?longCache=true&style=flat-square&label=cache"></a><!--
   -->
-  <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abase"><img alt="'base' workflow Status" src="https://github.com/ghdl/docker/workflows/base/badge.svg"></a><!--
+  <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abase"><img alt="'base' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/base?longCache=true&style=flat-square&label=base"></a><!--
   -->
 </p>
 
