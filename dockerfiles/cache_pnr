@@ -47,6 +47,45 @@ RUN apt-get update -qq \
 
 #---
 
+FROM base AS prjtrellis-build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    g++ \
+    libffi-dev \
+    libftdi1-dev \
+    make \
+    cmake \
+    python3-dev \
+    libboost-all-dev \
+    git \
+    pkg-config \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN cd /usr/local/src \
+ && git clone --recursive https://github.com/SymbiFlow/prjtrellis \
+ && cd prjtrellis/libtrellis \
+ && cmake . -DCMAKE_INSTALL_PREFIX=/opt/prjtrellis \
+ && make -j $(nproc) \
+ && make install
+
+#---
+
+FROM base AS prjtrellis
+
+COPY --from=prjtrellis-build /opt/prjtrellis /opt/prjtrellis
+ENV PATH /opt/prjtrellis/bin:$PATH
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libftdi1-2 \
+    usbutils \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/*
+
+#---
+
 FROM base AS nextpnr-base
 
 RUN apt-get update -qq \
@@ -82,7 +121,39 @@ RUN  mkdir -p /opt/nextpnr \
 
 #---
 
+FROM nextpnr-base AS nextpnr-ecp5-build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    cmake \
+    g++ \
+    libeigen3-dev \
+    make \
+    python3-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY --from=prjtrellis-build /opt/prjtrellis /opt/prjtrellis
+
+RUN  mkdir -p /opt/nextpnr \
+ && mkdir -p /usr/local/src/nextpnr/build \
+ && cd /usr/local/src/nextpnr \
+ && curl -fsSL https://codeload.github.com/YosysHQ/nextpnr/tar.gz/master | tar xzf - --strip-components=1 \
+ && cd build \
+ && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/nextpnr -DARCH=ecp5 -DTRELLIS_ROOT=/opt/prjtrellis/share/trellis -DPYTRELLIS_LIBDIR=/opt/prjtrellis/lib/trellis -DBUILD_GUI=OFF -DBUILD_PYTHON=ON -DUSE_OPENMP=ON \
+ && make -j $(nproc) \
+ && make install
+
+#---
+
 FROM nextpnr-base AS nextpnr
 
 COPY --from=nextpnr-build /opt/nextpnr /opt/nextpnr
+ENV PATH /opt/nextpnr/bin:$PATH
+
+#---
+
+FROM nextpnr-base AS nextpnr-ecp5
+
+COPY --from=nextpnr-ecp5-build /opt/nextpnr /opt/nextpnr
 ENV PATH /opt/nextpnr/bin:$PATH

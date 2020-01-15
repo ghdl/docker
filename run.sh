@@ -215,7 +215,7 @@ cache() {
       DREPO=cache DTAG=gtkwave DFILE=cache_gtkwave build_img
     ;;
     pnr)
-      for TAG in icestorm nextpnr; do
+      for TAG in icestorm nextpnr nextpnr-ecp5; do
         DREPO=synth DTAG="$TAG" DFILE=cache_pnr build_img --target="$TAG"
       done
     ;;
