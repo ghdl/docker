@@ -16,24 +16,22 @@ jobs:
       max-parallel: 3
       matrix:
         task: [
-          #{ distro: buster,   backend: mcode,     args: "" },
-          { distro: buster,   backend: mcode,     args: "--gpl" },
-          { distro: sid,      backend: mcode ,    args: "" },
+          { distro: sid,      backend: mcode ,    args: "--synth" },
           { distro: sid,      backend: mcode,     args: "--gpl" },
-          { distro: ubuntu16, backend: mcode ,    args: "" },
-          { distro: ubuntu18, backend: mcode ,    args: "" },
-          { distro: fedora30, backend: mcode ,    args: "" },
-          { distro: fedora31, backend: mcode ,    args: "" },
+          { distro: ubuntu16, backend: mcode ,    args: "--synth" },
+          { distro: ubuntu18, backend: mcode ,    args: "--synth" },
+          { distro: fedora30, backend: mcode ,    args: "--synth" },
+          { distro: fedora31, backend: mcode ,    args: "--synth" },
           #{ distro: buster,   backend: llvm-7,    args: "" },
-          { distro: sid,      backend: llvm-8,    args: "" },
-          { distro: ubuntu16, backend: llvm-3.9,  args: "" },
-          { distro: ubuntu18, backend: llvm-5.0,  args: "" },
-          { distro: fedora30, backend: llvm,      args: "" },
-          { distro: fedora31, backend: llvm,      args: "" },
+          { distro: sid,      backend: llvm-8,    args: "--synth" },
+          { distro: ubuntu16, backend: llvm-3.9,  args: "--synth" },
+          { distro: ubuntu18, backend: llvm-5.0,  args: "--synth" },
+          { distro: fedora30, backend: llvm,      args: "--synth" },
+          { distro: fedora31, backend: llvm,      args: "--synth" },
           #{ distro: buster,   backend: gcc-8.3.0, args: "" },
-          { distro: sid,      backend: gcc-9.1.0, args: "" },
-          { distro: fedora30, backend: gcc-8.2.0, args: "" },
-          { distro: fedora31, backend: gcc-9.2.0, args: "" },
+          { distro: sid,      backend: gcc-9.1.0, args: "--synth" },
+          { distro: fedora30, backend: gcc-8.2.0, args: "--synth" },
+          { distro: fedora31, backend: gcc-9.2.0, args: "--synth" },
         ]
     runs-on: ubuntu-latest
     steps:

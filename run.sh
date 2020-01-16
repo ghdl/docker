@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/usr/bin/env sh
 
 set -e
 
@@ -346,6 +346,12 @@ build () {
 
   if [ "$GITHUB_OS" != "macOS" ] && [ -f testsuite/test_ok ]; then
     IMAGE_TAG="$(docker images "ghdl/ghdl:*" | head -n2 | tail -n1 | awk -F ' ' '{print $2}')"
+    if echo $IMAGE_TAG | grep '\-synth'; then
+      BASE_TAG="$IMAGE_TAG"
+      IMAGE_TAG="$(echo $BASE_TAG | sed 's/-synth//g')"
+      docker tag ghdl/ghdl:$BASE_TAG ghdl/ghdl:$IMAGE_TAG
+      docker rmi ghdl/ghdl:$BASE_TAG
+    fi
     gstart "[CI] Docker build ghdl/pkg:${IMAGE_TAG}"
     docker build -t "ghdl/pkg:$IMAGE_TAG" . -f-<<EOF
 FROM scratch
