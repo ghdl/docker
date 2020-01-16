@@ -52,13 +52,17 @@ Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 - A pair of images is created in one job for each of `[ ls-debian, ls-ubuntu ]`.
 - One job is created for each of `[ fedora (30 | 31), debian (buster | sid), ubuntu (16 | 18)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
 
-### · [`cache.yml`](.github/workflows/cache.yml) (5 jobs -max 5-, 7 images) [weekly]
+### · [`cache.yml`](.github/workflows/cache.yml) (5 jobs -max 4-, 11 images) [weekly]
 
 Build and push all the images to `ghdl/cache:*` and some to `ghdl/synth:*`. Each of the following images includes a tool on top of a `debian:buster-slim` image:
 
 - `ghdl/synth:yosys`: includes [YosysHQ/yosys](https://github.com/YosysHQ/yosys) (`master`).
-- `ghdl/synth:icestorm`: includes [cliffordwolf/icestorm](https://github.com/cliffordwolf/icestorm) (`master`).
-- `ghdl/synth:nextpnr`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`).
+- `ghdl/synth:icestorm`: includes [cliffordwolf/icestorm](https://github.com/cliffordwolf/icestorm) (`master`) without `iceprog`.
+- `ghdl/synth:trellis`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`).
+- `ghdl/synth:prog`: includes `iceprog` from [cliffordwolf/icestorm](https://github.com/cliffordwolf/icestorm) (`master`).
+- `ghdl/synth:nextpnr-ice40`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for ICE40 devices only.
+- `ghdl/synth:nextpnr-ecp5`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for ECP5 devices only.
+- `ghdl/synth:nextpnr`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for all architectures (see [YosysHQ/nextpnr: Additional notes for building nextpnr](https://github.com/YosysHQ/nextpnr#additional-notes-for-building-nextpnr)).
 
 Furthermore:
 

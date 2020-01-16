@@ -11,78 +11,153 @@ RUN apt-get update -qq \
 
 #---
 
-FROM base AS icestorm-build
+FROM base AS build
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    g++ \
-    libffi-dev \
-    libftdi1-dev \
-    make \
-    pkg-config \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/*
+    clang \
+    make
 
-ENV PREFIX /opt/icestorm
+ENV CXX clang
 
-RUN mkdir /usr/local/src/icestorm \
- && cd /usr/local/src/icestorm \
+#---
+
+FROM build AS build-dev
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    cmake \
+    libboost-all-dev \
+    python3-dev
+
+#---
+
+FROM build AS icestorm-build
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    pkg-config
+
+RUN mkdir /tmp/icestorm \
+ && cd /tmp/icestorm \
  && curl -fsSL https://codeload.github.com/cliffordwolf/icestorm/tar.gz/master | tar xzf - --strip-components=1 \
+ && ICEPROG=0 make -j $(nproc) \
+ && ICEPROG=0 make DESTDIR=/opt/icestorm install
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libftdi1-dev
+
+RUN cd /tmp/icestorm/iceprog \
  && make -j $(nproc) \
- && make install
+ && make DESTDIR=/opt/iceprog install
 
 #---
 
 FROM base AS icestorm
-
-COPY --from=icestorm-build /opt/icestorm /opt/icestorm
-ENV PATH /opt/icestorm/bin:$PATH
-
-RUN apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    libftdi1-2 \
-    usbutils \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/*
+COPY --from=icestorm-build /opt/icestorm /
 
 #---
 
-FROM base AS prjtrellis-build
+FROM alpine as get-trellis
+RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/SymbiFlow/prjtrellis /tmp/trellis \
+ && cd /tmp/trellis \
+ && git describe --tags > libtrellis/git_version
 
-RUN apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    g++ \
-    libffi-dev \
-    libftdi1-dev \
-    make \
-    cmake \
-    python3-dev \
-    libboost-all-dev \
-    git \
-    pkg-config \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/*
+#---
 
-RUN cd /usr/local/src \
- && git clone --recursive https://github.com/SymbiFlow/prjtrellis \
- && cd prjtrellis/libtrellis \
- && cmake . -DCMAKE_INSTALL_PREFIX=/opt/prjtrellis \
+FROM build-dev AS trellis-build
+COPY --from=get-trellis /tmp/trellis /tmp/trellis
+
+ENV LDFLAGS "-Wl,--copy-dt-needed-entries"
+
+RUN cd /tmp/trellis/libtrellis \
+ && cmake -DCURRENT_GIT_VERSION="$(cat git_version)" . \
  && make -j $(nproc) \
- && make install
+ && make DESTDIR=/opt/trellis install
 
 #---
 
-FROM base AS prjtrellis
+FROM base AS trellis
+COPY --from=trellis-build /opt/trellis /
 
-COPY --from=prjtrellis-build /opt/prjtrellis /opt/prjtrellis
-ENV PATH /opt/prjtrellis/bin:$PATH
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libboost-all-dev \
+ && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+ && rm -rf /var/lib/apt/lists/*
+
+#---
+
+FROM debian:buster-slim AS prog
+COPY --from=icestorm-build /opt/iceprog /
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     libftdi1-2 \
+    openocd \
     usbutils \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
+
+#---
+
+FROM build-dev AS nextpnr-build-base
+
+ENV LDFLAGS "-Wl,--copy-dt-needed-entries"
+
+RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    libeigen3-dev \
+    libomp-dev
+
+#---
+
+FROM nextpnr-build-base AS nextpnr-ice40-build
+COPY --from=icestorm-build /opt/icestorm/usr/local/share/icebox /usr/local/share/icebox
+
+RUN mkdir -p /tmp/nextpnr/build \
+ && cd /tmp/nextpnr \
+ && curl -fsSL https://codeload.github.com/YosysHQ/nextpnr/tar.gz/master | tar xzf - --strip-components=1 \
+ && cd build \
+ && cmake .. \
+   -DARCH=ice40 \
+   -DBUILD_GUI=OFF \
+   -DBUILD_PYTHON=ON \
+   -DUSE_OPENMP=ON \
+ && make -j $(nproc) \
+ && make DESTDIR=/opt/nextpnr install
+
+#---
+
+FROM nextpnr-build-base AS nextpnr-ecp5-build
+COPY --from=trellis-build /opt/trellis /
+
+RUN mkdir -p /tmp/nextpnr/build \
+ && cd /tmp/nextpnr \
+ && curl -fsSL https://codeload.github.com/YosysHQ/nextpnr/tar.gz/master | tar xzf - --strip-components=1 \
+ && cd build \
+ && cmake .. \
+   -DARCH=ecp5 \
+   -DBUILD_GUI=OFF \
+   -DBUILD_PYTHON=ON \
+   -DUSE_OPENMP=ON \
+ && make -j $(nproc) \
+ && make DESTDIR=/opt/nextpnr install
+
+#---
+
+FROM nextpnr-ice40-build AS nextpnr-build
+COPY --from=trellis-build /opt/trellis /
+
+RUN cd /tmp/nextpnr/build \
+ && cmake .. \
+   -DARCH=all \
+   -DBUILD_GUI=OFF \
+   -DBUILD_PYTHON=ON \
+   -DUSE_OPENMP=ON \
+ && make -j $(nproc) \
+ && make DESTDIR=/opt/nextpnr install
 
 #---
 
@@ -91,69 +166,21 @@ FROM base AS nextpnr-base
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     libboost-all-dev \
+    libomp5-7 \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
 
 #---
 
-FROM nextpnr-base AS nextpnr-build
-
-RUN apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    cmake \
-    g++ \
-    libeigen3-dev \
-    make \
-    python3-dev \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/*
-
-COPY --from=icestorm-build /opt/icestorm/share/icebox /opt/icebox
-
-RUN  mkdir -p /opt/nextpnr \
- && mkdir -p /usr/local/src/nextpnr/build \
- && cd /usr/local/src/nextpnr \
- && curl -fsSL https://codeload.github.com/YosysHQ/nextpnr/tar.gz/master | tar xzf - --strip-components=1 \
- && cd build \
- && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/nextpnr -DARCH=ice40 -DICEBOX_ROOT=/opt/icebox -DBUILD_GUI=OFF -DBUILD_PYTHON=ON -DUSE_OPENMP=ON \
- && make -j $(nproc) \
- && make install
-
-#---
-
-FROM nextpnr-base AS nextpnr-ecp5-build
-
-RUN apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    cmake \
-    g++ \
-    libeigen3-dev \
-    make \
-    python3-dev \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/*
-
-COPY --from=prjtrellis-build /opt/prjtrellis /opt/prjtrellis
-
-RUN  mkdir -p /opt/nextpnr \
- && mkdir -p /usr/local/src/nextpnr/build \
- && cd /usr/local/src/nextpnr \
- && curl -fsSL https://codeload.github.com/YosysHQ/nextpnr/tar.gz/master | tar xzf - --strip-components=1 \
- && cd build \
- && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/nextpnr -DARCH=ecp5 -DTRELLIS_ROOT=/opt/prjtrellis/share/trellis -DPYTRELLIS_LIBDIR=/opt/prjtrellis/lib/trellis -DBUILD_GUI=OFF -DBUILD_PYTHON=ON -DUSE_OPENMP=ON \
- && make -j $(nproc) \
- && make install
-
-#---
-
-FROM nextpnr-base AS nextpnr
-
-COPY --from=nextpnr-build /opt/nextpnr /opt/nextpnr
-ENV PATH /opt/nextpnr/bin:$PATH
+FROM nextpnr-base AS nextpnr-ice40
+COPY --from=nextpnr-ice40-build /opt/nextpnr /
 
 #---
 
 FROM nextpnr-base AS nextpnr-ecp5
+COPY --from=nextpnr-ecp5-build /opt/nextpnr /
 
-COPY --from=nextpnr-ecp5-build /opt/nextpnr /opt/nextpnr
-ENV PATH /opt/nextpnr/bin:$PATH
+#---
+
+FROM nextpnr-base AS nextpnr
+COPY --from=nextpnr-build /opt/nextpnr /

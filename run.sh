@@ -2,67 +2,14 @@
 
 set -e
 
+. $(dirname $0)/utils.sh
+
 cd $(dirname $0)/dockerfiles
 
 export DOCKER_BUILDKIT=1
 
 #SKIP_BUILD=true
 #SKIP_DEPLOY=true
-
-#--
-
-enable_color() {
-  ENABLECOLOR='-c '
-  ANSI_RED="\033[31m"
-  ANSI_GREEN="\033[32m"
-  ANSI_YELLOW="\033[33m"
-  ANSI_BLUE="\033[34m"
-  ANSI_MAGENTA="\033[35m"
-  ANSI_GRAY="\033[90m"
-  ANSI_CYAN="\033[36;1m"
-  ANSI_DARKCYAN="\033[36m"
-  ANSI_NOCOLOR="\033[0m"
-}
-
-disable_color() { unset ENABLECOLOR ANSI_RED ANSI_GREEN ANSI_YELLOW ANSI_BLUE ANSI_MAGENTA ANSI_CYAN ANSI_DARKCYAN ANSI_NOCOLOR; }
-
-enable_color
-
-print_start() {
-  if [ "x$2" != "x" ]; then
-    COL="$2"
-  elif [ "x$BASE_COL" != "x" ]; then
-    COL="$BASE_COL"
-  else
-    COL="$ANSI_MAGENTA"
-  fi
-  printf "${COL}${1}$ANSI_NOCOLOR\n"
-}
-
-gstart () {
-  print_start "$@"
-}
-gend () {
-  :
-}
-
-if [ -n "$GITHUB_EVENT_PATH" ]; then
-  export CI=true
-fi
-
-[ -n "$CI" ] && {
-  gstart () {
-    printf '::group::'
-    print_start "$@"
-    SECONDS=0
-  }
-
-  gend () {
-    duration=$SECONDS
-    echo '::endgroup::'
-    printf "${ANSI_GRAY}took $(($duration / 60)) min $(($duration % 60)) sec.${ANSI_NOCOLOR}\n"
-  }
-} || echo "INFO: not in CI"
 
 #--
 
@@ -215,7 +162,7 @@ cache() {
       DREPO=cache DTAG=gtkwave DFILE=cache_gtkwave build_img
     ;;
     pnr)
-      for TAG in icestorm nextpnr nextpnr-ecp5; do
+      for TAG in icestorm trellis prog nextpnr-ice40 nextpnr-ecp5 nextpnr; do
         DREPO=synth DTAG="$TAG" DFILE=cache_pnr build_img --target="$TAG"
       done
     ;;

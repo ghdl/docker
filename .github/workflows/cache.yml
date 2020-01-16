@@ -4,30 +4,37 @@ on:
   push:
     paths:
       - 'run.sh'
+      - 'test_pnr.sh'
       - '.github/workflows/cache.yml'
       - 'dockerfiles/cache_*'
       - 'dockerfiles/run_*'
   schedule:
     - cron: '0 0 * * 5'
 
+env:
+  CI: true
+  DOCKER_BUILDKIT: 1
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
 jobs:
 
-  matrix:
-    strategy:
-      fail-fast: false
-      matrix:
-        task: [ gtkwave, pnr ]
+  gtkwave:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - run: ./run.sh -x $TASK
-      env:
-        TASK: ${{ matrix.task }}
+    - run: ./run.sh -x gtkwave
     - name: Deploy to hub.docker.com
       run: ./run.sh all
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+  pnr:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./run.sh -x pnr
+    - name: Deploy to hub.docker.com
+      run: ./run.sh all
+    - run: ./test_pnr.sh
 
   yosys:
     runs-on: ubuntu-latest
@@ -36,9 +43,6 @@ jobs:
     - run: ./run.sh -x yosys
     - name: Deploy to hub.docker.com
       run: ./run.sh all
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
   formal:
     runs-on: ubuntu-latest
@@ -47,9 +51,6 @@ jobs:
     - run: ./run.sh -x formal
     - name: Deploy to hub.docker.com
       run: ./run.sh all
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
   symbiyosys:
     needs: [yosys, formal]
@@ -59,6 +60,10 @@ jobs:
     - run: ./run.sh -x symbiyosys
     - name: Deploy to hub.docker.com
       run: ./run.sh all
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+  test:
+    needs: [pnr, yosys]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./test_pnr.sh
