@@ -1,0 +1,130 @@
+digraph G {
+
+  {
+    rank=same;
+    "scratch" [shape=cylinder];
+    "debian:buster-slim" [shape=cylinder];
+    "alpine" [shape=cylinder];
+  }
+
+  "debian:buster-slim" -> "build | cache_formal";
+  "build | cache_formal" -> "ghdl/cache:formal" [style=dashed];
+  "scratch" -> "ghdl/cache:formal";
+
+  {
+    rank=same;
+    "ghdl/cache:gtkwave" [shape=box];
+    "ghdl/cache:formal" [shape=box];
+  }
+
+
+  subgraph cluster_00 {
+    "ghdl/synth:icestorm" [shape=box];
+    "ghdl/synth:trellis" [shape=box];
+    "ghdl/synth:prog" [shape=box];
+    "ghdl/synth:nextpnr-ice40" [shape=box];
+    "ghdl/synth:nextpnr-ecp5" [shape=box];
+    "ghdl/synth:nextpnr" [shape=box];
+  }
+
+  subgraph cluster_20 {
+
+    "base | cache_yosys";
+    "build | cache_yosys";
+
+    subgraph cluster_21 {
+      "ghdl/synth:yosys" [shape=box];
+      "ghdl/cache:yosys-gnat" [shape=box];
+    }
+
+    subgraph cluster_22 {
+      "ghdl/synth:latest" [shape=box];
+      "ghdl/synth:beta" [shape=box];
+      "ghdl/synth:formal" [shape=box];
+    }
+
+    "ghdl/synth:symbiyosys" [shape=box];
+  }
+
+  {
+    rank=same;
+    "ghdl/build:buster-mcode";
+    "ghdl/run:buster-mcode";
+  }
+
+  //synth
+  "debian:buster-slim" -> "ghdl/build:buster-mcode" -> "tmp | synth";
+  "tmp | synth" -> "ghdl/synth:latest" [style=dashed];
+  "tmp | synth" -> "build | synth" -> "ghdl/synth:beta" [style=dashed];
+  "ghdl/cache:yosys-gnat" -> "build | synth";
+
+  "debian:buster-slim" -> "ghdl/run:buster-mcode" -> "ghdl/synth:latest";
+
+  "ghdl/cache:formal" -> "ghdl/synth:formal" [style=dashed];
+  "ghdl/cache:yosys-gnat" -> "ghdl/synth:beta" -> "ghdl/synth:formal";
+
+  // cache(gtkwave)
+  "debian:buster-slim"    -> "build | cache_gtkwave";
+  "build | cache_gtkwave" -> "ghdl/cache:gtkwave" [style=dashed];
+  "scratch" -> "ghdl/cache:gtkwave";
+  //"ghdl/cache:gtkwave";
+
+  // cache(yosys)
+  "debian:buster-slim"    -> "base | cache_yosys";
+  "base | cache_yosys" -> "build | cache_yosys";
+  "base | cache_yosys" -> "ghdl/synth:yosys";
+  "build | cache_yosys" -> "ghdl/synth:yosys" [style=dashed];
+  "ghdl/synth:yosys" -> "ghdl/cache:yosys-gnat";
+
+  // cache(formal)
+  //"ghdl/cache:formal"
+
+  // cache(symbiyosys)
+  "ghdl/synth:yosys"  -> "ghdl/synth:symbiyosys";
+  "ghdl/cache:formal" -> "ghdl/synth:symbiyosys" [style=dashed];
+
+  // cache(pnr)
+
+  "debian:buster-slim" -> "base | cache_pnr";
+
+  subgraph cluster_1 {
+
+    subgraph cluster_11 {
+      "build | cache_pnr" -> "icestorm-build";
+      "build | cache_pnr" -> "build-dev | cache_pnr";
+      "build-dev | cache_pnr" -> "nextpnr-build-base";
+      "build-dev | cache_pnr" -> "trellis-build";
+    }
+
+    subgraph cluster_12 {
+      "nextpnr-build-base"  -> "nextpnr-ice40-build";
+      "nextpnr-ice40-build" -> "nextpnr-build"
+      "nextpnr-build-base"  -> "nextpnr-ecp5-build";
+    }
+
+    "base | cache_pnr"  -> "build | cache_pnr";
+    "base | cache_pnr" -> "nextpnr-base";
+    "nextpnr-base" -> "ghdl/synth:nextpnr-ice40";
+    "nextpnr-base" -> "ghdl/synth:nextpnr-ecp5";
+    "nextpnr-base" -> "ghdl/synth:nextpnr";
+
+    "alpine" -> "get-trellis";
+  }
+
+
+  "base | cache_pnr" -> "ghdl/synth:icestorm";
+  "icestorm-build"   -> "ghdl/synth:icestorm" [style=dashed];
+
+  "get-trellis" -> "trellis-build" [style=dashed];
+
+  "base | cache_pnr" -> "ghdl/synth:trellis";
+  "trellis-build"    -> "ghdl/synth:trellis" [style=dashed];
+
+  "debian:buster-slim" -> "ghdl/synth:prog";
+  "icestorm-build"     -> "ghdl/synth:prog" [style=dashed];
+
+  "icestorm-build" -> "nextpnr-ice40-build" -> "ghdl/synth:nextpnr-ice40" [style=dashed];
+  "trellis-build"  -> "nextpnr-ecp5-build"  -> "ghdl/synth:nextpnr-ecp5" [style=dashed];
+  "trellis-build"  -> "nextpnr-build"       -> "ghdl/synth:nextpnr" [style=dashed];
+
+}
