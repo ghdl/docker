@@ -28,7 +28,7 @@ Images for development (i.e., building and/or testing ghdl):
 
 - [![ghdl/build Docker pulls](https://img.shields.io/docker/pulls/ghdl/build?label=ghdl%2Fbuild&style=flat-square)](https://hub.docker.com/r/ghdl/build) images include development depedendencies for [ghdl](https://github.com/ghdl/ghdl).
 - [![ghdl/run Docker pulls](https://img.shields.io/docker/pulls/ghdl/run?label=ghdl%2Frun&style=flat-square)](https://hub.docker.com/r/ghdl/run) images include runtime dependencies for [ghdl](https://github.com/ghdl/ghdl).
-- [![ghdl/pkg Docker pulls](https://img.shields.io/docker/pulls/ghdl/pkg?label=ghdl%2Fpkg&style=flat-square)](https://hub.docker.com/r/ghdl/pkg) images include [ghdl](https://github.com/ghdl/ghdl) tarballs built in [ghdl/build](https://hub.docker.com/r/ghdl/build/tags) images.
+- [![ghdl/pkg Docker pulls](https://img.shields.io/docker/pulls/ghdl/pkg?label=ghdl%2Fpkg&style=flat-square)](https://hub.docker.com/r/ghdl/pkg) images include the content of [ghdl](https://github.com/ghdl/ghdl) tarballs built in [ghdl/build](https://hub.docker.com/r/ghdl/build/tags) images.
 - [![ghdl/cache Docker pulls](https://img.shields.io/docker/pulls/ghdl/cache?label=ghdl%2Fcache&style=flat-square)](https://hub.docker.com/r/ghdl/cache) external dependencies which we want to keep almost in the edge, but are not part of [ghdl](https://github.com/ghdl/ghdl).
 
 Ready-to-use images:
@@ -81,7 +81,7 @@ The procedure in each job is as follows:
 - ghdl is built in the corresponding `ghdl/build:*` image.
 - A `ghdl/ghdl:*` image is created based on the corresponding `ghdl/run:*` image.
 - The testsuite is executed inside the `ghdl/ghdl:*` image created in the previous step.
-- If successful, a `ghdl/pkg:*` image is created with the tarball built in the first step.
+- If successful, a `ghdl/pkg:*` image is created from `scratch`, with the content of the tarball built in the first step.
 - `ghdl/ghdl:*` and `ghdl/pkg:*` images are pushed to [hub.docker.com/u/ghdl](https://cloud.docker.com/u/ghdl/repository/list).
 
 > NOTE: images with GCC backend include `lcov` for code coverage analysis.

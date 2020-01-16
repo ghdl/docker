@@ -337,14 +337,9 @@ build () {
   if [ "$GITHUB_OS" != "macOS" ] && [ -f testsuite/test_ok ]; then
     IMAGE_TAG="$(docker images "ghdl/ghdl:*" | head -n2 | tail -n1 | awk -F ' ' '{print $2}')"
     gstart "[CI] Docker build ghdl/pkg:${IMAGE_TAG}"
-
-    pwd
-    ls -la
-
     docker build -t "ghdl/pkg:$IMAGE_TAG" . -f-<<EOF
 FROM scratch
-COPY `ls | grep -v '\.src\.' | grep '^ghdl.*\.tgz'` ./
-COPY BUILD_TOOLS ./
+ADD `ls | grep -v '\.src\.' | grep '^ghdl.*\.tgz'` ./
 EOF
     gend
   fi
