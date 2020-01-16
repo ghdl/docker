@@ -171,10 +171,10 @@ cache() {
       DREPO=cache DTAG=yosys-gnat DFILE=cache_yosys build_img
     ;;
     formal)
-      DREPO=cache DTAG=formal DFILE=cache_formal build_img --target=cache
+      DREPO=cache DTAG=formal DFILE=cache_formal build_img
     ;;
     symbiyosys)
-      DREPO=synth DTAG=symbiyosys DFILE=cache_formal build_img
+      DREPO=synth DTAG=symbiyosys DFILE=synth_formal build_img --build-arg IMAGE="ghdl/synth:yosys"
     ;;
     *)
       printf "${ANSI_RED}cache: unknown task $1!$ANSI_NOCOLOR\n"
@@ -192,8 +192,8 @@ extended() {
       mkdir -p ghdlsynth
       cd ghdlsynth
       curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
-      printf "${ANSI_MAGENTA}[Run] ./travis.sh${ANSI_NOCOLOR}\n"
-      ./travis.sh
+      printf "${ANSI_MAGENTA}[Run] ./ci.sh${ANSI_NOCOLOR}\n"
+      ./ci.sh
       cd ..
 
       DREPO=synth DTAG="formal" DFILE=synth_formal build_img

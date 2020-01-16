@@ -7,7 +7,7 @@ on:
       - 'test_pnr.sh'
       - '.github/workflows/cache.yml'
       - 'dockerfiles/cache_*'
-      - 'dockerfiles/run_*'
+      - 'dockerfiles/synth_formal'
   schedule:
     - cron: '0 0 * * 5'
 
@@ -34,7 +34,6 @@ jobs:
     - run: ./run.sh -x pnr
     - name: Deploy to hub.docker.com
       run: ./run.sh all
-    - run: ./test_pnr.sh
 
   yosys:
     runs-on: ubuntu-latest

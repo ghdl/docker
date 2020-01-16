@@ -32,21 +32,17 @@ RUN apt-get update -qq \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
 
-ENV PREFIX /opt/yosys
-
-RUN mkdir /usr/local/src/yosys \
- && cd /usr/local/src/yosys \
+RUN mkdir /tmp/yosys && cd /tmp/yosys \
  && curl -fsSL https://codeload.github.com/cliffordwolf/yosys/tar.gz/master | tar xzf - --strip-components=1 \
  && make -j $(nproc) \
- && make install \
+ && make DESTDIR=/opt/yosys install \
  && make test
 
 #---
 
 FROM base AS yosys
 
-COPY --from=build /opt/yosys /opt/yosys
-ENV PATH /opt/yosys/bin:$PATH
+COPY --from=build /opt/yosys /
 CMD ["yosys"]
 
 #---

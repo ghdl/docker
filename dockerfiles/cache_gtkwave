@@ -3,7 +3,6 @@ ARG IMAGE="debian:buster-slim"
 #---
 
 FROM $IMAGE AS build
-ENV DESTDIR=/opt/gtkwave
 RUN apt-get update -qq \
  && apt-get -y install \
    build-essential \
@@ -20,11 +19,11 @@ RUN apt-get update -qq \
    subversion \
    tcl-dev \
    tk-dev \
- && mkdir -pv /tmp/gtkwave && cd /tmp/gtkwave \
+ && mkdir /tmp/gtkwave && cd /tmp/gtkwave \
  && svn checkout svn://svn.code.sf.net/p/gtkwave/code/gtkwave3-gtk3 ./ \
- && ./configure --prefix="/usr/local" --with-tk=/usr/lib --enable-gtk3 \
+ && ./configure --with-tk=/usr/lib --enable-gtk3 \
  && make -j$(nproc) \
- && make check install \
+ && make DESTDIR=/opt/gtkwave check install \
  && tar -zcvf /tmp/gtkwave.tgz -C /opt/gtkwave/usr/local/ .
 
 #---
