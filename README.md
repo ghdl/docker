@@ -41,8 +41,6 @@ Ready-to-use images:
 
 See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a user perspective.
 
-----
-
 ## GHA workflows
 
 > NOTE: currently, there is no triggering mechanism set up between [ghdl/ghdl](https://github.com/ghdl/ghdl) and [ghdl/docker](https://github.com/ghdl/docker). All the workflows in this repo are triggered by CRON jobs.
@@ -52,7 +50,7 @@ See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a 
 Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
 - A pair of images is created in one job for each of `[ ls-debian, ls-ubuntu ]`.
-- One job is created for each of `[ fedora (29 | 30), debian (buster | sid), ubuntu (16 | 18)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
+- One job is created for each of `[ fedora (30 | 31), debian (buster | sid), ubuntu (16 | 18)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
 
 ### · [`cache.yml`](.github/workflows/cache.yml) (5 jobs -max 5-, 7 images) [weekly]
 
@@ -73,8 +71,8 @@ Furthermore:
 
 Build and push almost all the `ghdl/ghdl:*` and `ghdl/pkg:*` images. A pair of images is created in one job for each combination of:
 
-- `[ fedora: [29, 30], debian: [sid], ubuntu: [16, 18] ]` and `[ mcode, llvm*]`.
-- `[ fedora: [29, 30], debian: [buster, sid] ]` and `[ gcc* ]`.
+- `[ fedora: [30, 31], debian: [sid], ubuntu: [16, 18] ]` and `[ mcode, llvm*]`.
+- `[ fedora: [30, 31], debian: [buster, sid] ]` and `[ gcc* ]`.
 - For Debian only, `[buster, sid]` and `[mcode]` and `[--gpl]`.
 
 The procedure in each job is as follows:
@@ -86,6 +84,8 @@ The procedure in each job is as follows:
 - If successful, a `ghdl/pkg:*` image is created with the tarball built in the first step.
 - `ghdl/ghdl:*` and `ghdl/pkg:*` images are pushed to [hub.docker.com/u/ghdl](https://cloud.docker.com/u/ghdl/repository/list).
 
+> NOTE: images with GCC backend include `lcov` for code coverage analysis.
+
 ### · [`daily.yml`](.github/workflows/daily.yml) (3 jobs -max 3-, 6 images) [daily]
 
 Complement of `ghdl.yml`, to be run daily. One job is scheduled for each combination of `[ buster ]` and `[ mcode, llvm-7 , gcc-8.3.0 ]`.
@@ -96,6 +96,8 @@ Build and push all the `ghdl/vunit:*` and `ghdl/ext:*` images. Four jobs are sch
 
 - `ls`: build and push `ghdl/ext:ls-debian` and `ghdl/ext:ls-ubuntu` (a job for each of them). These include [ghdl/ghdl](https://github.com/ghdl/ghdl), the [ghdl/ghdl-language-server](https://github.com/ghdl/ghdl-language-server) backend and the vscode-client (precompiled but not preinstalled).
 - `vunit`: build and push all the `ghdl/vunit:*` images, which are based on the ones created in the daily workflow.
+  - Two versions are published for each backend: one with latest stable VUnit (from PyPI) and one with the latest `master` (from Git).
+  - Images with GCC backend include `lcov` and `gcovr` for code coverage analysis.
 - `gui`: build and push the following images:
   - `ghdl/ext:gtkwave`: includes [GtkWave](http://gtkwave.sourceforge.net/) (gtk3) on top of `ghdl/vunit:llvm-master`.
   - `ghdl/ext:broadway`: adds a script to `ghdl/ext:gtkwave` in order to launch a [Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html) server that allows to use GtkWave from a web browser.
@@ -114,6 +116,4 @@ Multiple artifacts (i.e. standalone tarballs) of GHDL are generated in these wor
 - Want to use a base image which is compatible but different from the ones we use. E.g., use `python:3-slim-buster` instead of `debian:buster-slim`.
 - Do not want to build and test GHDL every time.
 
-Precisely, this is how images in [VUnit/docker](https://github.com/VUnit/docker/) are built. See [github.com/VUnit/docker/blob/master/run.sh](https://github.com/VUnit/docker/blob/e6cb236d021b42f44640fd0e7b83c0dc4ff22144/run.sh#L36-L54).
-
-However, it is discouraged to use these pre-built tarballs to install GHDL on host systems. Instead, [ghdl/packaging](https://github.com/ghdl/packaging) contains sources for package manager systems, and it provides *nightly builds* of GHDL.
+However, it is discouraged to use these pre-built artifacts to install GHDL on host systems. Instead, [ghdl/packaging](https://github.com/ghdl/packaging) contains sources for package manager systems, and it provides *nightly builds* of GHDL.
