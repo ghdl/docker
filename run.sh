@@ -256,10 +256,20 @@ extended() {
       for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
         TAG="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
         for version in stable master; do
+          PY_PACKAGES=""
+          if [ "x$TAG" = "xgcc" ]; then
+            PY_PACKAGES="gcovr"
+          fi
           if [ "x$version" = "xmaster" ]; then
             TAG="$TAG-master"
           fi
-          DREPO=vunit DTAG="$TAG" DFILE=vunit build_img --target="$version" --build-arg TAG="$fulltag"
+          DREPO=vunit \
+          DTAG="$TAG" \
+          DFILE=vunit \
+          build_img \
+          --target="$version" \
+          --build-arg TAG="$fulltag" \
+          --build-arg PY_PACKAGES="$PY_PACKAGES"
         done
       done
     ;;
