@@ -28,3 +28,7 @@
     - [ ] Push both, the tagged image and the `latest`
 - [ ] Can docker images be removed programatically?
 - [ ] ARM cross-compilation. Ready-to-use Rpi3 docker-based SD imgs available.
+
+---
+
+Check if nextpnr artifacts contain anything apart from the binary. It seems they don't.
