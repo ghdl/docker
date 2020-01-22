@@ -35,16 +35,18 @@ jobs:
       run: ./run.sh ext
 
   gui:
-    needs: [ls]
+    needs: [ ls ]
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - name: Build images
-      run: ./run.sh -e gui
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task gui
     - name: Deploy to hub.docker.com
       run: ./run.sh ext
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+

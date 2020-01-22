@@ -160,96 +160,6 @@ create () {
 
 #--
 
-cache() {
-  case "$1" in
-    gtkwave)
-      DREPO=cache DTAG=gtkwave DFILE=cache_gtkwave build_img
-    ;;
-    pnr)
-      for TAG in icestorm trellis prog nextpnr-ice40 nextpnr-ecp5 nextpnr; do
-        DREPO=synth DTAG="$TAG" DFILE=cache_pnr build_img --target="$TAG"
-      done
-    ;;
-    yosys)
-      DREPO=synth DTAG=yosys DFILE=cache_yosys build_img --target=yosys
-      DREPO=cache DTAG=yosys-gnat DFILE=cache_yosys build_img
-    ;;
-    formal)
-      DREPO=cache DTAG=formal DFILE=cache_formal build_img
-    ;;
-    symbiyosys)
-      DREPO=synth DTAG=symbiyosys DFILE=synth_formal build_img --build-arg IMAGE="ghdl/synth:yosys"
-    ;;
-    *)
-      printf "${ANSI_RED}cache: unknown task $1!$ANSI_NOCOLOR\n"
-      exit 1
-    ;;
-  esac
-}
-
-#--
-
-extended() {
-  case "$1" in
-    synth)
-      printf "${ANSI_MAGENTA}[Clone] tgingold/ghdlsynth-beta${ANSI_NOCOLOR}\n"
-      mkdir -p ghdlsynth
-      cd ghdlsynth
-      curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
-      printf "${ANSI_MAGENTA}[Run] ./ci.sh${ANSI_NOCOLOR}\n"
-      ./ci.sh
-      cd ..
-
-      DREPO=synth DTAG="formal" DFILE=synth_formal build_img
-    ;;
-    vunit)
-      export DOCKER_BUILDKIT=0
-      for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
-        TAG="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
-        for version in stable master; do
-          PY_PACKAGES=""
-          if [ "x$TAG" = "xgcc" ]; then
-            PY_PACKAGES="gcovr"
-          fi
-          if [ "x$version" = "xmaster" ]; then
-            TAG="$TAG-master"
-          fi
-          DREPO=vunit \
-          DTAG="$TAG" \
-          DFILE=vunit \
-          build_img \
-          --target="$version" \
-          --build-arg TAG="$fulltag" \
-          --build-arg PY_PACKAGES="$PY_PACKAGES"
-        done
-      done
-    ;;
-    gui)
-      for TAG in ls-vunit latest; do
-        DREPO=ext DTAG="$TAG" DFILE=gui build_img --target="$TAG"
-      done
-      TAG="broadway" DREPO=ext DTAG="broadway" DFILE=gui build_img --ctx=.. --target="broadway"
-    ;;
-    *)
-      printf "${ANSI_RED}ext: unknown task $1!$ANSI_NOCOLOR\n"
-      exit 1
-    ;;
-  esac
-}
-
-#--
-
-language_server() {
-  distro="$1"
-  llvm_ver="7"
-  if [ "x$distro" = "xubuntu" ]; then
-    llvm_ver="6.0"
-  fi
-  TAG="ls-$distro" DREPO="ext" DTAG="ls-$distro" DFILE=ls_debian build_img --build-arg "DISTRO=$distro" --build-arg LLVM_VER=$llvm_ver
-}
-
-#--
-
 deploy () {
   case $1 in
     "")
@@ -319,13 +229,15 @@ case "$1" in
     shift
     create "$@"
   ;;
-  -x)
-    shift
-    cache "$@"
-  ;;
-  -e)
-    shift
-    extended "$@"
+  -s)
+    printf "${ANSI_MAGENTA}[Clone] tgingold/ghdlsynth-beta${ANSI_NOCOLOR}\n"
+    mkdir -p ghdlsynth
+    cd ghdlsynth
+    curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
+    printf "${ANSI_MAGENTA}[Run] ./ci.sh${ANSI_NOCOLOR}\n"
+    ./ci.sh
+    cd ..
+    DREPO=synth DTAG="formal" DFILE=synth_formal build_img
   ;;
   -b)
     shift
@@ -334,7 +246,12 @@ case "$1" in
   ;;
   -l)
     shift
-    language_server "$@"
+    distro="$1"
+    llvm_ver="7"
+    if [ "x$distro" = "xubuntu" ]; then
+      llvm_ver="6.0"
+    fi
+    TAG="ls-$distro" DREPO="ext" DTAG="ls-$distro" DFILE=ls_debian build_img --build-arg "DISTRO=$distro" --build-arg LLVM_VER=$llvm_ver
   ;;
   *)
     deploy $@

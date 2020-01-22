@@ -24,6 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build images
-      run: ./run.sh -e synth
+      run: ./run.sh -s
     - name: Deploy to hub.docker.com
       run: ./run.sh synth

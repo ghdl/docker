@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'run.sh'
+      - 'cli/*'
       - 'test_pnr.sh'
       - '.github/workflows/cache.yml'
       - 'dockerfiles/cache_*'
@@ -22,46 +23,71 @@ jobs:
   gtkwave:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - run: ./run.sh -x gtkwave
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task gtkwave
     - name: Deploy to hub.docker.com
       run: ./run.sh all
 
   pnr:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - run: ./run.sh -x pnr
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task pnr
     - name: Deploy to hub.docker.com
       run: ./run.sh all
 
   yosys:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - run: ./run.sh -x yosys
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task yosys
     - name: Deploy to hub.docker.com
       run: ./run.sh all
 
   formal:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - run: ./run.sh -x formal
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task formal
     - name: Deploy to hub.docker.com
       run: ./run.sh all
 
   symbiyosys:
-    needs: [yosys, formal]
+    needs: [ yosys, formal ]
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - run: ./run.sh -x symbiyosys
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task symbiyosys
     - name: Deploy to hub.docker.com
       run: ./run.sh all
 
   test:
-    needs: [pnr, yosys]
+    needs: [ pnr, yosys ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1

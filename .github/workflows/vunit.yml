@@ -22,8 +22,12 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: actions/checkout@v1
-    - name: Build images
-      run: ./run.sh -e vunit
+    - run: |
+        python -m pip install -r cli/requirements.txt
+        ./cli/cli.py task vunit
     - name: Deploy to hub.docker.com
       run: ./run.sh vunit
