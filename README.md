@@ -1,22 +1,29 @@
 <p align="center">
-  <img src="./logo.png"/>
-</p>
-
-<p align="center">
 <!--
   <a title="Read the Docs" href="http://ghdl.readthedocs.io"><img src="https://img.shields.io/readthedocs/ghdl.svg?longCache=true&style=flat-square&logo=read-the-docs&logoColor=e8ecef"></a><!--
   -->
   <a title="Join the chat at https://gitter.im/ghdl1/Lobby" href="https://gitter.im/ghdl1/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef"></a><!--
   -->
-  <a title="'daily' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Adaily"><img alt="'daily' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/daily?longCache=true&style=flat-square&label=daily"></a><!--
-  -->
-  <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aext"><img alt="'ext' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ext?longCache=true&style=flat-square&label=ext"></a><!--
+  <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abase"><img alt="'base' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/base?longCache=true&style=flat-square&label=base"></a><!--
   -->
   <a title="'ghdl' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aghdl"><img alt="'ghdl' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ghdl?longCache=true&style=flat-square&label=ghdl"></a><!--
   -->
+  <a title="'daily' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Adaily"><img alt="'daily' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/daily?longCache=true&style=flat-square&label=daily"></a><!--
+  -->
+</p>
+
+<p align="center">
+  <img src="./logo.png"/>
+</p>
+
+<p align="center">
   <a title="'cache' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Acache"><img alt="'cache' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/cache?longCache=true&style=flat-square&label=cache"></a><!--
   -->
-  <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abase"><img alt="'base' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/base?longCache=true&style=flat-square&label=base"></a><!--
+  <a title="'synth' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Asynth"><img alt="'synth' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/synth?longCache=true&style=flat-square&label=synth"></a><!--
+  -->
+  <a title="'vunit' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Avunit"><img alt="'vunit' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/vunit?longCache=true&style=flat-square&label=vunit"></a><!--
+  -->
+  <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aext"><img alt="'ext' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ext?longCache=true&style=flat-square&label=ext"></a><!--
   -->
 </p>
 
@@ -33,11 +40,11 @@ Images for development (i.e., building and/or testing ghdl):
 
 Ready-to-use images:
 
-- [![ghdl/ghdl Docker pulls](https://img.shields.io/docker/pulls/ghdl/ghdl?label=ghdl%2Fghdl&style=flat-square)](https://hub.docker.com/r/ghdl/ghdl) images, which are based on correponding [ghdl/run](https://hub.docker.com/r/ghdl/run/tags) images, include [ghdl](https://github.com/ghdl/ghdl) along with minimum runtime dependencies.
+- [![ghdl/ghdl Docker pulls](https://img.shields.io/docker/pulls/ghdl/ghdl?label=ghdl%2Fghdl&style=flat-square)](https://hub.docker.com/r/ghdl/ghdl) images, which are based on correponding [ghdl/run](https://hub.docker.com/r/ghdl/run/tags) images, include [ghdl](https://github.com/ghdl/ghdl) along with minimum runtime dependencies. GHDL is built with the experimental `--synth` feature enabled.
 - [![ghdl/vunit Docker pulls](https://img.shields.io/docker/pulls/ghdl/vunit?label=ghdl%2Fvunit&style=flat-square)](https://hub.docker.com/r/ghdl/vunit) images, which are based on [`ghdl/ghdl:buster-*`](https://hub.docker.com/r/ghdl/ghdl/tags) images, include [ghdl](https://github.com/ghdl/ghdl) along with [VUnit](https://vunit.github.io/).
   - `*-master` variants include latest VUnit (master branch), while others include the latest stable release (installed through pip).
 - [![ghdl/ext Docker pulls](https://img.shields.io/docker/pulls/ghdl/ext?label=ghdl%2Fext&style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) ready-to-use images with GHDL and complements ([ghdl-language-server](https://github.com/ghdl/ghdl-language-server), [GtkWave](http://gtkwave.sourceforge.net/), [VUnit](https://vunit.github.io/), etc.).
-- [![ghdl/synth Docker pulls](https://img.shields.io/docker/pulls/ghdl/synth?label=ghdl%2Fsynth&style=flat-square)](https://hub.docker.com/r/ghdl/synth) images allow to try experimental synthesis features of [ghdl](https://github.com/ghdl/ghdl).
+- [![ghdl/synth Docker pulls](https://img.shields.io/docker/pulls/ghdl/synth?label=ghdl%2Fsynth&style=flat-square)](https://hub.docker.com/r/ghdl/synth) images allow to generate and program bitstreams from HDL sources with open source tools: [ghdl](https://github.com/ghdl/ghdl), [yosys](https://github.com/YosysHQ/yosys), [nextpnr](https://github.com/YosysHQ/nextpnr) (`master`), [icestorm](https://github.com/cliffordwolf/icestorm), [prjtrellis](https://github.com/SymbiFlow/prjtrellis), etc.
 
 See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a user perspective.
 
@@ -45,38 +52,38 @@ See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a 
 
 > NOTE: currently, there is no triggering mechanism set up between [ghdl/ghdl](https://github.com/ghdl/ghdl) and [ghdl/docker](https://github.com/ghdl/docker). All the workflows in this repo are triggered by CRON jobs.
 
-### · [`base.yml`](.github/workflows/base.yml) (8 jobs -max 4-, 40 images) [twice a month]
+### · [base](.github/workflows/base.yml) (8 jobs -max 4-, 40 images) [twice a month]
 
 Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
 - A pair of images is created in one job for each of `[ ls-debian, ls-ubuntu ]`.
 - One job is created for each of `[ fedora (30 | 31), debian (buster | sid), ubuntu (16 | 18)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
 
-### · [`cache.yml`](.github/workflows/cache.yml) (5 jobs -max 4-, 11 images) [weekly]
+### · [cache](.github/workflows/cache.yml) (5 jobs -max 4-, 11 images) [weekly]
 
 Build and push all the images to `ghdl/cache:*` and some to `ghdl/synth:*`. Each of the following images includes a tool on top of a `debian:buster-slim` image:
 
-- `ghdl/synth:yosys`: includes [YosysHQ/yosys](https://github.com/YosysHQ/yosys) (`master`).
-- `ghdl/synth:icestorm`: includes [cliffordwolf/icestorm](https://github.com/cliffordwolf/icestorm) (`master`) without `iceprog`.
-- `ghdl/synth:trellis`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`).
-- `ghdl/synth:prog`: includes `iceprog` from [cliffordwolf/icestorm](https://github.com/cliffordwolf/icestorm) (`master`).
-- `ghdl/synth:nextpnr-ice40`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for ICE40 devices only.
-- `ghdl/synth:nextpnr-ecp5`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for ECP5 devices only.
-- `ghdl/synth:nextpnr`: includes [YosysHQ/nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for all architectures (see [YosysHQ/nextpnr: Additional notes for building nextpnr](https://github.com/YosysHQ/nextpnr#additional-notes-for-building-nextpnr)).
+- `ghdl/synth:yosys`: includes [yosys](https://github.com/YosysHQ/yosys) (`master`).
+- `ghdl/synth:icestorm`: includes [icestorm](https://github.com/cliffordwolf/icestorm) (`master`) without `iceprog`.
+- `ghdl/synth:trellis`: includes [prjtrellis](https://github.com/SymbiFlow/prjtrellis) (`master`).
+- `ghdl/synth:prog`: includes `iceprog` from [icestorm](https://github.com/cliffordwolf/icestorm) (`master`) and [openocd](http://openocd.org/).
+- `ghdl/synth:nextpnr-ice40`: includes [nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for ICE40 devices only.
+- `ghdl/synth:nextpnr-ecp5`: includes [nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for ECP5 devices only.
+- `ghdl/synth:nextpnr`: includes [nextpnr](https://github.com/YosysHQ/nextpnr) (`master`) with support for all architectures (see [nextpnr: Additional notes for building nextpnr](https://github.com/YosysHQ/nextpnr#additional-notes-for-building-nextpnr)).
 
 Furthermore:
 
 - `ghdl/cache:yosys-gnat`: includes `libgnat-8` on top of `ghdl/synth:yosys`.
-- `ghdl/cache:gtkwave`: contains a tarball with [GtkWave](http://gtkwave.sourceforge.net/) (`gtkwave3-gtk3`) prebuilt for images based on Debian Buster.
-- `ghdl/cache:formal`: contains a tarball with [YosysHQ/SymbiYosys](https://github.com/YosysHQ/SymbiYosys) (`master`) and [Z3Prover/z3](https://github.com/Z3Prover/z3) (`master`) prebuilt for images based on Debian Buster.
+- `ghdl/cache:gtkwave`: contains a tarball with [GtkWave](http://gtkwave.sourceforge.net/) (`gtkwave3-gtk3`), prebuilt for images based on Debian Buster.
+- `ghdl/cache:formal`: contains a tarball with [SymbiYosys](https://github.com/YosysHQ/SymbiYosys) (`master`) and [z3](https://github.com/Z3Prover/z3) (`master`), prebuilt for images based on Debian Buster.
 - `ghdl/synth:symbiyosys`: includes the tarball from `ghdl/cache:formal` and Python3 on top of `ghdl/synth:yosys`.
 
-### · [`ghdl.yml`](.github/workflows/ghdl.yml) (15 jobs -max 3-, 30 images) [weekly]
+### · [ghdl](.github/workflows/ghdl.yml) (15 jobs -max 3-, 30 images) [weekly]
 
 Build and push almost all the `ghdl/ghdl:*` and `ghdl/pkg:*` images. A pair of images is created in one job for each combination of:
 
-- `[ fedora: [30, 31], debian: [sid], ubuntu: [16, 18] ]` and `[ mcode, llvm*]`.
-- `[ fedora: [30, 31], debian: [buster, sid] ]` and `[ gcc* ]`.
+- `[ fedora: [30, 31], debian: [sid], ubuntu: [16, 18] ]` and `[mcode, llvm*]`.
+- `[ fedora: [30, 31], debian: [buster, sid] ]` and `[gcc*]`.
 - For Debian only, `[buster, sid]` and `[mcode]` and `[--gpl]`.
 
 The procedure in each job is as follows:
@@ -90,32 +97,36 @@ The procedure in each job is as follows:
 
 > NOTE: images with GCC backend include `lcov` for code coverage analysis.
 
-### · [`daily.yml`](.github/workflows/daily.yml) (3 jobs -max 3-, 6 images) [daily]
+### · [daily](.github/workflows/daily.yml) (3 jobs -max 3-, 6 images) [daily]
 
 Complement of `ghdl.yml`, to be run daily. One job is scheduled for each combination of `[ buster ]` and `[ mcode, llvm-7 , gcc-8.3.0 ]`.
 
-### · [`ext.yml`](.github/workflows/ext.yml) (5 jobs -max 4-, 15 images) [twice a week]
+### · [synth](.github/workflows/synth.yml) (1 jobs, 2 images) [twice a week]
 
-Build and push all the `ghdl/vunit:*` and `ghdl/ext:*` images. Four jobs are scheduled:
+Build and push all the `ghdl/synth:*` images which are not created in workflow `cache`. Repo [tgingold/ghdlsynth-beta](https://github.com/tgingold/ghdlsynth-beta) is cloned and its CI script is used to build two images:
+  - `ghdl/synth:beta` includes ghdl from `ghdl/pkg:buster-mcode` along with ghdlsynth-beta built as a module for [YosysHQ/yosys](https://github.com/YosysHQ/yosys), on top of `ghdl/cache:yosys-gnat`.
+  - `ghdl/synth:formal` includes the tarball from `ghdl/cache:formal` and Python3 on top of `ghdl/synth:beta`.
 
-- `ls`: build and push `ghdl/ext:ls-debian` and `ghdl/ext:ls-ubuntu` (a job for each of them). These include [ghdl/ghdl](https://github.com/ghdl/ghdl), the [ghdl/ghdl-language-server](https://github.com/ghdl/ghdl-language-server) backend and the vscode-client (precompiled but not preinstalled).
-- `vunit`: build and push all the `ghdl/vunit:*` images, which are based on the ones created in the daily workflow.
-  - Two versions are published for each backend: one with latest stable VUnit (from PyPI) and one with the latest `master` (from Git).
-  - Images with GCC backend include `lcov` and `gcovr` for code coverage analysis.
-- `gui`: build and push the following images:
+### · [vunit](.github/workflows/vunit.yml) (1 job, 6 images) [twice a week]
+
+Build and push all the `ghdl/vunit:*` images, which are based on the ones created in the daily workflow.
+- Two versions are published for each backend: one with latest stable VUnit (from PyPI) and one with the latest `master` (from Git).
+- Images with GCC backend include `lcov` and `gcovr` for code coverage analysis.
+
+### · [ext](.github/workflows/ext.yml) (3 jobs -max 2-, 6 images) [twice a week]
+
+Build and push all the `ghdl/ext:*` images:
+
+- `ls`: `ghdl/ext:ls-debian` and `ghdl/ext:ls-ubuntu` (a job for each of them). These include [ghdl/ghdl](https://github.com/ghdl/ghdl), the [ghdl/ghdl-language-server](https://github.com/ghdl/ghdl-language-server) backend and the vscode-client (precompiled but not preinstalled).
+- `gui`:
   - `ghdl/ext:gtkwave`: includes [GtkWave](http://gtkwave.sourceforge.net/) (gtk3) on top of `ghdl/vunit:llvm-master`.
   - `ghdl/ext:broadway`: adds a script to `ghdl/ext:gtkwave` in order to launch a [Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html) server that allows to use GtkWave from a web browser.
   - `ghdl/ext:ls-vunit`: includes VUnit (`master`) on top of `ghdl/ext:ls-debian`.
   - `ghdl/ext:latest`: includes [GtkWave](http://gtkwave.sourceforge.net/) on top of `ghdl/ext:ls-vunit`.
-- `synth`: build and push all the `ghdl/synth:*` images which are not created in workflow `cache`:
-  - Repo [tgingold/ghdlsynth-beta](https://github.com/tgingold/ghdlsynth-beta) is cloned and it's build scripts are used to build two images:
-    - `ghdl/synth:latest`: includes [ghdl/ghdl](https://github.com/ghdl/ghdl) with synthesis features enabled on top of a `ghdl/run:buster-mcode` image.
-    - `ghdl/synth:beta`: includes ghdl from `ghdl/synth:latest` along with ghdlsynth-beta built as a module for [YosysHQ/yosys](https://github.com/YosysHQ/yosys), on top of `ghdl/cache:yosys-gnat`.
-  - Then, image `ghdl/synth:formal` is built, which includes the tarball from `ghdl/cache:formal` and Python3 on top of `ghdl/synth:beta`.
 
 ## Packaging
 
-Multiple artifacts (i.e. standalone tarballs) of GHDL are generated in these workflows. For example, each job in `daily.yml` generates a tarball that is then installed in a `ghdl/ghdl:*` image and published in a `ghdl/pkg:*` image. These resources might be useful for users/developers who:
+Multiple artifacts of GHDL are generated in these workflows. For example, each job in `daily.yml` generates a tarball that is then installed in a `ghdl/ghdl:*` image, and the content is published in a `ghdl/pkg:*` image. These resources might be useful for users/developers who:
 
 - Want to use a base image which is compatible but different from the ones we use. E.g., use `python:3-slim-buster` instead of `debian:buster-slim`.
 - Do not want to build and test GHDL every time.

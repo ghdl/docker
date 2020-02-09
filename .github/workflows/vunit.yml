@@ -1,0 +1,29 @@
+name: 'vunit'
+
+on:
+  push:
+    paths:
+      - 'run.sh'
+      - 'cli/*'
+      - '.github/workflows/vunit.yml'
+      - 'dockerfiles/vunit'
+  schedule:
+    - cron: '0 0 * * 3,6'
+
+env:
+  DOCKER_BUILDKIT: 1
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+jobs:
+
+  vunit:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build images
+      run: ./run.sh -e vunit
+    - name: Deploy to hub.docker.com
+      run: ./run.sh vunit
