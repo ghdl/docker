@@ -15,20 +15,16 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        task: [
-          { distro: buster,   backend: mcode     },
-          { distro: buster,   backend: llvm-7    },
-          { distro: buster,   backend: gcc-8.3.0 },
-        ]
+        backend: [ mcode, llvm-7, gcc-8.3.0 ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - name: Clone ghdl
       run: git clone https://github.com/ghdl/ghdl
     - name: Build 'ghdl' and 'pkg' images
-      run: ./run.sh -b --synth
+      run: ./run.sh -b
       env:
-        TASK: ${{ matrix.task.distro }}+${{ matrix.task.backend }}
+        TASK: buster+${{ matrix.backend }}
     - name: Deploy to hub.docker.com
       run: ./run.sh ""
       env:
