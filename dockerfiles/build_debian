@@ -39,10 +39,10 @@ RUN apt-get update -qq \
 FROM mcode AS gcc
 
 RUN apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install curl \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     autogen \
     bzip2 \
-    curl \
     dejagnu \
     flex \
     g++ \
