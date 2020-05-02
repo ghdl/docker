@@ -134,6 +134,10 @@ create () {
                   LLVM_VER="5.0"
                   GNAT_VER="7"
                 ;;
+                20) #focal
+                  LLVM_VER="10"
+                  GNAT_VER="9"
+                ;;
               esac
               ITAG="ubuntu$VERSION"
               build_debian_images \

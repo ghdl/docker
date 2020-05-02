@@ -21,10 +21,10 @@ jobs:
         task: [
           { distro: debian, version: buster },
           { distro: debian, version: sid    },
-          { distro: fedora, version: 30     },
           { distro: fedora, version: 31     },
-          { distro: ubuntu, version: 16     },
+          { distro: fedora, version: 32     },
           { distro: ubuntu, version: 18     },
+          { distro: ubuntu, version: 20     },
           { distro: ls,     version: debian },
           { distro: ls,     version: ubuntu },
         ]
