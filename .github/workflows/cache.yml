@@ -22,7 +22,7 @@ jobs:
   gtkwave:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: ./run.sh -x gtkwave
     - name: Deploy to hub.docker.com
       run: ./run.sh all
@@ -30,7 +30,7 @@ jobs:
   pnr:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: ./run.sh -x pnr
     - name: Deploy to hub.docker.com
       run: ./run.sh all
@@ -38,7 +38,7 @@ jobs:
   yosys:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: ./run.sh -x yosys
     - name: Deploy to hub.docker.com
       run: ./run.sh all
@@ -46,7 +46,7 @@ jobs:
   formal:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: ./run.sh -x formal
     - name: Deploy to hub.docker.com
       run: ./run.sh all
@@ -55,7 +55,7 @@ jobs:
     needs: [yosys, formal]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: ./run.sh -x symbiyosys
     - name: Deploy to hub.docker.com
       run: ./run.sh all
@@ -64,5 +64,5 @@ jobs:
     needs: [pnr, yosys]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: ./test_pnr.sh

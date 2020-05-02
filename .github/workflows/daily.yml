@@ -18,7 +18,7 @@ jobs:
         backend: [ mcode, llvm-7, gcc-8.3.0 ]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Clone ghdl
       run: git clone https://github.com/ghdl/ghdl
     - name: Build 'ghdl' and 'pkg' images
