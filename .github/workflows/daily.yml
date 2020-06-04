@@ -7,6 +7,7 @@ on:
       - '.github/workflows/daily.yml'
   schedule:
     - cron: '0 0 * * *'
+  repository_dispatch:
 
 jobs:
 
@@ -18,6 +19,7 @@ jobs:
         backend: [ mcode, llvm-7, gcc-8.3.0 ]
     runs-on: ubuntu-latest
     steps:
+    - run: echo "${{ toJson(github.event) }}"
     - uses: actions/checkout@v2
     - name: Clone ghdl
       run: git clone https://github.com/ghdl/ghdl
