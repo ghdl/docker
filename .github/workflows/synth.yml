@@ -7,8 +7,8 @@ on:
       - 'cli/*'
       - '.github/workflows/synth.yml'
       - 'dockerfiles/synth_*'
-  schedule:
-    - cron: '0 0 * * 3,6'
+  repository_dispatch:
+    types: [ synth ]
 
 env:
   DOCKER_BUILDKIT: 1

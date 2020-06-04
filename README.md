@@ -6,9 +6,9 @@
   -->
   <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abase"><img alt="'base' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/base?longCache=true&style=flat-square&label=base"></a><!--
   -->
-  <a title="'ghdl' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aghdl"><img alt="'ghdl' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ghdl?longCache=true&style=flat-square&label=ghdl"></a><!--
+  <a title="'test' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Atest"><img alt="'test' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/test?longCache=true&style=flat-square&label=test"></a><!--
   -->
-  <a title="'daily' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Adaily"><img alt="'daily' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/daily?longCache=true&style=flat-square&label=daily"></a><!--
+  <a title="'buster' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abuster"><img alt="'buster' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/buster?longCache=true&style=flat-square&label=buster"></a><!--
   -->
 </p>
 
@@ -78,7 +78,7 @@ Furthermore:
 - `ghdl/cache:formal`: contains a tarball with [SymbiYosys](https://github.com/YosysHQ/SymbiYosys) (`master`) and [z3](https://github.com/Z3Prover/z3) (`master`), prebuilt for images based on Debian Buster.
 - `ghdl/synth:symbiyosys`: includes the tarball from `ghdl/cache:formal` and Python3 on top of `ghdl/synth:yosys`.
 
-### · [ghdl](.github/workflows/ghdl.yml) (15 jobs -max 3-, 30 images) [weekly]
+### · [test](.github/workflows/test.yml) (15 jobs -max 3-, 30 images) [weekly]
 
 Build and push almost all the `ghdl/ghdl:*` and `ghdl/pkg:*` images. A pair of images is created in one job for each combination of:
 
@@ -97,23 +97,23 @@ The procedure in each job is as follows:
 
 > NOTE: images with GCC backend include `lcov` for code coverage analysis.
 
-### · [daily](.github/workflows/daily.yml) (3 jobs -max 3-, 6 images) [daily]
+### · [buster](.github/workflows/buster.yml) (3 jobs -max 3-, 6 images) [triggered by ghdl/ghdl nightly job]
 
-Complement of `ghdl.yml`, to be run daily. One job is scheduled for each combination of `[ buster ]` and `[ mcode, llvm-7 , gcc-8.3.0 ]`.
+Complement of `ghdl.yml`, to be run after each successful run of the main workflow in ghdl/ghdl. One job is scheduled for each combination of `[ buster ]` and `[ mcode, llvm-7 , gcc-8.3.0 ]`.
 
-### · [synth](.github/workflows/synth.yml) (1 jobs, 2 images) [twice a week]
+### · [synth](.github/workflows/synth.yml) (1 jobs, 2 images) [triggered after workflow 'buster']
 
 Build and push all the `ghdl/synth:*` images which are not created in workflow `cache`. Repo [tgingold/ghdlsynth-beta](https://github.com/tgingold/ghdlsynth-beta) is cloned and its CI script is used to build two images:
   - `ghdl/synth:beta` includes ghdl from `ghdl/pkg:buster-mcode` along with ghdlsynth-beta built as a module for [YosysHQ/yosys](https://github.com/YosysHQ/yosys), on top of `ghdl/cache:yosys-gnat`.
   - `ghdl/synth:formal` includes the tarball from `ghdl/cache:formal` and Python3 on top of `ghdl/synth:beta`.
 
-### · [vunit](.github/workflows/vunit.yml) (1 job, 6 images) [twice a week]
+### · [vunit](.github/workflows/vunit.yml) (1 job, 6 images) [triggered after workflow 'buster']
 
-Build and push all the `ghdl/vunit:*` images, which are based on the ones created in the daily workflow.
+Build and push all the `ghdl/vunit:*` images, which are based on the ones created in the 'buster' workflow.
 - Two versions are published for each backend: one with latest stable VUnit (from PyPI) and one with the latest `master` (from Git).
 - Images with GCC backend include `lcov` and `gcovr` for code coverage analysis.
 
-### · [ext](.github/workflows/ext.yml) (3 jobs -max 2-, 6 images) [twice a week]
+### · [ext](.github/workflows/ext.yml) (3 jobs -max 2-, 6 images) [triggered after workflow 'vunit']
 
 Build and push all the `ghdl/ext:*` images:
 
@@ -126,7 +126,7 @@ Build and push all the `ghdl/ext:*` images:
 
 ## Packaging
 
-Multiple artifacts of GHDL are generated in these workflows. For example, each job in `daily.yml` generates a tarball that is then installed in a `ghdl/ghdl:*` image, and the content is published in a `ghdl/pkg:*` image. These resources might be useful for users/developers who:
+Multiple artifacts of GHDL are generated in these workflows. For example, each job in `test.yml` generates a tarball that is then installed in a `ghdl/ghdl:*` image, and the content is published in a `ghdl/pkg:*` image. These resources might be useful for users/developers who:
 
 - Want to use a base image which is compatible but different from the ones we use. E.g., use `python:3-slim-buster` instead of `debian:buster-slim`.
 - Do not want to build and test GHDL every time.

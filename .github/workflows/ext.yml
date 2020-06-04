@@ -8,8 +8,8 @@ on:
       - '.github/workflows/ext.yml'
       - 'dockerfiles/ls_debian'
       - 'dockerfiles/gui'
-  schedule:
-    - cron: '0 0 * * 3,6'
+  repository_dispatch:
+    types: [ ext ]
 
 env:
   DOCKER_BUILDKIT: 1

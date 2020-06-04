@@ -1,13 +1,12 @@
-name: 'daily'
+name: 'buster'
 
 on:
   push:
     paths:
       - 'run.sh'
-      - '.github/workflows/daily.yml'
-  schedule:
-    - cron: '0 0 * * *'
+      - '.github/workflows/buster.yml'
   repository_dispatch:
+    types: [ ghdl ]
 
 jobs:
 
@@ -32,3 +31,6 @@ jobs:
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+    - run: |
+        ./.github/trigger.sh vunit
+        ./.github/trigger.sh synth

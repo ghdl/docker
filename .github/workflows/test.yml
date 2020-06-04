@@ -1,10 +1,10 @@
-name: 'ghdl'
+name: 'test'
 
 on:
   push:
     paths:
       - 'run.sh'
-      - '.github/workflows/ghdl.yml'
+      - '.github/workflows/test.yml'
   schedule:
     - cron: '0 0 * * 5'
 
