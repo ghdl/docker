@@ -18,7 +18,6 @@ jobs:
         backend: [ mcode, llvm-7, gcc-8.3.0 ]
     runs-on: ubuntu-latest
     steps:
-    - run: echo "${{ toJson(github.event) }}"
     - uses: actions/checkout@v2
     - name: Clone ghdl
       run: git clone https://github.com/ghdl/ghdl
@@ -31,6 +30,14 @@ jobs:
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+  trigger:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
     - run: |
         ./.github/trigger.sh vunit
         ./.github/trigger.sh synth
+      env:
+        GHDL_BOT_TOKEN: ${{ secrets.GHDL_BOT }}
