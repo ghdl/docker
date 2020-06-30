@@ -10,6 +10,8 @@ on:
       - 'dockerfiles/synth_formal'
   schedule:
     - cron: '0 0 * * 5'
+  repository_dispatch:
+    types: [ cache ]
 
 env:
   CI: true
@@ -66,3 +68,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: ./test_pnr.sh
+
+  trigger:
+    needs: [gtkwave, symbiyosys, test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: ./.github/trigger.sh synth
+      env:
+        GHDL_BOT_TOKEN: ${{ secrets.GHDL_BOT }}
