@@ -65,6 +65,10 @@ create () {
   TASK="$1"
   VERSION="$2"
   case $TASK in
+    arch)
+      DREPO="build" DTAG="archlinux" DFILE="build_arch.dockerfile" build_img
+    ;;
+
     ls)
       case "$VERSION" in
         debian)

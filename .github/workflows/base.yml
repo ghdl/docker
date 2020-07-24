@@ -19,6 +19,7 @@ jobs:
       max-parallel: 4
       matrix:
         task: [
+          { distro: arch,   version: ''     },
           { distro: debian, version: buster },
           { distro: debian, version: sid    },
           { distro: fedora, version: 31     },
