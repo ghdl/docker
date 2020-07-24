@@ -2,9 +2,9 @@
 
 set -e
 
-. $(dirname $0)/utils.sh
+cd $(dirname $0)
 
-cd $(dirname $0)/dockerfiles
+. ./utils.sh
 
 export DOCKER_BUILDKIT=1
 
@@ -40,7 +40,7 @@ build_img () {
   if [ "x$SKIP_BUILD" = "xtrue" ]; then
     printf "${ANSI_YELLOW}SKIP_BUILD...$ANSI_NOCOLOR\n"
   else
-    docker build -t "ghdl/${DREPO}:$DTAG" "$@" $DCTX < $DFILE
+    docker build -t "ghdl/${DREPO}:$DTAG" "$@" $DCTX < "${DFILE}".dockerfile
   fi
   gend
 }
@@ -66,7 +66,7 @@ create () {
   VERSION="$2"
   case $TASK in
     arch)
-      DREPO="build" DTAG="archlinux" DFILE="build_arch.dockerfile" build_img
+      DREPO="build" DTAG="archlinux" DFILE="build_arch" build_img
     ;;
 
     ls)
@@ -232,7 +232,7 @@ extended() {
       for TAG in ls-vunit latest; do
         DREPO=ext DTAG="$TAG" DFILE=gui build_img --target="$TAG"
       done
-      TAG="broadway" DREPO=ext DTAG="broadway" DFILE=gui build_img --ctx=.. --target="broadway"
+      TAG="broadway" DREPO=ext DTAG="broadway" DFILE=gui build_img --ctx=. --target="broadway"
     ;;
     *)
       printf "${ANSI_RED}ext: unknown task $1!$ANSI_NOCOLOR\n"
@@ -333,7 +333,7 @@ case "$1" in
   ;;
   -b)
     shift
-    cd ../ghdl
+    cd ghdl
     build "$@"
   ;;
   -l)

@@ -5,9 +5,9 @@ on:
     paths:
       - 'run.sh'
       - '.github/workflows/base.yml'
-      - 'dockerfiles/build_*'
-      - 'dockerfiles/run_*'
-      - 'dockerfiles/ls_*base'
+      - 'build_*.dockerfile'
+      - 'run_*.dockerfile'
+      - 'ls_*base*.dockerfile'
   schedule:
     - cron: '0 0 1,16 * *'
 

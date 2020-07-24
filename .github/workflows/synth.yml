@@ -6,7 +6,6 @@ on:
       - 'run.sh'
       - 'cli/*'
       - '.github/workflows/synth.yml'
-      - 'dockerfiles/synth_*'
   repository_dispatch:
     types: [ synth ]
 

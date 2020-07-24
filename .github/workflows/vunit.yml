@@ -6,7 +6,7 @@ on:
       - 'run.sh'
       - 'cli/*'
       - '.github/workflows/vunit.yml'
-      - 'dockerfiles/vunit'
+      - 'vunit.dockerfile'
   repository_dispatch:
     types: [ vunit ]
 

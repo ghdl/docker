@@ -6,8 +6,8 @@ on:
       - 'run.sh'
       - 'cli/*'
       - '.github/workflows/ext.yml'
-      - 'dockerfiles/ls_debian'
-      - 'dockerfiles/gui'
+      - 'ls_debian*.dockerfile'
+      - 'gui.dockerfile'
   repository_dispatch:
     types: [ ext ]
 

@@ -6,8 +6,8 @@ on:
       - 'run.sh'
       - 'test_pnr.sh'
       - '.github/workflows/cache.yml'
-      - 'dockerfiles/cache_*'
-      - 'dockerfiles/synth_formal'
+      - 'cache_*.dockerfile'
+      - 'synth_formal.dockerfile'
   schedule:
     - cron: '0 0 * * 5'
   repository_dispatch:
