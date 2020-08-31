@@ -12,7 +12,7 @@ RUN apt-get update -qq \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && update-ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
- && pip3 install -U pip setuptools $PY_PACKAGES
+ && pip3 install -U pip setuptools wheel $PY_PACKAGES
 
 FROM base as stable
 RUN pip3 install vunit_hdl
