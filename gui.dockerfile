@@ -22,7 +22,7 @@ RUN apk add --no-cache --update git && git clone --recurse-submodules https://gi
 FROM ghdl/ext:ls-debian AS ls-vunit
 COPY --from=get-master /tmp/vunit /tmp/vunit
 RUN cd /tmp/vunit \
- && python3 setup.py install \
+ && pip3 install . \
  && cd .. && rm -rf /tmp/vunit
 
 #---

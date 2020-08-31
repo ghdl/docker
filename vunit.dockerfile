@@ -23,6 +23,6 @@ RUN apk add --no-cache --update git && git clone --recurse-submodules https://gi
 FROM base AS master
 COPY --from=get-master /tmp/vunit /tmp/vunit
 RUN cd /tmp/vunit \
- && python3 setup.py install \
+ && pip3 install . \
  && cd .. \
  && rm -rf vunit
