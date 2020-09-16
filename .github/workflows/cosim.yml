@@ -1,0 +1,42 @@
+name: 'cosim'
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cosim.yml'
+  repository_dispatch:
+    types: [ cosim ]
+  schedule:
+    - cron: '0 0 * * 5'
+
+env:
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        img: [ matplotlib, xyce ]
+    runs-on: ubuntu-latest
+    env:
+      IMG: ${{ matrix.img }}
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        repository: ghdl/ghdl-cosim
+
+    - name: Build image
+      run: docker build -t ghdl/cosim:${IMG} - < docker/${IMG}.dockerfile
+
+    - name: Docker login
+      run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+    - name: Docker push
+      run: docker push ghdl/cosim:${IMG}
+
+    - name: Docker logout
+      run: docker logout
+      if: always()

@@ -25,6 +25,8 @@
   -->
   <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aext"><img alt="'ext' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ext?longCache=true&style=flat-square&label=ext"></a><!--
   -->
+  <a title="'cosim' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Acosim"><img alt="'cosim' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/cosim?longCache=true&style=flat-square&label=cosim"></a><!--
+  -->
 </p>
 
 This repository contains scripts and YAML workflows for GitHub Actions (GHA) to build and to deploy the docker images that are used and/or published by the [GHDL GitHub organization](https://github.com/ghdl). All of them are pushed to [hub.docker.com/u/ghdl](https://cloud.docker.com/u/ghdl/repository/list).
@@ -43,8 +45,9 @@ Ready-to-use images:
 - [![ghdl/ghdl Docker pulls](https://img.shields.io/docker/pulls/ghdl/ghdl?label=ghdl%2Fghdl&style=flat-square)](https://hub.docker.com/r/ghdl/ghdl) images, which are based on correponding [ghdl/run](https://hub.docker.com/r/ghdl/run/tags) images, include [ghdl](https://github.com/ghdl/ghdl) along with minimum runtime dependencies. GHDL is built with the experimental `--synth` feature enabled.
 - [![ghdl/vunit Docker pulls](https://img.shields.io/docker/pulls/ghdl/vunit?label=ghdl%2Fvunit&style=flat-square)](https://hub.docker.com/r/ghdl/vunit) images, which are based on [`ghdl/ghdl:buster-*`](https://hub.docker.com/r/ghdl/ghdl/tags) images, include [ghdl](https://github.com/ghdl/ghdl) along with [VUnit](https://vunit.github.io/).
   - `*-master` variants include latest VUnit (master branch), while others include the latest stable release (installed through pip).
-- [![ghdl/ext Docker pulls](https://img.shields.io/docker/pulls/ghdl/ext?label=ghdl%2Fext&style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) ready-to-use images with GHDL and complements ([ghdl-language-server](https://github.com/ghdl/ghdl-language-server), [GtkWave](http://gtkwave.sourceforge.net/), [VUnit](https://vunit.github.io/), etc.).
+- [![ghdl/ext Docker pulls](https://img.shields.io/docker/pulls/ghdl/ext?label=ghdl%2Fext&style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) GHDL and complements ([ghdl-language-server](https://github.com/ghdl/ghdl-language-server), [GtkWave](http://gtkwave.sourceforge.net/), [VUnit](https://vunit.github.io/), etc.).
 - [![ghdl/synth Docker pulls](https://img.shields.io/docker/pulls/ghdl/synth?label=ghdl%2Fsynth&style=flat-square)](https://hub.docker.com/r/ghdl/synth) images allow to generate and program bitstreams from HDL sources with open source tools: [ghdl](https://github.com/ghdl/ghdl), [yosys](https://github.com/YosysHQ/yosys), [nextpnr](https://github.com/YosysHQ/nextpnr) (`master`), [icestorm](https://github.com/cliffordwolf/icestorm), [prjtrellis](https://github.com/SymbiFlow/prjtrellis), etc.
+- [![ghdl/cosim Docker pulls](https://img.shields.io/docker/pulls/ghdl/cosim?label=ghdl%2Fcosim&style=flat-square)](https://hub.docker.com/r/ghdl/cosim/tags) GHDL and other tools for co-simulation such as [SciPy](https://www.scipy.org/), [Xyce](https://xyce.sandia.gov/) or [GNU Octave](https://www.gnu.org/software/octave/).
 
 See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a user perspective.
 
@@ -124,6 +127,10 @@ Build and push all the `ghdl/ext:*` images:
   - `ghdl/ext:ls-vunit`: includes VUnit (`master`) on top of `ghdl/ext:ls-debian`.
   - `ghdl/ext:latest`: includes [GtkWave](http://gtkwave.sourceforge.net/) on top of `ghdl/ext:ls-vunit`.
 
+### · [cosim](.github/workflows/cosim.yml) [weekly]
+
+See [ghdl/ghdl-cosim: docker](https://github.com/ghdl/ghdl-cosim/tree/master/docker) and [ghdl.github.io/ghdl-cosim/vhpidirect/examples/vffi_user](https://ghdl.github.io/ghdl-cosim/vhpidirect/examples/vffi_user.html).
+
 ## Packaging
 
 Multiple artifacts of GHDL are generated in these workflows. For example, each job in `test.yml` generates a tarball that is then installed in a `ghdl/ghdl:*` image, and the content is published in a `ghdl/pkg:*` image. These resources might be useful for users/developers who:
@@ -131,4 +138,8 @@ Multiple artifacts of GHDL are generated in these workflows. For example, each j
 - Want to use a base image which is compatible but different from the ones we use. E.g., use `python:3-slim-buster` instead of `debian:buster-slim`.
 - Do not want to build and test GHDL every time.
 
-However, it is discouraged to use these pre-built artifacts to install GHDL on host systems. Instead, [ghdl/packaging](https://github.com/ghdl/packaging) contains sources for package manager systems, and it provides *nightly builds* of GHDL.
+However, it is discouraged to use these pre-built artifacts to install GHDL on host systems.
+
+<!--
+Instead, [ghdl/packaging](https://github.com/ghdl/packaging) contains sources for package manager systems, and it provides *nightly builds* of GHDL.
+-->
