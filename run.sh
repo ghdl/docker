@@ -167,6 +167,8 @@ extended() {
           --target="$version" \
           --build-arg TAG="$fulltag" \
           --build-arg PY_PACKAGES="$PY_PACKAGES"
+          # Sanity check that the VUnit package works
+          docker run --rm ghdl/vunit:$TAG python3 -c "import vunit; print(vunit.__version__)"
         done
       done
     ;;
