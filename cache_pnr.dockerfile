@@ -60,7 +60,7 @@ COPY --from=icestorm-build /opt/icestorm /
 #---
 
 FROM alpine as get-trellis
-RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/SymbiFlow/prjtrellis /tmp/trellis \
+RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/YosysHQ/prjtrellis /tmp/trellis \
  && cd /tmp/trellis \
  && git describe --tags > libtrellis/git_version
 
