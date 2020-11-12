@@ -112,9 +112,9 @@ create () {
                   LLVM_VER="7"
                   GNAT_VER="8"
                 ;;
-                *sid*)
-                  LLVM_VER="8"
-                  GNAT_VER="8"
+                *bullseye*)
+                  LLVM_VER="9"
+                  GNAT_VER="9"
                 ;;
               esac
               ITAG="$VERSION"

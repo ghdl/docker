@@ -19,15 +19,15 @@ jobs:
       max-parallel: 4
       matrix:
         task: [
-          { distro: arch,   version: ''     },
-          { distro: debian, version: buster },
-          { distro: debian, version: sid    },
-          { distro: fedora, version: 31     },
-          { distro: fedora, version: 32     },
-          { distro: ubuntu, version: 18     },
-          { distro: ubuntu, version: 20     },
-          { distro: ls,     version: debian },
-          { distro: ls,     version: ubuntu },
+          { distro: arch,   version: ''       },
+          { distro: debian, version: buster   },
+          { distro: debian, version: bullseye },
+          { distro: fedora, version: 31       },
+          { distro: fedora, version: 32       },
+          { distro: ubuntu, version: 18       },
+          { distro: ubuntu, version: 20       },
+          { distro: ls,     version: debian   },
+          { distro: ls,     version: ubuntu   },
         ]
     runs-on: ubuntu-latest
     steps:
