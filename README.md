@@ -28,7 +28,7 @@ This repository contains scripts and YAML workflows for GitHub Actions (GHA) to 
 
 ----
 
-**Some images related to synthesis and PnR were moved to [hdl/containers](https://github.com/hdl/containers) and [hub.docker.com/u/hdlc](https://hub.docker.com/u/hdlc)**. See [DEPRECATED](DEPRECATED.md).
+**ATTENTION: Some images related to synthesis and PnR were moved to [hdl/containers](https://github.com/hdl/containers) and [hub.docker.com/u/hdlc](https://hub.docker.com/u/hdlc)**. See [DEPRECATED](DEPRECATED.md).
 
 ----
 
@@ -90,16 +90,25 @@ Build and push all the `ghdl/vunit:*` images, which are based on the ones create
 
 Build and push all the `ghdl/ext:*` images:
 
-- `ls`: `ghdl/ext:ls-debian` and `ghdl/ext:ls-ubuntu` (a job for each of them). These include [ghdl/ghdl](https://github.com/ghdl/ghdl), the [ghdl/ghdl-language-server](https://github.com/ghdl/ghdl-language-server) backend and the vscode-client (precompiled but not preinstalled).
+- `ls`: **ghdl/ext:ls-debian** and **ghdl/ext:ls-ubuntu** (a job for each of them). These include [ghdl/ghdl](https://github.com/ghdl/ghdl), the [ghdl/ghdl-language-server](https://github.com/ghdl/ghdl-language-server) backend and the vscode-client (precompiled but not preinstalled).
 - `gui`:
-  - `ghdl/ext:gtkwave`: includes [GtkWave](http://gtkwave.sourceforge.net/) (gtk3) on top of `ghdl/vunit:llvm-master`.
-  - `ghdl/ext:broadway`: adds a script to `ghdl/ext:gtkwave` in order to launch a [Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html) server that allows to use GtkWave from a web browser.
-  - `ghdl/ext:ls-vunit`: includes VUnit (`master`) on top of `ghdl/ext:ls-debian`.
-  - `ghdl/ext:latest`: includes [GtkWave](http://gtkwave.sourceforge.net/) on top of `ghdl/ext:ls-vunit`.
+  - **ghdl/ext:gtkwave**: includes [GtkWave](http://gtkwave.sourceforge.net/) (gtk3) on top of *ghdl/vunit:llvm-master*.
+  - **ghdl/ext:broadway**: adds a script to *ghdl/ext:gtkwave* in order to launch a [Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html) server that allows to use GtkWave from a web browser.
+  - **ghdl/ext:ls-vunit**: includes VUnit (`master`) on top of *ghdl/ext:ls-debian*.
+  - **ghdl/ext:latest**: includes [GtkWave](http://gtkwave.sourceforge.net/) on top of `ghdl/ext:ls-vunit`.
 
 ### · [cosim](.github/workflows/cosim.yml) [weekly]
 
 See [ghdl/ghdl-cosim: docker](https://github.com/ghdl/ghdl-cosim/tree/master/docker) and [ghdl.github.io/ghdl-cosim/vhpidirect/examples/vffi_user](https://ghdl.github.io/ghdl-cosim/vhpidirect/examples/vffi_user.html).
+
+- **ghdl/cosim:mcode**: based on *ghdl/ghdl:buster-mcode*, includes GCC.
+- **ghdl/cosim:py**: based on *ghdl/ghdl:buster-llvm-7*, includes Python.
+  - **ghdl/cosim:vunit-cocotb**: based on *ghdl/cosim:py*, includes [VUnit](https://vunit.github.io/), [cocotb](https://docs.cocotb.org/) and `g++` (required by cocotb).
+  - **ghdl/cosim:matplotlib**: based on *ghdl/cosim:py*, includes `pytest`, `matplotlib`, `numpy` and Imagemagick.
+  - **ghdl/cosim:octave**: based on *ghdl/cosim:py*, includes [GNU Octave](https://www.gnu.org/software/octave/).
+  - **ghdl/cosim:xyce**: based on *ghdl/cosim:py*, includes [Xyce](https://xyce.sandia.gov/).
+
+NOTE: `*-slim` variants of `matplotlib`, `octave` and `xyce` images are provided too. Those are based on *ghdl/cosim:vunit-cocotb*, instead of *ghdl/cosim:py*.
 
 ## Packaging
 
