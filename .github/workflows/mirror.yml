@@ -1,0 +1,52 @@
+name: 'mirror'
+
+on:
+  push:
+    paths:
+      - 'run.sh'
+      - '.github/workflows/mirror.yml'
+  schedule:
+    - cron: '0 0 * * 5'
+  repository_dispatch:
+    types: [ mirror ]
+
+jobs:
+
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Pull images
+      run: |
+        docker pull hdlc/nextpnr:latest
+        docker pull hdlc/nextpnr:ice40
+        docker pull hdlc/nextpnr:ecp5
+        docker pull hdlc/prog:latest
+        docker pull hdlc/prjtrellis:latest
+        docker pull hdlc/icestorm:latest
+        docker pull hdlc/yosys:latest
+        docker pull hdlc/ghdl:yosys
+        docker pull hdlc/formal:latest
+
+    - name: Tag images
+      run: |
+        docker tag hdlc/nextpnr:latest ghdl/synth:nextpnr
+        docker tag hdlc/nextpnr:ice40 ghdl/synth:nextpnr-ice40
+        docker tag hdlc/nextpnr:ecp5 ghdl/synth:nextpnr-ecp5
+        docker tag hdlc/prog:latest ghdl/synth:prog
+        docker tag hdlc/prjtrellis:latest ghdl/synth:trellis
+        docker tag hdlc/icestorm:latest ghdl/synth:icestorm
+        docker tag hdlc/yosys:latest ghdl/synth:yosys
+        docker tag hdlc/ghdl:yosys ghdl/synth:beta
+        docker tag hdlc/formal:latest ghdl/synth:formal
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
+      run: ./run.sh synth

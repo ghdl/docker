@@ -164,48 +164,8 @@ create () {
 
 #--
 
-cache() {
-  case "$1" in
-    gtkwave)
-      DREPO=cache DTAG=gtkwave DFILE=cache_gtkwave build_img
-    ;;
-    pnr)
-      for TAG in icestorm trellis prog nextpnr-ice40 nextpnr-ecp5 nextpnr; do
-        DREPO=synth DTAG="$TAG" DFILE=cache_pnr build_img --target="$TAG"
-      done
-    ;;
-    yosys)
-      DREPO=synth DTAG=yosys DFILE=cache_yosys build_img --target=yosys
-      DREPO=cache DTAG=yosys-gnat DFILE=cache_yosys build_img
-    ;;
-    formal)
-      DREPO=cache DTAG=formal DFILE=cache_formal build_img
-    ;;
-    symbiyosys)
-      DREPO=synth DTAG=symbiyosys DFILE=synth_formal build_img --build-arg IMAGE="ghdl/synth:yosys"
-    ;;
-    *)
-      printf "${ANSI_RED}cache: unknown task $1!$ANSI_NOCOLOR\n"
-      exit 1
-    ;;
-  esac
-}
-
-#--
-
 extended() {
   case "$1" in
-    synth)
-      printf "${ANSI_MAGENTA}[Clone] tgingold/ghdlsynth-beta${ANSI_NOCOLOR}\n"
-      mkdir -p ghdlsynth
-      cd ghdlsynth
-      curl -fsSL https://codeload.github.com/tgingold/ghdlsynth-beta/tar.gz/master | tar xzf - --strip-components=1
-      printf "${ANSI_MAGENTA}[Run] ./ci.sh${ANSI_NOCOLOR}\n"
-      ./ci.sh
-      cd ..
-
-      DREPO=synth DTAG="formal" DFILE=synth_formal build_img
-    ;;
     vunit)
       export DOCKER_BUILDKIT=0
       for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
@@ -318,10 +278,6 @@ case "$1" in
   -c)
     shift
     create "$@"
-  ;;
-  -x)
-    shift
-    cache "$@"
   ;;
   -e)
     shift

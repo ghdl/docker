@@ -45,6 +45,5 @@ jobs:
     - uses: actions/checkout@v2
     - run: |
         ./.github/trigger.sh vunit
-        ./.github/trigger.sh synth
       env:
         GHDL_BOT_TOKEN: ${{ secrets.GHDL_BOT }}
