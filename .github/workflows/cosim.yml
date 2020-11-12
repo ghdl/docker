@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       max-parallel: 2
       matrix:
-        img: [ matplotlib, xyce ]
+        img: [ matplotlib, xyce, octave ]
     runs-on: ubuntu-latest
     env:
       IMG: ${{ matrix.img }}
