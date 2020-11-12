@@ -18,9 +18,9 @@ jobs:
   base:
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 1
       matrix:
-        img: [ mcode, py ]
+        img: [ mcode, py, vunit-cocotb ]
     runs-on: ubuntu-latest
     env:
       IMG: ${{ matrix.img }}
@@ -47,9 +47,9 @@ jobs:
     needs: base
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 3
       matrix:
-        img: [ matplotlib, xyce, octave, vunit-cocotb ]
+        img: [ matplotlib, xyce, octave ]
     runs-on: ubuntu-latest
     env:
       IMG: ${{ matrix.img }}
@@ -59,8 +59,10 @@ jobs:
       with:
         repository: ghdl/ghdl-cosim
 
-    - name: Build image
-      run: docker build -t ghdl/cosim:${IMG} - < docker/${IMG}.dockerfile
+    - name: Build images
+      run: |
+        docker build -t ghdl/cosim:${IMG}-slim - < docker/${IMG}.dockerfile
+        docker build -t ghdl/cosim:${IMG} --build-arg IMAGE="ghdl/cosim:${IMG}-slim" - < docker/vunit-cocotb.dockerfile
 
     - name: Login to DockerHub
       uses: docker/login-action@v1
@@ -69,4 +71,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASS }}
 
     - name: Docker push
-      run: docker push ghdl/cosim:${IMG}
+      run: |
+        docker push ghdl/cosim:${IMG}-slim
+        docker push ghdl/cosim:${IMG}
