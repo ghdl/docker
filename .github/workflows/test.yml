@@ -35,16 +35,23 @@ jobs:
         ]
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - name: Clone ghdl
       run: git clone https://github.com/ghdl/ghdl
+
     - name: Build 'ghdl' and 'pkg' images
       run: ./run.sh -b $TARGS
       env:
         TASK: ${{ matrix.task.distro }}+${{ matrix.task.backend }}
         TARGS: ${{ matrix.task.args }}
-    - name: Deploy to hub.docker.com
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
       run: ./run.sh ""
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}

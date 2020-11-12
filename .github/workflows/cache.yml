@@ -16,64 +16,118 @@ on:
 env:
   CI: true
   DOCKER_BUILDKIT: 1
-  DOCKER_USER: ${{ secrets.DOCKER_USER }}
-  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
 jobs:
+
 
   gtkwave:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./run.sh -x gtkwave
-    - name: Deploy to hub.docker.com
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
       run: ./run.sh all
+
 
   pnr:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./run.sh -x pnr
-    - name: Deploy to hub.docker.com
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
       run: ./run.sh all
+
 
   yosys:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./run.sh -x yosys
-    - name: Deploy to hub.docker.com
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
       run: ./run.sh all
+
 
   formal:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./run.sh -x formal
-    - name: Deploy to hub.docker.com
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
       run: ./run.sh all
+
 
   symbiyosys:
     needs: [yosys, formal]
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./run.sh -x symbiyosys
-    - name: Deploy to hub.docker.com
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: Deploy to DockerHub
       run: ./run.sh all
+
 
   test:
     needs: [pnr, yosys]
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./test_pnr.sh
+
 
   trigger:
     needs: [gtkwave, symbiyosys, test]
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - run: ./.github/trigger.sh synth
       env:
         GHDL_BOT_TOKEN: ${{ secrets.GHDL_BOT }}

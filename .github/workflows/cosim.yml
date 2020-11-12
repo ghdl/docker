@@ -31,12 +31,11 @@ jobs:
     - name: Build image
       run: docker build -t ghdl/cosim:${IMG} - < docker/${IMG}.dockerfile
 
-    - name: Docker login
-      run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
 
     - name: Docker push
       run: docker push ghdl/cosim:${IMG}
-
-    - name: Docker logout
-      run: docker logout
-      if: always()

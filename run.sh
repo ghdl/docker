@@ -272,8 +272,6 @@ deploy () {
       FILTER="/";;
   esac
 
-  echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
   echo "IMAGES: $FILTER"
   docker images
 
@@ -290,8 +288,6 @@ deploy () {
       gend
     done
   done
-
-  docker logout
 }
 
 #--
