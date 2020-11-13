@@ -70,31 +70,14 @@ create () {
     ;;
 
     ls)
-      case "$VERSION" in
-        debian)
-          BASE_IMAGE="python:3-slim-buster"
-          LLVM_VER="7"
-          GNAT_VER="7"
-          APT_PY=""
-        ;;
-        ubuntu)
-          BASE_IMAGE="ubuntu:bionic"
-          LLVM_VER="6.0"
-          GNAT_VER="7"
-          APT_PY="python3 python3-pip"
-        ;;
-      esac
       for img in build run; do
-        TAG="ghdl/$img.ls-$VERSION" \
         DREPO="$img" \
-        DTAG="ls-$VERSION" \
-        DFILE=ls_debian_base \
+        DTAG="ls" \
+        DFILE=ls_base \
         build_img \
         --target="$img" \
-        --build-arg IMAGE="$BASE_IMAGE" \
-        --build-arg LLVM_VER="$LLVM_VER" \
-        --build-arg GNAT_VER="$GNAT_VER" \
-        --build-arg APT_PY="$APT_PY"
+        --build-arg LLVM_VER="7" \
+        --build-arg GNAT_VER="7"
       done
     ;;
 
@@ -204,12 +187,7 @@ extended() {
 #--
 
 language_server() {
-  distro="$1"
-  llvm_ver="7"
-  if [ "x$distro" = "xubuntu" ]; then
-    llvm_ver="6.0"
-  fi
-  TAG="ls-$distro" DREPO="ext" DTAG="ls-$distro" DFILE=ls_debian build_img --build-arg "DISTRO=$distro" --build-arg LLVM_VER=$llvm_ver
+  DREPO="ext" DTAG="ls" DFILE=ls build_img --build-arg LLVM_VER='7'
 }
 
 #--

@@ -1,13 +1,9 @@
-ARG IMAGE="python:3-slim-buster"
 ARG LLVM_VER="7"
 ARG GNAT_VER="7"
-ARG APT_PY=""
 
 #---
 
-FROM $IMAGE AS base
-
-ARG APT_PY
+FROM python:3-slim-buster AS base
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
@@ -15,7 +11,7 @@ RUN apt-get update -qq \
     curl \
     gcc \
     make \
-    zlib1g-dev $APT_PY \
+    zlib1g-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && update-ca-certificates \
  && rm -rf /var/lib/apt/lists/* \

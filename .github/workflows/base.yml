@@ -7,7 +7,7 @@ on:
       - '.github/workflows/base.yml'
       - 'build_*.dockerfile'
       - 'run_*.dockerfile'
-      - 'ls_*base*.dockerfile'
+      - 'ls_base.dockerfile'
   schedule:
     - cron: '0 0 1,16 * *'
 
@@ -26,8 +26,7 @@ jobs:
           { distro: fedora, version: 33       },
           { distro: ubuntu, version: 18       },
           { distro: ubuntu, version: 20       },
-          { distro: ls,     version: debian   },
-          { distro: ls,     version: ubuntu   },
+          { distro: ls,     version: ''       },
         ]
     runs-on: ubuntu-latest
     steps:

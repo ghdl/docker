@@ -1,9 +1,10 @@
-ARG DISTRO="debian"
+# syntax=docker/dockerfile:experimental
+
 ARG LLVM_VER="4.0"
 
 #---
 
-FROM ghdl/build:ls-$DISTRO AS build
+FROM ghdl/build:ls AS build
 
 ARG LLVM_VER
 
@@ -23,11 +24,10 @@ RUN mkdir -p /tmp/vscode-repo && cd /tmp/vscode-repo \
 
 #---
 
-FROM ghdl/run:ls-$DISTRO AS run
+FROM ghdl/run:ls AS run
 
-COPY --from=build /tmp/ghdl-dist /opt/ghdl
-
-RUN cd /opt/ghdl \
+RUN --mount=type=cache,from=build,src=/tmp/ghdl-dist,target=/tmp/ghdl-dist \
+ cd /tmp/ghdl-dist \
  && tar -xzf ghdl-llvm-fPIC.tgz -C /usr/local \
  && pip3 install ghdl-py.tgz \
  && printf "%s\n" \
