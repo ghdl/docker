@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:experimental
+
 ARG TAG="buster-mcode"
 
 FROM ghdl/ghdl:$TAG AS base
@@ -14,15 +16,18 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/* \
  && pip3 install -U pip setuptools wheel $PY_PACKAGES
 
+#---
+
 FROM base as stable
 RUN pip3 install vunit_hdl
+
+#---
 
 FROM alpine as get-master
 RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
 
 FROM base AS master
-COPY --from=get-master /tmp/vunit /tmp/vunit
-RUN cd /tmp/vunit \
+RUN --mount=type=cache,from=get-master,src=/tmp/vunit,target=/tmp/vunit \
+ cd /tmp/vunit \
  && pip3 install . \
- && cd .. \
- && rm -rf vunit
+ && rm -rf .cache

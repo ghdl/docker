@@ -150,7 +150,6 @@ create () {
 extended() {
   case "$1" in
     vunit)
-      export DOCKER_BUILDKIT=0
       for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
         TAG="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
         for version in stable master; do
