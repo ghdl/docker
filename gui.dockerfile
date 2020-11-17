@@ -19,8 +19,8 @@ FROM alpine as get-master
 RUN apk add --no-cache --update git && git clone --recurse-submodules https://github.com/VUnit/vunit /tmp/vunit
 
 FROM ghdl/ext:ls AS ls-vunit
-RUN --mount=type=cache,from=get-master,src=/tmp/vunit,target=/tmp/vunit \
- cd /tmp/vunit \
+RUN --mount=type=cache,from=get-master,src=/tmp/vunit,target=/tmp/ \
+ cd /tmp \
  && pip3 install . \
  && rm -rf .cache
 

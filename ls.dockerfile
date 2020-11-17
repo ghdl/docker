@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:experimental
 
-ARG LLVM_VER="4.0"
+ARG LLVM_VER="7"
 
 #---
 
@@ -26,10 +26,12 @@ RUN mkdir -p /tmp/vscode-repo && cd /tmp/vscode-repo \
 
 FROM ghdl/run:ls AS run
 
-RUN --mount=type=cache,from=build,src=/tmp/ghdl-dist,target=/tmp/ghdl-dist \
- cd /tmp/ghdl-dist \
- && tar -xzf ghdl-llvm-fPIC.tgz -C /usr/local \
- && pip3 install ghdl-py.tgz \
+RUN --mount=type=cache,from=build,src=/tmp/ghdl-dist,target=/tmp/ \
+ tar -xzf /tmp/ghdl-llvm-fPIC.tgz -C /usr/local \
+ && pip3 install /tmp/ghdl-py.tgz \
+ && mkdir -p /opt/ghdl \
+ && cd /opt/ghdl \
+ && cp $(ls /tmp/vhdl-lsp-*.vsix) ./ \
  && printf "%s\n" \
 'cd $(dirname $0)' \
 'vsix_file="$(ls vhdl-lsp-*.vsix)"' \
