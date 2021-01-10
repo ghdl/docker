@@ -11,27 +11,25 @@ ARG LLVM_VER
 RUN mkdir /tmp/ghdl-dist \
  && mkdir -p /tmp/ghdl && cd /tmp/ghdl \
  && curl -fsSL https://codeload.github.com/ghdl/ghdl/tar.gz/master | tar xzf - --strip-components=1 \
- && CONFIG_OPTS="--default-pic" ./scripts/ci-run.sh -b llvm-$LLVM_VER -p ghdl-llvm-fPIC build \
- && mv ghdl-llvm-fPIC.tgz /tmp/ghdl-dist/ \
- && rm -rf python/xtools \
- && tar -zcvf /tmp/ghdl-dist/ghdl-py.tgz -C python .
+ && CONFIG_OPTS="--default-pic" ./scripts/ci-run.sh -b llvm-$LLVM_VER -p ghdl-llvm-fPIC build
 
 RUN mkdir -p /tmp/vscode-repo && cd /tmp/vscode-repo \
  && curl -fsSL https://codeload.github.com/ghdl/ghdl-language-server/tar.gz/master | tar xzf - --strip-components=2 ghdl-language-server-master/vscode-client \
  && npm install \
  && vsce package \
- && mv $(ls vhdl-lsp-*.vsix) /tmp/ghdl-dist/
+ && mv $(ls vhdl-lsp-*.vsix) /tmp/ghdl/
 
 #---
 
 FROM ghdl/run:ls AS run
 
-RUN --mount=type=cache,from=build,src=/tmp/ghdl-dist,target=/tmp/ \
- tar -xzf /tmp/ghdl-llvm-fPIC.tgz -C /usr/local \
- && pip3 install /tmp/ghdl-py.tgz \
+RUN --mount=type=cache,from=build,src=/tmp/ghdl,target=/tmp/ghdl \
+ tar -xzf /tmp/ghdl/ghdl-llvm-fPIC.tgz -C /usr/local \
+ && cd /tmp/ghdl/ \
+ && python3 setup.py install \
  && mkdir -p /opt/ghdl \
  && cd /opt/ghdl \
- && cp $(ls /tmp/vhdl-lsp-*.vsix) ./ \
+ && cp $(ls /tmp/ghdl/vhdl-lsp-*.vsix) ./ \
  && printf "%s\n" \
 'cd $(dirname $0)' \
 'vsix_file="$(ls vhdl-lsp-*.vsix)"' \
