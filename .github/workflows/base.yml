@@ -8,6 +8,7 @@ on:
       - 'build_*.dockerfile'
       - 'run_*.dockerfile'
       - 'ls_base.dockerfile'
+  workflow_dispatch:
   schedule:
     - cron: '0 0 1,16 * *'
 

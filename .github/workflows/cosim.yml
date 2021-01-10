@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/cosim.yml'
+  workflow_dispatch:
   repository_dispatch:
     types: [ cosim ]
   schedule:

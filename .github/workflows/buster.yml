@@ -5,6 +5,7 @@ on:
     paths:
       - 'run.sh'
       - '.github/workflows/buster.yml'
+  workflow_dispatch:
   repository_dispatch:
     types: [ ghdl ]
 

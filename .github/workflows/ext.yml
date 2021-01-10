@@ -8,6 +8,7 @@ on:
       - '.github/workflows/ext.yml'
       - 'ls_debian*.dockerfile'
       - 'gui.dockerfile'
+  workflow_dispatch:
   repository_dispatch:
     types: [ ext ]
 

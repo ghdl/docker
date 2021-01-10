@@ -5,6 +5,7 @@ on:
     paths:
       - 'run.sh'
       - '.github/workflows/test.yml'
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * 5'
 

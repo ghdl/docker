@@ -5,10 +5,11 @@ on:
     paths:
       - 'run.sh'
       - '.github/workflows/mirror.yml'
-  schedule:
-    - cron: '0 0 * * 5'
+  workflow_dispatch:
   repository_dispatch:
     types: [ mirror ]
+  schedule:
+    - cron: '0 0 * * 5'
 
 jobs:
 
