@@ -6,7 +6,7 @@ on:
       - 'run.sh'
       - 'cli/*'
       - '.github/workflows/ext.yml'
-      - 'ls_debian*.dockerfile'
+      - 'ls*.dockerfile'
       - 'gui.dockerfile'
   workflow_dispatch:
   repository_dispatch:
