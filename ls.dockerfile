@@ -11,7 +11,7 @@ ARG LLVM_VER
 RUN mkdir /tmp/ghdl-dist \
  && mkdir -p /tmp/ghdl && cd /tmp/ghdl \
  && curl -fsSL https://codeload.github.com/ghdl/ghdl/tar.gz/master | tar xzf - --strip-components=1 \
- && CONFIG_OPTS="--default-pic" ./dist/ci-run.sh -b llvm-$LLVM_VER -p ghdl-llvm-fPIC build \
+ && CONFIG_OPTS="--default-pic" ./scripts/ci-run.sh -b llvm-$LLVM_VER -p ghdl-llvm-fPIC build \
  && mv ghdl-llvm-fPIC.tgz /tmp/ghdl-dist/ \
  && rm -rf python/xtools \
  && tar -zcvf /tmp/ghdl-dist/ghdl-py.tgz -C python .

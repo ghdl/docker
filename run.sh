@@ -232,7 +232,7 @@ deploy () {
 #--
 
 build () {
-  CONFIG_OPTS="--default-pic " ./dist/ci-run.sh -c "$@"
+  CONFIG_OPTS="--default-pic " ./scripts/ci-run.sh -c "$@"
 
   if [ "$GITHUB_OS" != "macOS" ] && [ -f testsuite/test_ok ]; then
     IMAGE_TAG="$(docker images "ghdl/ghdl:*" | head -n2 | tail -n1 | awk -F ' ' '{print $2}')"
