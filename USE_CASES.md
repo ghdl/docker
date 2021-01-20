@@ -12,7 +12,7 @@ This same feature is useful in CI environment. E.g. run a script in travis to co
 docker run --rm -t \
   -v /$(pwd):/src \
   -w //src \
-  ghdl/ghdl:stretch-mcode \
+  ghdl/ghdl:buster-mcode \
   bash -c "$(cat myscript.sh)"
 ```
 
@@ -39,10 +39,10 @@ You need docker installed and the daemon running. If you don't, you can try the 
 - [play-with-docker](https://labs.play-with-docker.com/) (requires Docker ID)
 - The public demo of [Portainer](https://github.com/portainer/portainer) (see user and pass in the readme)
 
-We may use any of the images. I will take the smallest image (75MB), [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-stretch--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags), and start a container with a shell prompt:
+We may use any of the images. I will take the smallest image (75MB), [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-buster--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags), and start a container with a shell prompt:
 
 ``` bash
-$(commnad -v winpty) docker run --rm -it ghdl/ghdl:stretch-mcode bash
+$(commnad -v winpty) docker run --rm -it ghdl/ghdl:buster-mcode bash
 ```
 
 > NOTE: `winpty` is required on windows (MSYS2) only.
@@ -96,7 +96,7 @@ Please, let us know if you think that `llvm` and `gcc` variants are requied for 
 
 ## Non-GUI environments
 
-Since [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) is equivalent to [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-stretch--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags) + VUnit, the exercise above can be reduced to:
+Since [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) is equivalent to [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-buster--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags) + VUnit, the exercise above can be reduced to:
 
 ``` bash
 # Start a container with option `--interactive`
