@@ -18,7 +18,7 @@ jobs:
       matrix:
         task: [
           { distro: bullseye, backend: mcode ,    args: "" },
-          { distro: bullseye, backend: mcode,     args: "--gpl --no-synth" },
+          { distro: bullseye, backend: mcode,     args: "--gplcompat" },
           { distro: ubuntu18, backend: mcode ,    args: "" },
           { distro: ubuntu20, backend: mcode ,    args: "" },
           { distro: fedora32, backend: mcode ,    args: "" },
