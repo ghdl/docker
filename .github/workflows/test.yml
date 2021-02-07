@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        task: [
+        include: [
           { distro: bullseye, backend: mcode ,    args: "" },
           { distro: bullseye, backend: mcode,     args: "--gplcompat" },
           { distro: ubuntu18, backend: mcode ,    args: "" },
@@ -45,8 +45,8 @@ jobs:
     - name: Build 'ghdl' and 'pkg' images
       run: ./run.sh -b $TARGS
       env:
-        TASK: ${{ matrix.task.distro }}+${{ matrix.task.backend }}
-        TARGS: ${{ matrix.task.args }}
+        TASK: ${{ matrix.distro }}+${{ matrix.backend }}
+        TARGS: ${{ matrix.args }}
 
     - name: Login to DockerHub
       uses: docker/login-action@v1
