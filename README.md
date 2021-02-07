@@ -37,6 +37,7 @@ Images for development (i.e., building and/or testing ghdl):
 - [![ghdl/build Docker pulls](https://img.shields.io/docker/pulls/ghdl/build?label=ghdl%2Fbuild&style=flat-square)](https://hub.docker.com/r/ghdl/build) images include development depedendencies for [ghdl](https://github.com/ghdl/ghdl).
 - [![ghdl/run Docker pulls](https://img.shields.io/docker/pulls/ghdl/run?label=ghdl%2Frun&style=flat-square)](https://hub.docker.com/r/ghdl/run) images include runtime dependencies for [ghdl](https://github.com/ghdl/ghdl).
 - [![ghdl/pkg Docker pulls](https://img.shields.io/docker/pulls/ghdl/pkg?label=ghdl%2Fpkg&style=flat-square)](https://hub.docker.com/r/ghdl/pkg) images include the content of [ghdl](https://github.com/ghdl/ghdl) tarballs built in [ghdl/build](https://hub.docker.com/r/ghdl/build/tags) images.
+- [![ghdl/debug Docker pulls](https://img.shields.io/docker/pulls/ghdl/debug?label=ghdl%2Fdebug&style=flat-square)](https://hub.docker.com/r/ghdl/debug) image is based on `ghdl/build:buster-mcode` and includes Python pip, GNAT GPS, Graphviz and GDB.
 
 Ready-to-use images:
 
@@ -56,6 +57,7 @@ Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
 - A pair of images is created in one job for each of `[ ls-debian, ls-ubuntu ]`.
 - One job is created for each of `[ fedora (32 | 33), debian (buster | bullseye), ubuntu (18 | 20)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
+  - `ghdl/debug` is created in the `debian buster` job.
 
 ### · [test](.github/workflows/test.yml) (15 jobs -max 3-, 30 images) [weekly]
 

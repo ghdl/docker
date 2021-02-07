@@ -198,7 +198,7 @@ deploy () {
     "")
       FILTER="/ghdl /pkg";;
     "base")
-      FILTER="/build /run";;
+      FILTER="/build /run /debug";;
     "ext")
       FILTER="/ext";;
     "synth")

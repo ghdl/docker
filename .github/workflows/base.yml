@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        task: [
+        include: [
           { distro: arch,   version: ''       },
           { distro: debian, version: buster   },
           { distro: debian, version: bullseye },
@@ -36,8 +36,17 @@ jobs:
 
     - run: ./run.sh -c $DISTRIBUTION $VERSION
       env:
-        DISTRIBUTION: ${{ matrix.task.distro }}
-        VERSION:      ${{ matrix.task.version }}
+        DISTRIBUTION: ${{ matrix.distro }}
+        VERSION:      ${{ matrix.version }}
+
+    - name: Build ghdl/debug
+      if: (matrix.distro == 'debian') && (matrix.version == 'buster')
+      run: |
+        docker build -t ghdl/debug - <<-EOF
+        FROM ghdl/build:buster-mcode
+        RUN apt update -qq && apt install -y python3-pip gnat-gps graphviz gdb \
+         && ln -s /usr/bin/pip3 /usr/bin/pip
+        EOF
 
     - name: Login to DockerHub
       uses: docker/login-action@v1
