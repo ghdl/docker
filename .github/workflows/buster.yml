@@ -30,6 +30,14 @@ jobs:
       env:
         TASK: buster+${{ matrix.backend }}
 
+    - name: 'Build ghdl/debug'
+      if: matrix.backend == 'mcode'
+      run: |
+        docker build -t ghdl/debug - <<-EOF
+        FROM ghdl/debug:base
+        COPY --from=ghdl/pkg:buster-mcode / /ghdl/usr/local/
+        EOF
+
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:

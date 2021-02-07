@@ -39,10 +39,10 @@ jobs:
         DISTRIBUTION: ${{ matrix.distro }}
         VERSION:      ${{ matrix.version }}
 
-    - name: Build ghdl/debug
+    - name: 'Build ghdl/debug:base'
       if: (matrix.distro == 'debian') && (matrix.version == 'buster')
       run: |
-        docker build -t ghdl/debug - <<-EOF
+        docker build -t ghdl/debug:base - <<-EOF
         FROM ghdl/build:buster-mcode
         RUN apt update -qq && apt install -y python3-pip gnat-gps graphviz gdb \
          && ln -s /usr/bin/pip3 /usr/bin/pip
