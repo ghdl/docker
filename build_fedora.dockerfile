@@ -10,6 +10,7 @@ RUN dnf --nodocs -y install \
     diffutils \
     gcc-gnat \
     make \
+    rust cargo \
     zlib-devel \
  && dnf clean all --enablerepo=\*
 
