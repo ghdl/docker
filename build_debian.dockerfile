@@ -15,6 +15,7 @@ RUN apt-get update -qq \
     ca-certificates \
     gcc \
     gnat-$GNAT_VER \
+    cargo \
     make \
     zlib1g-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
