@@ -39,12 +39,14 @@ jobs:
         EOF
 
     - name: Login to DockerHub
+      if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASS }}
 
     - name: Deploy to DockerHub
+      if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       run: ./run.sh ""
 
   trigger:
