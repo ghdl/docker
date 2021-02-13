@@ -35,12 +35,14 @@ jobs:
       run: docker build -t ghdl/cosim:${IMG} - < docker/${IMG}.dockerfile
 
     - name: Login to DockerHub
+      if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASS }}
 
     - name: Docker push
+      if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       run: docker push ghdl/cosim:${IMG}
 
 
@@ -66,12 +68,14 @@ jobs:
         docker build -t ghdl/cosim:${IMG} --build-arg IMAGE="ghdl/cosim:${IMG}-slim" - < docker/vunit-cocotb.dockerfile
 
     - name: Login to DockerHub
+      if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASS }}
 
     - name: Docker push
+      if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       run: |
         docker push ghdl/cosim:${IMG}-slim
         docker push ghdl/cosim:${IMG}
