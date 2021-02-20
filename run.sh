@@ -139,6 +139,14 @@ create () {
                 TAG="$d-$i" DREPO="$d" DTAG="$i" DFILE="${d}_fedora" build_img --target="$tgt" --build-arg IMAGE="fedora:${VERSION}"
               done
             ;;
+
+            "centos")
+              for tgt in gcc; do
+                i="centos${VERSION}-$tgt"
+                TAG="$d-$i" DREPO="$d" DTAG="$i" DFILE="${d}_centos" build_img --target="$tgt" --build-arg IMAGE="centos:${VERSION}"
+              done
+            ;;
+
           esac
       done
     ;;
