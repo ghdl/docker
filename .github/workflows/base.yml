@@ -28,6 +28,8 @@ jobs:
           { distro: ubuntu, version: 18       },
           { distro: ubuntu, version: 20       },
           { distro: ls,     version: ''       },
+          { distro: centos, version: 7        },
+          { distro: centos, version: 8        },
         ]
     runs-on: ubuntu-latest
     steps:
