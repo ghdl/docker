@@ -27,7 +27,7 @@ ENV PATH=/opt/gnat/bin:$PATH
 
 #---
 
-FROM common AS gcc-7
+FROM common AS centos7-gcc
 
 RUN yum install -y centos-release-scl \
  && yum install -y \
@@ -38,7 +38,7 @@ SHELL [ "/usr/bin/scl", "enable", "devtoolset-8" ]
 
 #---
 
-FROM common AS gcc-8
+FROM common AS centos8-gcc
 
 RUN yum install -y --enablerepo=powertools \
     gcc \
