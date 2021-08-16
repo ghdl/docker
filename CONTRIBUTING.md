@@ -28,7 +28,7 @@ Create `build_<DISTRO>.dockerfile` and `run_<DISTRO>.dockerfile` in the root dir
 matrix:
   include: [
     { distro: arch,     version: ''        },
-    { distro: debian,   version: buster    },
+    { distro: debian,   version: bullseye  },
     ...
     { distro: <DISTRO>, version: <VERSION> },
 ```

@@ -12,7 +12,7 @@ This same feature is useful in CI environment. E.g. run a script in travis to co
 docker run --rm -t \
   -v /$(pwd):/src \
   -w //src \
-  ghdl/ghdl:buster-mcode \
+  ghdl/ghdl:bullseye-mcode \
   bash -c "$(cat myscript.sh)"
 ```
 
@@ -39,10 +39,10 @@ You need docker installed and the daemon running. If you don't, you can try the 
 - [play-with-docker](https://labs.play-with-docker.com/) (requires Docker ID)
 - The public demo of [Portainer](https://github.com/portainer/portainer) (see user and pass in the readme)
 
-We may use any of the images. I will take the smallest image (75MB), [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-buster--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags), and start a container with a shell prompt:
+We may use any of the images. I will take the smallest image (75MB), [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-bullseye--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags), and start a container with a shell prompt:
 
 ``` bash
-$(commnad -v winpty) docker run --rm -it ghdl/ghdl:buster-mcode bash
+$(commnad -v winpty) docker run --rm -it ghdl/ghdl:bullseye-mcode bash
 ```
 
 > NOTE: `winpty` is required on windows (MSYS2) only.
@@ -73,10 +73,10 @@ for f in $(find vunit/examples/vhdl/ -name 'run.py'); do python3 $f; done
 
 # Extended images
 
-A reduced number of carefully crafted images is built on top of [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-*-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags) images. These are meant to let users make the best of GHDL by adding companion tools, such as [VUnit](https://vunit.github.io/) or [gtkwave](https://gtkwave.sourceforge.net/). In order to make the first contact easier for them, these are all based on `debian:buster`. Right now, these are available:
+A reduced number of carefully crafted images is built on top of [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-*-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags) images. These are meant to let users make the best of GHDL by adding companion tools, such as [VUnit](https://vunit.github.io/) or [gtkwave](https://gtkwave.sourceforge.net/). In order to make the first contact easier for them, these are all based on `debian:bullseye`. Right now, these are available:
 
 - [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags)
-  - BASED ON `ghdl/ghdl:buster-mcode`
+  - BASED ON `ghdl/ghdl:bullseye-mcode`
   - python3
   - pip3 install vunit_hdl
   - apt-get install -y curl
@@ -96,7 +96,7 @@ Please, let us know if you think that `llvm` and `gcc` variants are requied for 
 
 ## Non-GUI environments
 
-Since [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) is equivalent to [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-buster--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags) + VUnit, the exercise above can be reduced to:
+Since [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ext/tags) is equivalent to [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-bullseye--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags) + VUnit, the exercise above can be reduced to:
 
 ``` bash
 # Start a container with option `--interactive`

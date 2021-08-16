@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:experimental
 
-ARG TAG="buster-mcode"
+ARG TAG="bullseye-mcode"
 
 #---
 

@@ -158,8 +158,8 @@ create () {
 extended() {
   case "$1" in
     vunit)
-      for fulltag in buster-mcode buster-llvm-7 buster-gcc-8.3.0; do
-        TAG="$(echo $fulltag | sed 's/buster-\(.*\)/\1/g' | sed 's/-.*//g' )"
+      for fulltag in bullseye-mcode bullseye-llvm-9 bullseye-gcc-9.1.0; do
+        TAG="$(echo $fulltag | sed 's/bullseye-\(.*\)/\1/g' | sed 's/-.*//g' )"
         for version in stable master; do
           PY_PACKAGES=""
           if [ "x$TAG" = "xgcc" ]; then
