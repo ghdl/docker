@@ -6,7 +6,6 @@ ARG TAG="bullseye-mcode"
 
 FROM ghdl/ghdl:$TAG AS base
 
-ARG TAG
 ARG PY_PACKAGES
 
 RUN apt-get update -qq \
@@ -19,9 +18,6 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/* \
  && pip3 install --upgrade setuptools wheel $PY_PACKAGES \
  && rm -rf ~/.cache
-# Some combinations of system and GHDL versions of GCC break code coverage support
-# if GCC version bundled with GCC isn't used for linking, see issue #42
-RUN if echo "$TAG" | grep -q "gcc" ; then cd /usr/local/bin && ln -s gcc cc ; fi
 
 #---
 

@@ -33,6 +33,9 @@ RUN apt-get update -qq \
 
 FROM zlib AS gcc
 
+# make sure proper GCC version is used for linking (elaborate)
+RUN cd /usr/local/bin && ln -s gcc cc
+
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     lcov \
