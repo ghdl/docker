@@ -37,3 +37,5 @@ RUN dnf --nodocs -y install \
     libstdc++ \
     lcov \
  && dnf clean all --enablerepo=\*
+
+ENV CC=gcc

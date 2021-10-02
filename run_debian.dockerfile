@@ -39,6 +39,8 @@ RUN apt-get update -qq \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
 
+ENV CC=gcc
+
 #---
 
 FROM zlib AS llvm

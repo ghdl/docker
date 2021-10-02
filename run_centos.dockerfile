@@ -11,6 +11,8 @@ RUN yum update -y \
     make \
     zlib-devel
 
+ENV CC=gcc
+
 #---
 
 FROM common AS centos7-gcc
