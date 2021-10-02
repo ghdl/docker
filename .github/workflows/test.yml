@@ -14,7 +14,6 @@ jobs:
   build:
     strategy:
       fail-fast: false
-      max-parallel: 3
       matrix:
         include: [
           { distro: buster,   backend: mcode ,    args: "" },

@@ -24,7 +24,7 @@
   -->
 </p>
 
-This repository contains scripts and YAML workflows for GitHub Actions (GHA) to build and to deploy the docker images that are used and/or published by the [GHDL GitHub organization](https://github.com/ghdl). All of them are pushed to [hub.docker.com/u/ghdl](https://cloud.docker.com/u/ghdl/repository/list).
+This repository contains scripts and YAML workflows for GitHub Actions (GHA) to build and to deploy the container images that are used and/or published by the [GHDL GitHub organization](https://github.com/ghdl). All of them are pushed to [hub.docker.com/u/ghdl](https://cloud.docker.com/u/ghdl/repository/list).
 
 ----
 
@@ -51,7 +51,7 @@ See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a 
 
 ## GHA workflows
 
-### · [base](.github/workflows/base.yml) (8 jobs -max 4-, 40 images) [twice a month]
+### · [base](.github/workflows/base.yml)
 
 Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
@@ -59,7 +59,7 @@ Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 - One job is created for each of `[ fedora (33 | 34), debian (buster | bullseye), ubuntu (18 | 20)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
   - `ghdl/debug:base` is created in the `debian bullseye` job.
 
-### · [test](.github/workflows/test.yml) (15 jobs -max 3-, 30 images) [weekly]
+### · [test](.github/workflows/test.yml)
 
 Build and push almost all the `ghdl/ghdl:*` and `ghdl/pkg:*` images. A pair of images is created in one job for each combination of:
 
@@ -78,19 +78,19 @@ The procedure in each job is as follows:
 
 > NOTE: images with GCC backend include `lcov` for code coverage analysis.
 
-### · [bullseye](.github/workflows/bullseye.yml) (3 jobs -max 3-, 6 images) [triggered by ghdl/ghdl nightly job]
+### · [bullseye](.github/workflows/bullseye.yml) [triggered by ghdl/ghdl nightly job]
 
 Complement of `ghdl.yml`, to be run after each successful run of the main workflow in ghdl/ghdl. One job is scheduled for each combination of `[ bullseye ]` and `[ mcode, llvm-9 , gcc-9.1.0 ]`.
 
 `ghdl/debug` is created in the `mcode` job.
 
-### · [vunit](.github/workflows/vunit.yml) (1 job, 6 images) [triggered after workflow 'bullseye']
+### · [vunit](.github/workflows/vunit.yml) [triggered after workflow 'bullseye']
 
 Build and push all the `ghdl/vunit:*` images, which are based on the ones created in the 'bullseye' workflow.
 - Two versions are published for each backend: one with latest stable VUnit (from PyPI) and one with the latest `master` (from Git).
 - Images with GCC backend include `lcov` and `gcovr` for code coverage analysis.
 
-### · [ext](.github/workflows/ext.yml) (3 jobs -max 2-, 6 images) [triggered after workflow 'vunit']
+### · [ext](.github/workflows/ext.yml) [triggered after workflow 'vunit']
 
 Build and push all the `ghdl/ext:*` images:
 
@@ -101,7 +101,7 @@ Build and push all the `ghdl/ext:*` images:
   - **ghdl/ext:ls-vunit**: includes VUnit (`master`) on top of *ghdl/ext:ls-debian*.
   - **ghdl/ext:latest**: includes [GtkWave](http://gtkwave.sourceforge.net/) on top of `ghdl/ext:ls-vunit`.
 
-### · [cosim](.github/workflows/cosim.yml) [weekly]
+### · [cosim](.github/workflows/cosim.yml)
 
 See [ghdl/ghdl-cosim: docker](https://github.com/ghdl/ghdl-cosim/tree/master/docker) and [ghdl.github.io/ghdl-cosim/vhpidirect/examples/vffi_user](https://ghdl.github.io/ghdl-cosim/vhpidirect/examples/vffi_user.html).
 

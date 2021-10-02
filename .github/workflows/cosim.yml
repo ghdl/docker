@@ -50,7 +50,6 @@ jobs:
     needs: base
     strategy:
       fail-fast: false
-      max-parallel: 3
       matrix:
         img: [ matplotlib, xyce, octave ]
     runs-on: ubuntu-latest
