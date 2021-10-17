@@ -53,7 +53,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: |
-        ./.github/trigger.sh vunit
-      env:
-        GHDL_BOT_TOKEN: ${{ secrets.GHDL_BOT }}
+    - run: GHDL_BOT_TOKEN=${{ secrets.GHDL_BOT }} ./.github/trigger.sh vunit

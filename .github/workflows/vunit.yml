@@ -38,6 +38,4 @@ jobs:
       if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       run: ./run.sh vunit
 
-    - run: ./.github/trigger.sh ext
-      env:
-        GHDL_BOT_TOKEN: ${{ secrets.GHDL_BOT }}
+    - run: GHDL_BOT_TOKEN=${{ secrets.GHDL_BOT }} ./.github/trigger.sh ext
