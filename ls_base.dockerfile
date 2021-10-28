@@ -3,7 +3,7 @@ ARG GNAT_VER="7"
 
 #---
 
-FROM python:3-slim-buster AS base
+FROM python:3-slim-bullseye AS base
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \

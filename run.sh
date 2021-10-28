@@ -76,8 +76,8 @@ create () {
         DFILE=ls_base \
         build_img \
         --target="$img" \
-        --build-arg LLVM_VER="7" \
-        --build-arg GNAT_VER="7"
+        --build-arg LLVM_VER="9" \
+        --build-arg GNAT_VER="9"
       done
     ;;
 
@@ -196,7 +196,7 @@ extended() {
 #--
 
 language_server() {
-  DREPO="ext" DTAG="ls" DFILE=ls build_img --build-arg LLVM_VER='7'
+  DREPO="ext" DTAG="ls" DFILE=ls build_img --build-arg LLVM_VER='9'
 }
 
 #--
