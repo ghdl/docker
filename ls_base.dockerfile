@@ -32,7 +32,7 @@ RUN apt-get update -qq \
     npm \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/* \
- && npm install -g vsce
+ && npm install -g vsce@1.103.1
 
 #---
 
