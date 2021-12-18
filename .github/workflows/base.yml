@@ -49,6 +49,14 @@ jobs:
          && ln -s /usr/bin/pip3 /usr/bin/pip
         EOF
 
+    - name: 'Build ghdl/build:doc'
+      if: (matrix.distro == 'debian') && (matrix.version == 'bullseye')
+      run: |
+        docker build -t ghdl/build:doc . -f- <<-EOF
+        FROM ghdl/build:bullseye-mcode
+        RUN apt update -qq && apt install -y python3-pip graphviz
+        EOF
+
     - name: Login to DockerHub
       if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
       uses: docker/login-action@v1
