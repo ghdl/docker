@@ -26,7 +26,7 @@ FROM ghdl/run:ls AS run
 RUN --mount=type=cache,from=build,src=/tmp/ghdl,target=/tmp/ghdl \
  tar -xzf /tmp/ghdl/ghdl-llvm-fPIC.tgz -C /usr/local \
  && cd /tmp/ghdl/ \
- && python3 setup.py install \
+ && pip3 install . \
  && mkdir -p /opt/ghdl \
  && cd /opt/ghdl \
  && cp $(ls /tmp/ghdl/vhdl-lsp-*.vsix) ./ \
