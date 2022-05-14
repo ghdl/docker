@@ -31,8 +31,6 @@ jobs:
           { distro: buster,   backend: gcc-9.4.0,  args: "" },
           { distro: fedora35, backend: gcc-10.3.0, args: "" },
           { distro: fedora36, backend: gcc-11.3.0, args: "" },
-          { distro: centos7,  backend: gcc-8.4.0,  args: "" },
-          { distro: centos8,  backend: gcc-9.3.0,  args: "" },
         ]
     runs-on: ubuntu-latest
     steps:
