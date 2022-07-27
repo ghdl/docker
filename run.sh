@@ -117,10 +117,6 @@ create () {
                   LLVM_VER="3.9"
                   GNAT_VER="4.9"
                 ;;
-                18) #bionic
-                  LLVM_VER="5.0"
-                  GNAT_VER="7"
-                ;;
                 20) #focal
                   LLVM_VER="10"
                   GNAT_VER="9"
@@ -237,7 +233,7 @@ deploy () {
 #--
 
 build () {
-  CONFIG_OPTS="--default-pic " ./scripts/ci-run.sh -c "$@"
+  CONFIG_OPTS="--default-pic " ./scripts/ci-run.sh -c --docker "$@"
 
   if [ "$GITHUB_OS" != "macOS" ] && [ -f testsuite/test_ok ]; then
     IMAGE_TAG="$(docker images "ghdl/ghdl:*" | head -n2 | tail -n1 | awk -F ' ' '{print $2}')"

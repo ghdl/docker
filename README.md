@@ -56,14 +56,14 @@ See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a 
 Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
 - A pair of images is created in one job for each of `[ ls-debian, ls-ubuntu ]`.
-- One job is created for each of `[ fedora (35 | 36), debian (buster | bullseye), ubuntu (18 | 20)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
+- One job is created for each of `[ fedora (35 | 36), debian (buster | bullseye), ubuntu (20 | 22)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
   - `ghdl/debug:base` is created in the `debian bullseye` job.
 
 ### · [test](.github/workflows/test.yml)
 
 Build and push almost all the `ghdl/ghdl:*` and `ghdl/pkg:*` images. A pair of images is created in one job for each combination of:
 
-- `[ fedora: [35, 36], debian: [bullseye], ubuntu: [18, 20] ]` and `[mcode, llvm*]`.
+- `[ fedora: [35, 36], debian: [bullseye], ubuntu: [20, 22] ]` and `[mcode, llvm*]`.
 - `[ fedora: [35, 36], debian: [buster, bullseye] ]` and `[gcc*]`.
 - For Debian only, `[buster, bullseye]` and `[mcode]` and `[--gpl]`.
 

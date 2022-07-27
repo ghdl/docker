@@ -15,7 +15,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        backend: [ mcode, llvm-9, gcc-9.1.0 ]
+        backend:
+          - mcode
+          - llvm-9
+          - gcc-9.1.0
     runs-on: ubuntu-latest
     steps:
 
