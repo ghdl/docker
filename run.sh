@@ -125,6 +125,10 @@ create () {
                   LLVM_VER="10"
                   GNAT_VER="9"
                 ;;
+                22) #jammy
+                  LLVM_VER="11"
+                  GNAT_VER="10"
+                ;;
               esac
               ITAG="ubuntu$VERSION"
               build_debian_images \

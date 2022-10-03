@@ -26,6 +26,7 @@ jobs:
           { distro: fedora, version: 36       },
           { distro: ubuntu, version: 18       },
           { distro: ubuntu, version: 20       },
+          { distro: ubuntu, version: 22       },
           { distro: ls,     version: ''       },
         ]
     runs-on: ubuntu-latest
