@@ -37,4 +37,4 @@ jobs:
           ./run.sh vunit
         post: docker logout docker.io
 
-    - run: GHDL_BOT_TOKEN=${{ secrets.GHDL_BOT }} ./.github/trigger.sh ext
+    - run: GHDL_BOT_TOKEN=${{ github.token }} ./.github/trigger.sh ext
