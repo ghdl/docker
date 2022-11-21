@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Clone ghdl
       run: git clone https://github.com/ghdl/ghdl
@@ -55,5 +55,5 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: GHDL_BOT_TOKEN=${{ secrets.GHDL_BOT }} ./.github/trigger.sh vunit

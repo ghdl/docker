@@ -27,7 +27,7 @@ jobs:
       IMG: ${{ matrix.img }}
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         repository: ghdl/ghdl-cosim
 
@@ -57,7 +57,7 @@ jobs:
       IMG: ${{ matrix.img }}
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         repository: ghdl/ghdl-cosim
 
