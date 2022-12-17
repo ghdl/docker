@@ -1,11 +1,11 @@
 <p align="center">
   <a title="Join the chat at https://gitter.im/ghdl1/Lobby" href="https://gitter.im/ghdl1/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://img.shields.io/badge/chat-on%20gitter-4db797.svg?longCache=true&style=flat-square&logo=gitter&logoColor=e8ecef"></a><!--
   -->
-  <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abase"><img alt="'base' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/base?longCache=true&style=flat-square&label=base&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'base' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/base.yml"><img alt="'base' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/base.yml?branch=master&longCache=true&style=flat-square&label=base&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
-  <a title="'test' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Atest"><img alt="'test' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/test?longCache=true&style=flat-square&label=test&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'test' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/test.yml"><img alt="'test' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/test.yml?branch=master&longCache=true&style=flat-square&label=test&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
-  <a title="'bullseye' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Abullseye"><img alt="'bullseye' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/bullseye?longCache=true&style=flat-square&label=bullseye&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'bullseye' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/bullseye.yml"><img alt="'bullseye' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/bullseye.yml?branch=master&longCache=true&style=flat-square&label=bullseye&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
 </p>
 
@@ -14,13 +14,13 @@
 </p>
 
 <p align="center">
-  <a title="'vunit' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Avunit"><img alt="'vunit' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/vunit?longCache=true&style=flat-square&label=vunit&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'vunit' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/vunit.yml"><img alt="'vunit' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/vunit.yml?branch=master&longCache=true&style=flat-square&label=vunit&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
-  <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Aext"><img alt="'ext' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/ext?longCache=true&style=flat-square&label=ext&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'ext' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/ext.yml"><img alt="'ext' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/ext.yml?branch=master&longCache=true&style=flat-square&label=ext&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
-  <a title="'cosim' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Acosim"><img alt="'cosim' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/cosim?longCache=true&style=flat-square&label=cosim&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'cosim' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/cosim.yml"><img alt="'cosim' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/cosim.yml?branch=master&longCache=true&style=flat-square&label=cosim&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
-  <a title="'mirror' workflow Status" href="https://github.com/ghdl/docker/actions?query=workflow%3Amirror"><img alt="'mirror' workflow Status" src="https://img.shields.io/github/workflow/status/ghdl/docker/mirror?longCache=true&style=flat-square&label=mirror&logo=GitHub%20Actions&logoColor=fff"></a><!--
+  <a title="'mirror' workflow Status" href="https://github.com/ghdl/docker/actions/workflows/mirror.yml"><img alt="'mirror' workflow Status" src="https://img.shields.io/github/actions/workflow/status/ghdl/docker/mirror.yml?branch=master&longCache=true&style=flat-square&label=mirror&logo=GitHub%20Actions&logoColor=fff"></a><!--
   -->
 </p>
 
