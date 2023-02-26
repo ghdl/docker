@@ -78,7 +78,7 @@ The procedure in each job is as follows:
 
 > NOTE: images with GCC backend include `lcov` for code coverage analysis.
 
-### · [bullseye](.github/workflows/bullseye.yml) [triggered by ghdl/ghdl nightly job]
+### · [bullseye](.github/workflows/bullseye.yml) [scheduled daily]
 
 Complement of `ghdl.yml`, to be run after each successful run of the main workflow in ghdl/ghdl. One job is scheduled for each combination of `[ bullseye ]` and `[ mcode, llvm-9 , gcc-9.1.0 ]`.
 
