@@ -6,8 +6,8 @@ on:
       - 'run.sh'
       - '.github/workflows/bullseye.yml'
   workflow_dispatch:
-  repository_dispatch:
-    types: [ ghdl ]
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
 
