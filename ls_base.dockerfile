@@ -1,9 +1,9 @@
-ARG LLVM_VER="7"
-ARG GNAT_VER="7"
+ARG LLVM_VER="14"
+ARG GNAT_VER="12"
 
 #---
 
-FROM python:3-slim-bullseye AS base
+FROM python:3-slim-bookworm AS base
 
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \

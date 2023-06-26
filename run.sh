@@ -76,8 +76,8 @@ create () {
         DFILE=ls_base \
         build_img \
         --target="$img" \
-        --build-arg LLVM_VER="9" \
-        --build-arg GNAT_VER="9"
+        --build-arg LLVM_VER="14" \
+        --build-arg GNAT_VER="12"
       done
     ;;
 
@@ -98,6 +98,10 @@ create () {
                 *bullseye*)
                   LLVM_VER="9"
                   GNAT_VER="9"
+                ;;
+                *bookworm*)
+                  LLVM_VER="14"
+                  GNAT_VER="12"
                 ;;
               esac
               ITAG="$VERSION"
@@ -151,8 +155,8 @@ create () {
 extended() {
   case "$1" in
     vunit)
-      for fulltag in bullseye-mcode bullseye-llvm-9 bullseye-gcc-9.1.0; do
-        TAG="$(echo $fulltag | sed 's/bullseye-\(.*\)/\1/g' | sed 's/-.*//g' )"
+      for fulltag in bookworm-mcode bookworm-llvm-14 bookworm-gcc-12.3.0; do
+        TAG="$(echo $fulltag | sed 's/bookworm-\(.*\)/\1/g' | sed 's/-.*//g' )"
         for version in stable master; do
           PY_PACKAGES=""
           if [ "x$TAG" = "xgcc" ]; then
@@ -189,7 +193,7 @@ extended() {
 #--
 
 language_server() {
-  DREPO="ext" DTAG="ls" DFILE=ls build_img --build-arg LLVM_VER='9'
+  DREPO="ext" DTAG="ls" DFILE=ls build_img --build-arg LLVM_VER='14'
 }
 
 #--

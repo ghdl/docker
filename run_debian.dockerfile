@@ -1,8 +1,8 @@
 # [run] Debian or Ubuntu
 
-ARG IMAGE="debian:stretch-slim"
-ARG LLVM_VER="4.0"
-ARG GNAT_VER="6"
+ARG IMAGE="debian:bookworm-slim"
+ARG LLVM_VER="14"
+ARG GNAT_VER="12"
 
 #---
 

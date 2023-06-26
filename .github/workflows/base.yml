@@ -22,6 +22,7 @@ jobs:
           { distro: arch,   version: ''       },
           { distro: debian, version: buster   },
           { distro: debian, version: bullseye },
+          { distro: debian, version: bookworm },
           { distro: fedora, version: 35       },
           { distro: fedora, version: 36       },
           { distro: ubuntu, version: 20       },
@@ -39,6 +40,7 @@ jobs:
         VERSION:      ${{ matrix.version }}
 
     - name: 'Build ghdl/debug:base'
+      # We need to use 'buster' because 'gnat-gps' is not available on 'bullseye' or 'bookworm'
       if: (matrix.distro == 'debian') && (matrix.version == 'buster')
       run: |
         docker build -t ghdl/debug:base - <<-EOF
@@ -48,10 +50,10 @@ jobs:
         EOF
 
     - name: 'Build ghdl/build:doc'
-      if: (matrix.distro == 'debian') && (matrix.version == 'bullseye')
+      if: (matrix.distro == 'debian') && (matrix.version == 'bookworm')
       run: |
         docker build -t ghdl/build:doc . -f- <<-EOF
-        FROM ghdl/build:bullseye-mcode
+        FROM ghdl/build:bookworm-mcode
         RUN apt update -qq && apt install -y python3-pip graphviz
         EOF
 

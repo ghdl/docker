@@ -1,10 +1,10 @@
-name: 'bullseye'
+name: 'bookworm'
 
 on:
   push:
     paths:
       - 'run.sh'
-      - '.github/workflows/bullseye.yml'
+      - '.github/workflows/bookworm.yml'
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
@@ -17,8 +17,8 @@ jobs:
       matrix:
         backend:
           - mcode
-          - llvm-9
-          - gcc-9.1.0
+          - llvm-14
+          - gcc-12.3.0
     runs-on: ubuntu-latest
     steps:
 
@@ -30,15 +30,7 @@ jobs:
     - name: Build 'ghdl' and 'pkg' images
       run: ./run.sh -b
       env:
-        TASK: bullseye+${{ matrix.backend }}
-
-    - name: 'Build ghdl/debug'
-      if: matrix.backend == 'mcode'
-      run: |
-        docker build -t ghdl/debug - <<-EOF
-        FROM ghdl/debug:base
-        COPY --from=ghdl/pkg:bullseye-mcode / /ghdl/usr/local/
-        EOF
+        TASK: bookworm+${{ matrix.backend }}
 
     - name: Deploy to DockerHub
       if: github.event_name != 'pull_request' && github.repository == 'ghdl/docker'
