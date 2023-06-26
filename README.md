@@ -56,7 +56,7 @@ See [USE_CASES.md](./USE_CASES.md) if you are looking for usage examples from a 
 Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
 - A pair of images is created in one job for `[ ls ]`.
-- One job is created for each of `[ fedora (35 | 36), debian (buster | bullseye | bookworm), ubuntu (20 | 22)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
+- One job is created for each of `[ fedora (37 | 38), debian (buster | bullseye | bookworm), ubuntu (20 | 22)]`, and six images are created in each job; two (`ghdl/build:*`, `ghdl/run:*`) for each supported backend `[ mcode, llvm*, gcc ]`.
   - `ghdl/debug:base` is created in the `debian buster` job.
   - `ghdl/build:doc` is created in the `debian bookworm` job.
 
@@ -64,8 +64,8 @@ Build and push all the `ghdl/build:*` and `ghdl/run:*` docker images. :
 
 Build and push almost all the `ghdl/ghdl:*` and `ghdl/pkg:*` images. A pair of images is created in one job for each combination of:
 
-- `[ fedora: [35, 36], debian: [bullseye], ubuntu: [20, 22] ]` and `[mcode, llvm*]`.
-- `[ fedora: [35, 36], debian: [bullseye] ]` and `[gcc*]`.
+- `[ fedora: [37, 38], debian: [bullseye], ubuntu: [20, 22] ]` and `[mcode, llvm*]`.
+- `[ fedora: [37, 38], debian: [bullseye] ]` and `[gcc*]`.
 - For Debian only, `[bullseye, bookworm]` and `[mcode]` and `[--gpl]`.
 - For Debian Buster, only `[mcode]`.
   - `ghdl/debug` is created in this job.

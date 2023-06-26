@@ -1,6 +1,6 @@
 # [build] Fedora
 
-ARG IMAGE="fedora:28"
+ARG IMAGE="fedora:38"
 
 #---
 
