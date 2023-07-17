@@ -14,16 +14,22 @@ RUN apt-get update -qq \
     make \
     python3 \
     python3-pip \
+    python3-venv \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists/* \
- && pip3 install -U setuptools wheel $PY_PACKAGES --break-system-packages \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip3 install -U setuptools wheel $PY_PACKAGES \
  && rm -rf ~/.cache
 
 #---
 
 FROM base as stable
 
-RUN pip3 install vunit_hdl --break-system-packages \
+RUN pip3 install vunit_hdl \
  && rm -rf ~/.cache
 
 #---
@@ -34,5 +40,5 @@ RUN apk add --no-cache --update git && git clone --recurse-submodules https://gi
 FROM base AS master
 RUN --mount=type=cache,from=get-master,src=/tmp/vunit,target=/tmp/vunit \
  cd /tmp/vunit \
- && pip3 install . --break-system-packages \
+ && pip3 install . \
  && rm -rf ~/.cache
