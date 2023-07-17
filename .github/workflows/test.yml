@@ -24,7 +24,7 @@ jobs:
           { distro: ubuntu22, backend: mcode ,     args: "" },
           { distro: fedora37, backend: mcode ,     args: "" },
           { distro: fedora38, backend: mcode ,     args: "" },
-          { distro: bullseye, backend: llvm-9,     args: "" },
+          { distro: bullseye, backend: llvm-11,     args: "" },
           { distro: ubuntu20, backend: llvm-10,    args: "" },
           { distro: ubuntu22, backend: llvm-11,    args: "" },
           { distro: fedora37, backend: llvm,       args: "" },

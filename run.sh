@@ -96,7 +96,7 @@ create () {
                   GNAT_VER="8"
                 ;;
                 *bullseye*)
-                  LLVM_VER="9"
+                  LLVM_VER="11"
                   GNAT_VER="9"
                 ;;
                 *bookworm*)
