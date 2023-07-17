@@ -16,14 +16,14 @@ RUN apt-get update -qq \
     python3-pip \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/* \
- && pip3 install --upgrade setuptools wheel $PY_PACKAGES \
+ && pip3 install -U setuptools wheel $PY_PACKAGES --break-system-packages \
  && rm -rf ~/.cache
 
 #---
 
 FROM base as stable
 
-RUN pip3 install vunit_hdl \
+RUN pip3 install vunit_hdl --break-system-packages \
  && rm -rf ~/.cache
 
 #---
@@ -34,5 +34,5 @@ RUN apk add --no-cache --update git && git clone --recurse-submodules https://gi
 FROM base AS master
 RUN --mount=type=cache,from=get-master,src=/tmp/vunit,target=/tmp/vunit \
  cd /tmp/vunit \
- && pip3 install . \
+ && pip3 install . --break-system-packages \
  && rm -rf ~/.cache
