@@ -52,9 +52,12 @@ jobs:
     - name: 'Build ghdl/build:doc'
       if: (matrix.distro == 'debian') && (matrix.version == 'bookworm')
       run: |
-        docker build -t ghdl/build:doc . -f- <<-EOF
+        docker build -t ghdl/build:doc . -f- <<-'EOF'
         FROM ghdl/build:bookworm-mcode
-        RUN apt update -qq && apt install -y python3-pip graphviz
+        RUN apt update -qq && apt install -y python3-pip python3-venv graphviz
+        ENV VIRTUAL_ENV=/opt/venv
+        RUN python3 -m venv $VIRTUAL_ENV
+        ENV PATH="$VIRTUAL_ENV/bin:$PATH"
         EOF
 
     - name: Deploy to DockerHub

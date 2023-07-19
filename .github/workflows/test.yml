@@ -48,11 +48,12 @@ jobs:
         TARGS: ${{ matrix.args }}
 
     - name: 'Build ghdl/debug'
+      # We need to use 'buster' because 'gnat-gps' is not available on 'bullseye' or 'bookworm'
       if: matrix.backend == 'mcode' && matrix.distro == 'buster'
       run: |
         docker build -t ghdl/debug - <<-EOF
         FROM ghdl/debug:base
-        COPY --from=ghdl/pkg:bookworm-mcode / /ghdl/usr/local/
+        COPY --from=ghdl/pkg:buster-mcode / /ghdl/usr/local/
         EOF
 
     - name: Deploy to DockerHub
