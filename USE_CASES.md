@@ -42,7 +42,7 @@ You need docker installed and the daemon running. If you don't, you can try the 
 We may use any of the images. I will take the smallest image (75MB), [![`ghdl/ghdl`](https://img.shields.io/badge/ghdl/ghdl-bullseye--mcode-blue.svg?style=flat-square)](https://hub.docker.com/r/ghdl/ghdl/tags), and start a container with a shell prompt:
 
 ``` bash
-$(commnad -v winpty) docker run --rm -it ghdl/ghdl:bullseye-mcode bash
+$(command -v winpty) docker run --rm -it ghdl/ghdl:bullseye-mcode bash
 ```
 
 > NOTE: `winpty` is required on windows (MSYS2) only.
@@ -100,7 +100,7 @@ Since [![`ghdl/ext`](https://img.shields.io/badge/ghdl/ext-vunit-blue.svg?style=
 
 ``` bash
 # Start a container with option `--interactive`
-$(commnad -v winpty) docker run --rm -it ghdl/ext:vunit bash
+$(command -v winpty) docker run --rm -it ghdl/ext:vunit bash
 # In the prompt inside the container:
 ghdl --version
 mkdir vunit
@@ -134,7 +134,7 @@ As an alternative to using an X server on the host, a [GTK+ Broadway](https://de
 
 ``` bash
 # Start a container with either `x11docker` or `docker run`:
-$(commnad -v winpty) docker run -it \
+$(command -v winpty) docker run -it \
   -e BROADWAY=5 -p 8085:8085 -- ghdl/ext:broadway bash
 # or
 x11docker -it -- \
