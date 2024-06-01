@@ -50,5 +50,8 @@ RUN apt-get update -qq \
     lbzip2 \
     texinfo \
     wget \
+    libgmp-dev \
+    libmpfr-dev \
+    libmpc-dev \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && rm -rf /var/lib/apt/lists/*
