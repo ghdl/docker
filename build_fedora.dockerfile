@@ -44,4 +44,7 @@ RUN dnf --nodocs -y --allowerasing install \
     lbzip2 \
     texinfo \
     wget \
+    mpfr-devel \
+    gmp-devel \
+    libmpc-devel \
  && dnf clean all
