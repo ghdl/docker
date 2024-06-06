@@ -109,11 +109,11 @@ See [ghdl/ghdl-cosim: docker](https://github.com/ghdl/ghdl-cosim/tree/master/doc
 - **ghdl/cosim:mcode**: based on *ghdl/ghdl:bookworm-mcode*, includes GCC.
 - **ghdl/cosim:py**: based on *ghdl/ghdl:bookworm-llvm-7*, includes Python.
   - **ghdl/cosim:vunit-cocotb**: based on *ghdl/cosim:py*, includes [VUnit](https://vunit.github.io/), [cocotb](https://docs.cocotb.org/) and `g++` (required by cocotb).
-  - **ghdl/cosim:matplotlib**: based on *ghdl/cosim:py*, includes `pytest`, `matplotlib`, `numpy` and Imagemagick.
-  - **ghdl/cosim:octave**: based on *ghdl/cosim:py*, includes [GNU Octave](https://www.gnu.org/software/octave/).
-  - **ghdl/cosim:xyce**: based on *ghdl/cosim:py*, includes [Xyce](https://xyce.sandia.gov/).
+    - **ghdl/cosim:matplotlib**: based on *ghdl/cosim:vunit-cocotb*, includes `pytest`, `matplotlib`, `numpy` and Imagemagick.
+    - **ghdl/cosim:octave**: based on *ghdl/cosim:vunit-cocotb*, includes [GNU Octave](https://www.gnu.org/software/octave/).
+    - **ghdl/cosim:xyce**: based on *ghdl/cosim:vunit-cocotb*, includes [Xyce](https://xyce.sandia.gov/).
 
-NOTE: `*-slim` variants of `matplotlib`, `octave` and `xyce` images are provided too. Those are based on *ghdl/cosim:vunit-cocotb*, instead of *ghdl/cosim:py*.
+NOTE: `*-slim` variants of `matplotlib`, `octave` and `xyce` images are provided too. Those are based on *ghdl/cosim:py*, instead of *ghdl/cosim:vunit-cocotb*.
 
 ## Packaging
 
